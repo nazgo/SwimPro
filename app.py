@@ -255,9 +255,11 @@ def init_auth_db():
                 password_hash TEXT NOT NULL,
                 is_active BOOLEAN NOT NULL DEFAULT TRUE,
                 created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
-                last_login TIMESTAMPTZ
+                last_login TIMESTAMPTZ,
+                session_version INTEGER NOT NULL DEFAULT 1
             )
         """)
+        conn.execute("ALTER TABLE users ADD COLUMN IF NOT EXISTS session_version INTEGER NOT NULL DEFAULT 1")
         conn.execute("CREATE UNIQUE INDEX IF NOT EXISTS uq_users_username_lower ON users (LOWER(username))")
         conn.execute("CREATE UNIQUE INDEX IF NOT EXISTS uq_users_email_lower ON users (LOWER(email))")
 
@@ -440,8 +442,30 @@ def require_login():
     if not session.get("user_id"):
         if request.path.startswith("/api/"):
             return jsonify({"ok": False, "error": "authentication_required"}), 401
-
         return redirect(url_for("login", next=request.full_path if request.query_string else request.path))
+
+    # V42: invalidate old browser sessions after "Cerrar todas las sesiones"
+    # or after a password change.
+    conn = get_admin_db()
+    try:
+        user = conn.execute(
+            "SELECT id, username, email, is_active, session_version FROM users WHERE id=?",
+            (session["user_id"],)
+        ).fetchone()
+    finally:
+        conn.close()
+
+    if not user or not user["is_active"]:
+        session.clear()
+        return redirect(url_for("login"))
+
+    if session.get("session_version") != user["session_version"]:
+        session.clear()
+        return redirect(url_for("login"))
+
+    # Keep display data synchronized if username/email changed.
+    session["username"] = user["username"]
+    session["email"] = user["email"]
 
     return None
 
@@ -502,6 +526,7 @@ def register():
                     session["user_id"] = user_id
                     session["username"] = username
                     session["email"] = email
+                    session["session_version"] = 1
 
                     return redirect(url_for("index"))
             except Exception:
@@ -548,6 +573,7 @@ def login():
                 session["user_id"] = user["id"]
                 session["username"] = user["username"]
                 session["email"] = user["email"]
+                session["session_version"] = user.get("session_version", 1)
 
                 next_url = request.args.get("next", "")
                 if not next_url.startswith("/") or next_url.startswith("//"):
@@ -562,6 +588,124 @@ def login():
 
 @app.route("/logout", methods=["POST"])
 def logout():
+    session.clear()
+    return redirect(url_for("login"))
+
+
+@app.route("/account", methods=["GET", "POST"])
+def account_settings():
+    conn = get_admin_db()
+    user = conn.execute(
+        "SELECT id, username, email, created_at, last_login, session_version FROM users WHERE id=?",
+        (session["user_id"],)
+    ).fetchone()
+
+    if not user:
+        conn.close()
+        session.clear()
+        return redirect(url_for("login"))
+
+    error = None
+    success = None
+
+    if request.method == "POST":
+        username = request.form.get("username", "").strip()
+        email = request.form.get("email", "").strip().lower()
+
+        if not re.fullmatch(r"[A-Za-z0-9_.-]{3,40}", username):
+            error = "El usuario debe tener 3–40 caracteres y usar solo letras, números, punto, guion o guion bajo."
+        elif not re.fullmatch(r"[^@\s]+@[^@\s]+\.[^@\s]+", email):
+            error = "Introduce un correo electrónico válido."
+        else:
+            duplicate = conn.execute("""
+                SELECT id
+                FROM users
+                WHERE id<>?
+                  AND (LOWER(username)=LOWER(?) OR LOWER(email)=LOWER(?))
+                LIMIT 1
+            """, (session["user_id"], username, email)).fetchone()
+
+            if duplicate:
+                error = "Ese usuario o correo ya pertenece a otra cuenta."
+            else:
+                conn.execute(
+                    "UPDATE users SET username=?, email=? WHERE id=?",
+                    (username, email, session["user_id"])
+                )
+                conn.commit()
+                session["username"] = username
+                session["email"] = email
+                success = "Datos de cuenta actualizados."
+                user = conn.execute(
+                    "SELECT id, username, email, created_at, last_login, session_version FROM users WHERE id=?",
+                    (session["user_id"],)
+                ).fetchone()
+
+    conn.close()
+    return render_template("account.html", user=user, error=error, success=success)
+
+
+@app.route("/account/password", methods=["POST"])
+def change_password():
+    current_password = request.form.get("current_password", "")
+    new_password = request.form.get("new_password", "")
+    confirm_password = request.form.get("confirm_password", "")
+
+    conn = get_admin_db()
+    try:
+        user = conn.execute(
+            "SELECT id, password_hash, session_version FROM users WHERE id=?",
+            (session["user_id"],)
+        ).fetchone()
+
+        if not user or not check_password_hash(user["password_hash"], current_password):
+            return redirect(url_for("account_settings", password_error="current"))
+
+        if len(new_password) < 8:
+            return redirect(url_for("account_settings", password_error="short"))
+
+        if new_password != confirm_password:
+            return redirect(url_for("account_settings", password_error="mismatch"))
+
+        new_version = int(user["session_version"]) + 1
+
+        conn.execute("""
+            UPDATE users
+            SET password_hash=?, session_version=?
+            WHERE id=?
+        """, (
+            generate_password_hash(new_password),
+            new_version,
+            session["user_id"]
+        ))
+        conn.commit()
+
+        # Keep this browser logged in, invalidate all other sessions.
+        session["session_version"] = new_version
+
+        return redirect(url_for("account_settings", password_changed="1"))
+    finally:
+        conn.close()
+
+
+@app.route("/account/logout-all", methods=["POST"])
+def logout_all_sessions():
+    conn = get_admin_db()
+    try:
+        user = conn.execute(
+            "SELECT session_version FROM users WHERE id=?",
+            (session["user_id"],)
+        ).fetchone()
+
+        if user:
+            conn.execute(
+                "UPDATE users SET session_version=? WHERE id=?",
+                (int(user["session_version"]) + 1, session["user_id"])
+            )
+            conn.commit()
+    finally:
+        conn.close()
+
     session.clear()
     return redirect(url_for("login"))
 
