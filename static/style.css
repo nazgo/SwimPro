@@ -4620,3 +4620,16 @@ body {
 /* SwimPro V38 PWA */
 html{background:#03263c}body{overscroll-behavior-y:none;-webkit-tap-highlight-color:transparent}
 @media(display-mode:standalone){body{padding-top:env(safe-area-inset-top);padding-left:env(safe-area-inset-left);padding-right:env(safe-area-inset-right)}.bottom-nav,.nav-bottom,.sp-bottom-nav{padding-bottom:max(8px,env(safe-area-inset-bottom))!important}}
+
+
+/* ============================================================
+   SwimPro V41 — Cuenta / aislamiento de usuarios
+   ============================================================ */
+.sp41-account-row{display:grid;grid-template-columns:44px minmax(0,1fr);gap:10px;align-items:center;padding:10px 0}
+.sp41-account-avatar{width:44px;height:44px;display:grid;place-items:center;border-radius:50%;background:linear-gradient(145deg,#28d7ef,#397cea);color:#052b3d;font-size:16px;font-weight:900}
+.sp41-account-copy{min-width:0}
+.sp41-account-copy strong,.sp41-account-copy span,.sp41-account-copy small{display:block}
+.sp41-account-copy strong{font-size:11px}
+.sp41-account-copy span{margin-top:2px;color:#9fb8c4;font-size:8px;overflow:hidden;text-overflow:ellipsis}
+.sp41-account-copy small{margin-top:4px;color:#54d9ee;font-size:7px}
+.sp41-logout{width:100%;min-height:40px;border:1px solid rgba(255,102,126,.35);border-radius:8px;background:rgba(92,29,45,.26);color:#ff9aac;font-size:9px;font-weight:850}
