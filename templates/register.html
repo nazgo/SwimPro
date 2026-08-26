@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% block title %}Crear cuenta · SwimPro{% endblock %}
+{% block content %}
+
+<style>
+.auth-page{min-height:calc(100vh - 24px);display:grid;align-content:center;padding:20px 12px 34px;color:#f5fbff}
+.auth-brand{text-align:center;margin-bottom:18px}
+.auth-brand img{width:150px;max-width:52vw;height:auto;display:block;margin:0 auto 10px}
+.auth-brand h1{margin:0;font-size:25px;letter-spacing:-.02em}
+.auth-brand p{margin:6px auto 0;max-width:300px;color:#96afbb;font-size:10px;line-height:1.45}
+.auth-card{max-width:390px;width:100%;margin:0 auto;padding:15px;border:1px solid rgba(39,216,244,.24);border-radius:14px;background:linear-gradient(180deg,#073956,#062f49)}
+.auth-card h2{margin:0 0 13px;color:#27def4;font-size:11px;letter-spacing:.04em}
+.auth-form{display:grid;gap:11px}
+.auth-form label>span{display:block;margin-bottom:5px;font-size:9px}
+.auth-form input{width:100%;height:44px;box-sizing:border-box;border:1px solid #176886;border-radius:9px;background:#082f49;color:#f6fbff;padding:0 11px;font-size:16px;outline:none}
+.auth-form input:focus{border-color:#27def4;box-shadow:0 0 0 2px rgba(39,222,244,.08)}
+.auth-primary{height:44px;border:0;border-radius:9px;background:linear-gradient(90deg,#27d4eb,#3c91ef);color:#052b3d;font-size:10px;font-weight:900}
+.auth-error{margin-bottom:11px;padding:9px 10px;border:1px solid rgba(255,111,130,.35);border-radius:8px;background:rgba(91,27,44,.42);color:#ffd7df;font-size:9px;line-height:1.4}
+.auth-switch{margin:13px 0 0;text-align:center;color:#94aeba;font-size:9px}
+.auth-switch a{color:#27def4;font-weight:800}
+.auth-note{margin-top:11px;padding:9px;border-radius:8px;background:#062b42;color:#93adba;font-size:8px;line-height:1.45}
+</style>
+
+<div class="auth-page">
+  <div class="auth-brand">
+    <img src="{{ url_for('static', filename='swimpro_logo_user.png') }}" alt="SwimPro">
+    <h1>Crea tu cuenta</h1>
+    <p>Cada usuario tendrá su propio perfil, tiempos, competencias, objetivos y logros.</p>
+  </div>
+
+  <section class="auth-card">
+    <h2>NUEVA CUENTA</h2>
+
+    {% if error %}<div class="auth-error">{{ error }}</div>{% endif %}
+
+    <form method="post" class="auth-form">
+      <label>
+        <span>Usuario</span>
+        <input name="username" maxlength="40" autocomplete="username" required>
+      </label>
+
+      <label>
+        <span>Correo electrónico</span>
+        <input type="email" name="email" autocomplete="email" required>
+      </label>
+
+      <label>
+        <span>Contraseña</span>
+        <input type="password" name="password" minlength="8" autocomplete="new-password" required>
+      </label>
+
+      <label>
+        <span>Repetir contraseña</span>
+        <input type="password" name="confirm_password" minlength="8" autocomplete="new-password" required>
+      </label>
+
+      <button class="auth-primary" type="submit">Crear cuenta</button>
+    </form>
+
+    <div class="auth-note">
+      Si esta es la primera cuenta creada después de actualizar a V41,
+      SwimPro asignará automáticamente a esta cuenta los registros que ya existían.
+    </div>
+
+    <p class="auth-switch">¿Ya tienes cuenta? <a href="{{ url_for('login') }}">Iniciar sesión</a></p>
+  </section>
+</div>
+{% endblock %}

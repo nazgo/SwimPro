@@ -1,21 +1,5 @@
 {% extends "base.html" %}
-{% block title %}Perfil · SwimPro
-<section class="pwa-install-card" id="pwaInstallCard">
-  <img src="{{ url_for('static', filename='pwa/icon-192.png') }}" alt="">
-  <div><strong>Instalar SwimPro</strong><span id="pwaInstallText">Usa SwimPro como una app en tu teléfono.</span></div>
-  <button type="button" id="pwaInstallButton">Instalar</button>
-</section>
-<style>
-.pwa-install-card{display:grid;grid-template-columns:48px minmax(0,1fr) auto;gap:10px;align-items:center;margin:10px 0;padding:10px;border:1px solid rgba(39,216,244,.25);border-radius:10px;background:#06334f}
-.pwa-install-card>img{width:48px;height:48px;border-radius:11px}.pwa-install-card strong,.pwa-install-card span{display:block}.pwa-install-card strong{font-size:10px}.pwa-install-card span{margin-top:3px;color:#9fb8c4;font-size:8px;line-height:1.35}.pwa-install-card button{min-height:34px;padding:0 10px;border:0;border-radius:7px;background:linear-gradient(90deg,#27d4eb,#3c91ef);color:#052b3d;font-size:8px;font-weight:850}.pwa-install-card.installed button{display:none}
-</style>
-<script>
-(()=>{const c=document.getElementById("pwaInstallCard"),b=document.getElementById("pwaInstallButton"),t=document.getElementById("pwaInstallText");if(!c||!b||!t||!window.SwimProPWA)return;
-if(SwimProPWA.isStandalone()){c.classList.add("installed");t.textContent="SwimPro ya está instalada en este dispositivo.";return;}
-if(SwimProPWA.isIOS()){b.textContent="Cómo instalar";b.addEventListener("click",()=>t.textContent="En Safari toca Compartir y luego “Añadir a pantalla de inicio”.");return;}
-b.addEventListener("click",async()=>{const ok=await SwimProPWA.install();if(ok){c.classList.add("installed");t.textContent="SwimPro fue instalada correctamente.";}else if(!SwimProPWA.canInstall()){t.textContent="Abre SwimPro en Chrome y usa “Instalar app” o “Añadir a pantalla de inicio”.";}});})();
-</script>
-{% endblock %}
+{% block title %}Perfil · SwimPro{% endblock %}
 
 {% block content %}
 <div class="sp-profile-v13">
@@ -134,6 +118,22 @@ b.addEventListener("click",async()=>{const ok=await SwimProPWA.install();if(ok){
         </svg>
       </a>
     </div>
+  </section>
+
+
+  <section class="sp-profile-card sp41-account-card">
+    <div class="sp-profile-card-title">CUENTA</div>
+    <div class="sp41-account-row">
+      <div class="sp41-account-avatar">{{ (session.get('username') or 'S')[0]|upper }}</div>
+      <div class="sp41-account-copy">
+        <strong>{{ session.get('username') }}</strong>
+        <span>{{ session.get('email') }}</span>
+        <small>Solo tú puedes ver tus registros.</small>
+      </div>
+    </div>
+    <form method="post" action="{{ url_for('logout') }}">
+      <button type="submit" class="sp41-logout">Cerrar sesión</button>
+    </form>
   </section>
 
   <section class="sp-profile-info">
