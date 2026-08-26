@@ -1,6 +1,11 @@
 import os
 from flask import Flask, render_template, request, redirect, url_for, jsonify, Response
 import sqlite3
+try:
+    import psycopg
+    from psycopg.rows import dict_row
+except ImportError:
+    psycopg = None
 from pathlib import Path
 from datetime import datetime, date
 import csv
@@ -11,6 +16,7 @@ from werkzeug.middleware.proxy_fix import ProxyFix
 app = Flask(__name__)
 app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1, x_proto=1, x_host=1)
 DB = Path(__file__).with_name("swimtracker.db")
+DATABASE_URL = os.getenv("DATABASE_URL", "").strip()
 
 STYLES = ["Libre", "Espalda", "Pecho", "Mariposa", "Combinado"]
 
@@ -22,7 +28,61 @@ OFFICIAL_EVENTS = {
     "Combinado": {25: [100, 200, 400], 50: [200, 400]},
 }
 
+class CursorResult:
+    def __init__(self, cursor, lastrowid=None):
+        self._cursor = cursor
+        self.lastrowid = lastrowid
+    def fetchone(self): return self._cursor.fetchone()
+    def fetchall(self): return self._cursor.fetchall()
+    def __iter__(self): return iter(self._cursor)
+
+
+class PostgresConnection:
+    """Small compatibility layer so the existing SQLite-style queries work on PostgreSQL."""
+    def __init__(self, conn):
+        self._conn = conn
+
+    @staticmethod
+    def _sql(sql):
+        sql = sql.replace("?", "%s")
+        sql = sql.replace(
+            "INSERT OR IGNORE INTO profile (id, name) VALUES (1, 'Mi perfil')",
+            "INSERT INTO profile (id, name) VALUES (1, 'Mi perfil') ON CONFLICT (id) DO NOTHING",
+        )
+        if "INSERT OR REPLACE INTO splits" in sql:
+            sql = sql.replace("INSERT OR REPLACE INTO splits", "INSERT INTO splits")
+            sql += " ON CONFLICT (swim_id, split_distance) DO UPDATE SET split_cs=EXCLUDED.split_cs"
+        return sql
+
+    def execute(self, sql, params=()):
+        sql = self._sql(sql)
+        # The app uses lastrowid for these two inserts. PostgreSQL uses RETURNING.
+        stripped = sql.lstrip().upper()
+        needs_id = (stripped.startswith("INSERT INTO SWIMS") or stripped.startswith("INSERT INTO COMPETITIONS")) and " RETURNING " not in stripped
+        if needs_id:
+            sql = sql.rstrip().rstrip(";") + " RETURNING id"
+        cur = self._conn.execute(sql, params)
+        lastrowid = None
+        if needs_id:
+            row = cur.fetchone()
+            lastrowid = row["id"] if row else None
+        return CursorResult(cur, lastrowid)
+
+    def commit(self):
+        return self._conn.commit()
+
+    def rollback(self):
+        return self._conn.rollback()
+
+    def close(self):
+        return self._conn.close()
+
+
 def get_db():
+    if DATABASE_URL:
+        if psycopg is None:
+            raise RuntimeError("DATABASE_URL está configurada pero falta psycopg. Ejecuta pip install -r requirements.txt")
+        return PostgresConnection(psycopg.connect(DATABASE_URL, row_factory=dict_row))
     conn = sqlite3.connect(DB)
     conn.row_factory = sqlite3.Row
     conn.execute("PRAGMA foreign_keys = ON")
@@ -42,90 +102,94 @@ def available_seasons(conn):
     ]
 
 def ensure_column(conn, table, column, definition):
-    cols = [r["name"] for r in conn.execute(f"PRAGMA table_info({table})").fetchall()]
-    if column not in cols:
-        conn.execute(f"ALTER TABLE {table} ADD COLUMN {column} {definition}")
+    if DATABASE_URL:
+        row = conn.execute(
+            "SELECT 1 FROM information_schema.columns WHERE table_schema='public' AND table_name=? AND column_name=?",
+            (table, column),
+        ).fetchone()
+        if not row:
+            conn.execute(f"ALTER TABLE {table} ADD COLUMN {column} {definition}")
+    else:
+        cols = [r["name"] for r in conn.execute(f"PRAGMA table_info({table})").fetchall()]
+        if column not in cols:
+            conn.execute(f"ALTER TABLE {table} ADD COLUMN {column} {definition}")
 
 def init_db():
     conn = get_db()
-    conn.executescript("""
-    CREATE TABLE IF NOT EXISTS profile (
-        id INTEGER PRIMARY KEY CHECK (id = 1),
-        name TEXT NOT NULL DEFAULT 'Mi perfil',
-        birth_date TEXT,
-        sex TEXT
-    );
-
-    CREATE TABLE IF NOT EXISTS competitions (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        name TEXT NOT NULL,
-        competition_date TEXT NOT NULL,
-        location TEXT,
-        pool_length INTEGER NOT NULL,
-        notes TEXT,
-        created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
-    );
-
-    CREATE TABLE IF NOT EXISTS swims (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        distance INTEGER NOT NULL,
-        stroke TEXT NOT NULL,
-        pool_length INTEGER NOT NULL,
-        time_cs INTEGER NOT NULL,
-        swim_date TEXT NOT NULL,
-        kind TEXT NOT NULL DEFAULT 'Competencia',
-        event_name TEXT,
-        notes TEXT,
-        competition_id INTEGER,
-        planned_event_id INTEGER,
-        created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
-        FOREIGN KEY(competition_id) REFERENCES competitions(id) ON DELETE SET NULL
-    );
-
-    CREATE TABLE IF NOT EXISTS competition_events (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        competition_id INTEGER NOT NULL,
-        distance INTEGER NOT NULL,
-        stroke TEXT NOT NULL,
-        target_cs INTEGER,
-        status TEXT NOT NULL DEFAULT 'Pendiente',
-        created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
-        FOREIGN KEY(competition_id) REFERENCES competitions(id) ON DELETE CASCADE
-    );
-
-    CREATE TABLE IF NOT EXISTS goals (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        distance INTEGER NOT NULL,
-        stroke TEXT NOT NULL,
-        pool_length INTEGER NOT NULL,
-        target_cs INTEGER NOT NULL,
-        UNIQUE(distance, stroke, pool_length)
-    );
-
-    CREATE TABLE IF NOT EXISTS splits (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        swim_id INTEGER NOT NULL,
-        split_distance INTEGER NOT NULL,
-        split_cs INTEGER NOT NULL,
-        FOREIGN KEY(swim_id) REFERENCES swims(id) ON DELETE CASCADE,
-        UNIQUE(swim_id, split_distance)
-    );
-
-    INSERT OR IGNORE INTO profile (id, name) VALUES (1, 'Mi perfil');
-    """)
-    ensure_column(conn, "swims", "competition_id", "INTEGER")
-    ensure_column(conn, "swims", "planned_event_id", "INTEGER")
-
-    # V27 competition event metadata migration
-    existing_event_columns = {
-        row["name"] for row in conn.execute("PRAGMA table_info(competition_events)").fetchall()
-    }
-    if "position" not in existing_event_columns:
-        conn.execute("ALTER TABLE competition_events ADD COLUMN position TEXT")
-    if "notes" not in existing_event_columns:
-        conn.execute("ALTER TABLE competition_events ADD COLUMN notes TEXT")
+    if DATABASE_URL:
+        statements = [
+            """CREATE TABLE IF NOT EXISTS profile (id INTEGER PRIMARY KEY CHECK (id = 1), name TEXT NOT NULL DEFAULT 'Mi perfil', birth_date TEXT, sex TEXT)""",
+            """CREATE TABLE IF NOT EXISTS competitions (id BIGSERIAL PRIMARY KEY, name TEXT NOT NULL, competition_date TEXT NOT NULL, location TEXT, pool_length INTEGER NOT NULL, notes TEXT, created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP)""",
+            """CREATE TABLE IF NOT EXISTS swims (id BIGSERIAL PRIMARY KEY, distance INTEGER NOT NULL, stroke TEXT NOT NULL, pool_length INTEGER NOT NULL, time_cs INTEGER NOT NULL, swim_date TEXT NOT NULL, kind TEXT NOT NULL DEFAULT 'Competencia', event_name TEXT, notes TEXT, competition_id BIGINT REFERENCES competitions(id) ON DELETE SET NULL, planned_event_id BIGINT, created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP)""",
+            """CREATE TABLE IF NOT EXISTS competition_events (id BIGSERIAL PRIMARY KEY, competition_id BIGINT NOT NULL REFERENCES competitions(id) ON DELETE CASCADE, distance INTEGER NOT NULL, stroke TEXT NOT NULL, target_cs INTEGER, status TEXT NOT NULL DEFAULT 'Pendiente', position TEXT, notes TEXT, created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP)""",
+            """CREATE TABLE IF NOT EXISTS goals (id BIGSERIAL PRIMARY KEY, distance INTEGER NOT NULL, stroke TEXT NOT NULL, pool_length INTEGER NOT NULL, target_cs INTEGER NOT NULL, UNIQUE(distance, stroke, pool_length))""",
+            """CREATE TABLE IF NOT EXISTS splits (id BIGSERIAL PRIMARY KEY, swim_id BIGINT NOT NULL REFERENCES swims(id) ON DELETE CASCADE, split_distance INTEGER NOT NULL, split_cs INTEGER NOT NULL, UNIQUE(swim_id, split_distance))""",
+        ]
+        for statement in statements:
+            conn.execute(statement)
+        conn.execute("INSERT INTO profile (id, name) VALUES (1, 'Mi perfil') ON CONFLICT (id) DO NOTHING")
+    else:
+        conn._conn if False else None
+        # Keep the original SQLite schema for local/offline development.
+        script = """
+        CREATE TABLE IF NOT EXISTS profile (id INTEGER PRIMARY KEY CHECK (id = 1), name TEXT NOT NULL DEFAULT 'Mi perfil', birth_date TEXT, sex TEXT);
+        CREATE TABLE IF NOT EXISTS competitions (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL, competition_date TEXT NOT NULL, location TEXT, pool_length INTEGER NOT NULL, notes TEXT, created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP);
+        CREATE TABLE IF NOT EXISTS swims (id INTEGER PRIMARY KEY AUTOINCREMENT, distance INTEGER NOT NULL, stroke TEXT NOT NULL, pool_length INTEGER NOT NULL, time_cs INTEGER NOT NULL, swim_date TEXT NOT NULL, kind TEXT NOT NULL DEFAULT 'Competencia', event_name TEXT, notes TEXT, competition_id INTEGER, planned_event_id INTEGER, created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP, FOREIGN KEY(competition_id) REFERENCES competitions(id) ON DELETE SET NULL);
+        CREATE TABLE IF NOT EXISTS competition_events (id INTEGER PRIMARY KEY AUTOINCREMENT, competition_id INTEGER NOT NULL, distance INTEGER NOT NULL, stroke TEXT NOT NULL, target_cs INTEGER, status TEXT NOT NULL DEFAULT 'Pendiente', created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP, FOREIGN KEY(competition_id) REFERENCES competitions(id) ON DELETE CASCADE);
+        CREATE TABLE IF NOT EXISTS goals (id INTEGER PRIMARY KEY AUTOINCREMENT, distance INTEGER NOT NULL, stroke TEXT NOT NULL, pool_length INTEGER NOT NULL, target_cs INTEGER NOT NULL, UNIQUE(distance, stroke, pool_length));
+        CREATE TABLE IF NOT EXISTS splits (id INTEGER PRIMARY KEY AUTOINCREMENT, swim_id INTEGER NOT NULL, split_distance INTEGER NOT NULL, split_cs INTEGER NOT NULL, FOREIGN KEY(swim_id) REFERENCES swims(id) ON DELETE CASCADE, UNIQUE(swim_id, split_distance));
+        INSERT OR IGNORE INTO profile (id, name) VALUES (1, 'Mi perfil');
+        """
+        conn.executescript(script)
+    ensure_column(conn, "swims", "competition_id", "BIGINT" if DATABASE_URL else "INTEGER")
+    ensure_column(conn, "swims", "planned_event_id", "BIGINT" if DATABASE_URL else "INTEGER")
+    ensure_column(conn, "competition_events", "position", "TEXT")
+    ensure_column(conn, "competition_events", "notes", "TEXT")
     conn.commit()
     conn.close()
+
+
+def migrate_bundled_sqlite_to_postgres():
+    """One-time seed of Neon from the bundled SQLite DB when Neon is still empty."""
+    if not DATABASE_URL or not DB.exists():
+        return
+    pg = get_db()
+    try:
+        existing = pg.execute("SELECT COUNT(*) AS n FROM swims").fetchone()["n"]
+        existing_comp = pg.execute("SELECT COUNT(*) AS n FROM competitions").fetchone()["n"]
+        if existing or existing_comp:
+            return
+        src = sqlite3.connect(DB)
+        src.row_factory = sqlite3.Row
+        for table in ("profile", "competitions", "competition_events", "swims", "splits", "goals"):
+            rows = src.execute(f"SELECT * FROM {table} ORDER BY id").fetchall()
+            for row in rows:
+                data = dict(row)
+                cols = list(data.keys())
+                placeholders = ",".join(["?"] * len(cols))
+                col_sql = ",".join(cols)
+                pg.execute(
+                    f"INSERT INTO {table} ({col_sql}) VALUES ({placeholders}) ON CONFLICT DO NOTHING",
+                    tuple(data[c] for c in cols),
+                )
+        src.close()
+        # Explicit IDs were copied, so advance PostgreSQL sequences.
+        for table in ("competitions", "competition_events", "swims", "splits", "goals"):
+            pg.execute(
+                f"SELECT setval(pg_get_serial_sequence('{table}','id'), COALESCE((SELECT MAX(id) FROM {table}), 1), true)"
+            )
+        pg.commit()
+        print("✅ Datos existentes migrados de SQLite a Neon PostgreSQL")
+    except Exception:
+        pg.rollback()
+        raise
+    finally:
+        pg.close()
+
+
+# Gunicorn imports app.py; initialize the schema and seed Neon before serving requests.
+init_db()
+migrate_bundled_sqlite_to_postgres()
 
 def parse_time(value: str) -> int:
     value = value.strip().replace(",", ".")
