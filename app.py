@@ -1,5 +1,5 @@
 import os
-from flask import Flask, render_template, request, redirect, url_for, jsonify, Response
+from flask import Flask, render_template, request, redirect, url_for, jsonify, Response, session, has_request_context
 import sqlite3
 try:
     import psycopg
@@ -11,10 +11,19 @@ from datetime import datetime, date
 import csv
 import io
 import json
+import re
 from werkzeug.middleware.proxy_fix import ProxyFix
+from werkzeug.security import generate_password_hash, check_password_hash
 
 app = Flask(__name__)
 app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1, x_proto=1, x_host=1)
+app.secret_key = os.environ.get("SECRET_KEY", "swimpro-dev-secret-change-me")
+app.config.update(
+    SESSION_COOKIE_HTTPONLY=True,
+    SESSION_COOKIE_SAMESITE="Lax",
+    SESSION_COOKIE_SECURE=bool(os.environ.get("DATABASE_URL")),
+    PERMANENT_SESSION_LIFETIME=60 * 60 * 24 * 30,
+)
 DB = Path(__file__).with_name("swimtracker.db")
 DATABASE_URL = os.getenv("DATABASE_URL", "").strip()
 
@@ -52,6 +61,12 @@ class PostgresConnection:
         if "INSERT OR REPLACE INTO splits" in sql:
             sql = sql.replace("INSERT OR REPLACE INTO splits", "INSERT INTO splits")
             sql += " ON CONFLICT (swim_id, split_distance) DO UPDATE SET split_cs=EXCLUDED.split_cs"
+
+        # V41: goals are unique per user, not globally.
+        sql = sql.replace(
+            "ON CONFLICT(distance, stroke, pool_length)",
+            "ON CONFLICT(user_id, distance, stroke, pool_length)"
+        )
         return sql
 
     def execute(self, sql, params=()):
@@ -79,10 +94,41 @@ class PostgresConnection:
 
 
 def get_db():
+    """User-scoped DB connection.
+
+    On PostgreSQL/Neon every protected request sets app.user_id in the
+    PostgreSQL session. Row Level Security then guarantees that every query
+    can only see the authenticated user's rows.
+    """
     if DATABASE_URL:
         if psycopg is None:
             raise RuntimeError("DATABASE_URL está configurada pero falta psycopg. Ejecuta pip install -r requirements.txt")
-        return PostgresConnection(psycopg.connect(DATABASE_URL, row_factory=dict_row))
+
+        raw = psycopg.connect(DATABASE_URL, row_factory=dict_row)
+
+        if has_request_context() and session.get("user_id"):
+            raw.execute(
+                "SELECT set_config('app.user_id', %s, false)",
+                (str(session["user_id"]),)
+            )
+
+        return PostgresConnection(raw)
+
+    conn = sqlite3.connect(DB)
+    conn.row_factory = sqlite3.Row
+    conn.execute("PRAGMA foreign_keys = ON")
+    return conn
+
+
+def get_admin_db():
+    """Administrative connection used only for authentication and migrations."""
+    if DATABASE_URL:
+        if psycopg is None:
+            raise RuntimeError("Falta psycopg para conectar a Neon.")
+        raw = psycopg.connect(DATABASE_URL, row_factory=dict_row)
+        raw.execute("SELECT set_config('app.admin', '1', false)")
+        return PostgresConnection(raw)
+
     conn = sqlite3.connect(DB)
     conn.row_factory = sqlite3.Row
     conn.execute("PRAGMA foreign_keys = ON")
@@ -127,7 +173,6 @@ def init_db():
         ]
         for statement in statements:
             conn.execute(statement)
-        conn.execute("INSERT INTO profile (id, name) VALUES (1, 'Mi perfil') ON CONFLICT (id) DO NOTHING")
     else:
         conn._conn if False else None
         # Keep the original SQLite schema for local/offline development.
@@ -187,9 +232,102 @@ def migrate_bundled_sqlite_to_postgres():
         pg.close()
 
 
+
+def init_auth_db():
+    """V41 schema migration: users + per-user ownership + PostgreSQL RLS."""
+    if not DATABASE_URL:
+        # Production multi-user isolation is implemented with PostgreSQL RLS.
+        # Local SQLite remains available for single-user development.
+        return
+
+    conn = get_admin_db()
+    try:
+        conn.execute("""
+            CREATE TABLE IF NOT EXISTS users (
+                id BIGSERIAL PRIMARY KEY,
+                username VARCHAR(40) NOT NULL,
+                email VARCHAR(255) NOT NULL,
+                password_hash TEXT NOT NULL,
+                is_active BOOLEAN NOT NULL DEFAULT TRUE,
+                created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                last_login TIMESTAMPTZ
+            )
+        """)
+        conn.execute("CREATE UNIQUE INDEX IF NOT EXISTS uq_users_username_lower ON users (LOWER(username))")
+        conn.execute("CREATE UNIQUE INDEX IF NOT EXISTS uq_users_email_lower ON users (LOWER(email))")
+
+        owned_tables = ("profile", "competitions", "swims", "competition_events", "goals", "splits")
+
+        for table in owned_tables:
+            conn.execute(
+                f"ALTER TABLE {table} ADD COLUMN IF NOT EXISTS user_id BIGINT REFERENCES users(id) ON DELETE CASCADE"
+            )
+            conn.execute(
+                f"""ALTER TABLE {table}
+                    ALTER COLUMN user_id
+                    SET DEFAULT (NULLIF(current_setting('app.user_id', true), '')::BIGINT)"""
+            )
+            conn.execute(f"CREATE INDEX IF NOT EXISTS ix_{table}_user_id ON {table}(user_id)")
+
+        # profile previously had id=1 as a global PK. Each user needs their own id=1 row.
+        conn.execute("ALTER TABLE profile DROP CONSTRAINT IF EXISTS profile_pkey")
+        conn.execute("CREATE UNIQUE INDEX IF NOT EXISTS uq_profile_user_row ON profile(user_id, id)")
+
+        # Goals were globally unique in V40; V41 makes them unique per user.
+        conn.execute("ALTER TABLE goals DROP CONSTRAINT IF EXISTS goals_distance_stroke_pool_length_key")
+        conn.execute(
+            "CREATE UNIQUE INDEX IF NOT EXISTS uq_goals_user_event "
+            "ON goals(user_id, distance, stroke, pool_length)"
+        )
+
+        # PostgreSQL Row Level Security is the final protection layer.
+        policy_expr = (
+            "(current_setting('app.admin', true) = '1' "
+            "OR user_id = NULLIF(current_setting('app.user_id', true), '')::BIGINT)"
+        )
+
+        for table in owned_tables:
+            conn.execute(f"ALTER TABLE {table} ENABLE ROW LEVEL SECURITY")
+            conn.execute(f"ALTER TABLE {table} FORCE ROW LEVEL SECURITY")
+            conn.execute(f"DROP POLICY IF EXISTS swimpro_user_isolation ON {table}")
+            conn.execute(
+                f"CREATE POLICY swimpro_user_isolation ON {table} "
+                f"USING {policy_expr} WITH CHECK {policy_expr}"
+            )
+
+        conn.commit()
+    except Exception:
+        conn.rollback()
+        raise
+    finally:
+        conn.close()
+
+
+def _claim_legacy_data(conn, user_id):
+    """Assign all pre-V41 rows to the first account that registers."""
+    for table in ("profile", "competitions", "swims", "competition_events", "goals", "splits"):
+        conn.execute(
+            f"UPDATE {table} SET user_id=? WHERE user_id IS NULL",
+            (user_id,)
+        )
+
+
+def _ensure_user_profile(conn, user_id, username):
+    row = conn.execute(
+        "SELECT id FROM profile WHERE user_id=? AND id=1",
+        (user_id,)
+    ).fetchone()
+    if not row:
+        conn.execute(
+            "INSERT INTO profile (id, name, user_id) VALUES (1, ?, ?)",
+            (username, user_id)
+        )
+
+
 # Gunicorn imports app.py; initialize the schema and seed Neon before serving requests.
 init_db()
 migrate_bundled_sqlite_to_postgres()
+init_auth_db()
 
 def parse_time(value: str) -> int:
     value = value.strip().replace(",", ".")
@@ -252,6 +390,147 @@ def pb_for(conn, distance, stroke, pool_length):
         WHERE distance=? AND stroke=? AND pool_length=?
     """, (distance, stroke, pool_length)).fetchone()
     return row["pb"] if row else None
+
+
+AUTH_PUBLIC_ENDPOINTS = {"login", "register", "offline", "static"}
+
+
+@app.before_request
+def require_login():
+    endpoint = request.endpoint or ""
+
+    if endpoint in AUTH_PUBLIC_ENDPOINTS or endpoint.startswith("static"):
+        return None
+
+    if not session.get("user_id"):
+        if request.path.startswith("/api/"):
+            return jsonify({"ok": False, "error": "authentication_required"}), 401
+
+        return redirect(url_for("login", next=request.full_path if request.query_string else request.path))
+
+    return None
+
+
+@app.route("/register", methods=["GET", "POST"])
+def register():
+    if session.get("user_id"):
+        return redirect(url_for("index"))
+
+    error = None
+
+    if request.method == "POST":
+        username = request.form.get("username", "").strip()
+        email = request.form.get("email", "").strip().lower()
+        password = request.form.get("password", "")
+        confirm = request.form.get("confirm_password", "")
+
+        if not re.fullmatch(r"[A-Za-z0-9_.-]{3,40}", username):
+            error = "El usuario debe tener 3–40 caracteres y usar solo letras, números, punto, guion o guion bajo."
+        elif not re.fullmatch(r"[^@\s]+@[^@\s]+\.[^@\s]+", email):
+            error = "Introduce un correo electrónico válido."
+        elif len(password) < 8:
+            error = "La contraseña debe tener al menos 8 caracteres."
+        elif password != confirm:
+            error = "Las contraseñas no coinciden."
+
+        if not error:
+            conn = get_admin_db()
+            try:
+                exists = conn.execute(
+                    "SELECT id FROM users WHERE LOWER(username)=LOWER(?) OR LOWER(email)=LOWER(?)",
+                    (username, email)
+                ).fetchone()
+
+                if exists:
+                    error = "Ese usuario o correo ya está registrado."
+                else:
+                    count_before = conn.execute("SELECT COUNT(*) AS n FROM users").fetchone()["n"]
+
+                    row = conn.execute("""
+                        INSERT INTO users (username, email, password_hash)
+                        VALUES (?, ?, ?)
+                        RETURNING id
+                    """, (username, email, generate_password_hash(password))).fetchone()
+
+                    user_id = row["id"]
+
+                    # The first account receives every existing V40 record.
+                    if count_before == 0:
+                        _claim_legacy_data(conn, user_id)
+
+                    _ensure_user_profile(conn, user_id, username)
+
+                    conn.commit()
+
+                    session.clear()
+                    session.permanent = True
+                    session["user_id"] = user_id
+                    session["username"] = username
+                    session["email"] = email
+
+                    return redirect(url_for("index"))
+            except Exception:
+                conn.rollback()
+                raise
+            finally:
+                conn.close()
+
+    return render_template("register.html", error=error)
+
+
+@app.route("/login", methods=["GET", "POST"])
+def login():
+    if session.get("user_id"):
+        return redirect(url_for("index"))
+
+    error = None
+
+    if request.method == "POST":
+        identity = request.form.get("identity", "").strip()
+        password = request.form.get("password", "")
+
+        conn = get_admin_db()
+        try:
+            user = conn.execute("""
+                SELECT *
+                FROM users
+                WHERE is_active=TRUE
+                  AND (LOWER(email)=LOWER(?) OR LOWER(username)=LOWER(?))
+                LIMIT 1
+            """, (identity, identity)).fetchone()
+
+            if not user or not check_password_hash(user["password_hash"], password):
+                error = "Usuario/correo o contraseña incorrectos."
+            else:
+                conn.execute(
+                    "UPDATE users SET last_login=CURRENT_TIMESTAMP WHERE id=?",
+                    (user["id"],)
+                )
+                conn.commit()
+
+                session.clear()
+                session.permanent = True
+                session["user_id"] = user["id"]
+                session["username"] = user["username"]
+                session["email"] = user["email"]
+
+                next_url = request.args.get("next", "")
+                if not next_url.startswith("/") or next_url.startswith("//"):
+                    next_url = url_for("index")
+
+                return redirect(next_url)
+        finally:
+            conn.close()
+
+    return render_template("login.html", error=error)
+
+
+@app.route("/logout", methods=["POST"])
+def logout():
+    session.clear()
+    return redirect(url_for("login"))
+
+
 
 @app.route("/offline")
 def offline():
