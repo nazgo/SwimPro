@@ -19,6 +19,8 @@
 .auth-switch{margin:13px 0 0;text-align:center;color:#94aeba;font-size:9px}
 .auth-switch a{color:#27def4;font-weight:800}
 .auth-note{margin-top:11px;padding:9px;border-radius:8px;background:#062b42;color:#93adba;font-size:8px;line-height:1.45}
+.auth-forgot{display:block;text-align:center;margin-top:1px;color:#61d8ec;font-size:9px}
+.auth-success{margin-bottom:11px;padding:9px 10px;border:1px solid rgba(61,226,174,.3);border-radius:8px;background:rgba(16,77,67,.32);color:#77e9c3;font-size:9px}
 </style>
 
 <div class="auth-page">
@@ -29,6 +31,9 @@
   </div>
 
   <section class="auth-card">
+    {% if request.args.get('reset') == 'success' %}
+      <div class="auth-success">Contraseña actualizada. Ya puedes iniciar sesión.</div>
+    {% endif %}
     <h2>INICIAR SESIÓN</h2>
 
     {% if error %}<div class="auth-error">{{ error }}</div>{% endif %}
@@ -45,6 +50,7 @@
       </label>
 
       <button class="auth-primary" type="submit">Entrar a SwimPro</button>
+      <a class="auth-forgot" href="{{ url_for('forgot_password') }}">¿Olvidaste tu contraseña?</a>
     </form>
 
     <p class="auth-switch">¿Aún no tienes cuenta? <a href="{{ url_for('register') }}">Crear cuenta</a></p>
