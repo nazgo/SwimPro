@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+{% block title %}Mi cuenta · SwimPro{% endblock %}
+{% block content %}
+<div class="sp42-page">
+
+  <section class="sp42-head">
+    <a href="{{ url_for('profile') }}" class="sp42-back" aria-label="Volver">
+      <svg viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></svg>
+    </a>
+    <span>CUENTA</span>
+    <h1>Seguridad y acceso</h1>
+    <p>Administra tus credenciales y sesiones de SwimPro.</p>
+  </section>
+
+  {% if error %}<div class="sp42-alert error">{{ error }}</div>{% endif %}
+  {% if success %}<div class="sp42-alert success">{{ success }}</div>{% endif %}
+
+  {% if request.args.get('password_changed') %}
+    <div class="sp42-alert success">Contraseña actualizada. Las demás sesiones fueron cerradas.</div>
+  {% endif %}
+  {% if request.args.get('password_error') == 'current' %}
+    <div class="sp42-alert error">La contraseña actual no es correcta.</div>
+  {% elif request.args.get('password_error') == 'short' %}
+    <div class="sp42-alert error">La nueva contraseña debe tener al menos 8 caracteres.</div>
+  {% elif request.args.get('password_error') == 'mismatch' %}
+    <div class="sp42-alert error">Las nuevas contraseñas no coinciden.</div>
+  {% endif %}
+
+  <section class="sp42-card">
+    <div class="sp42-title">DATOS DE LA CUENTA</div>
+    <form method="post" class="sp42-form">
+      <label>
+        <span>Usuario</span>
+        <input name="username" value="{{ user.username }}" maxlength="40" required>
+      </label>
+
+      <label>
+        <span>Correo electrónico</span>
+        <input type="email" name="email" value="{{ user.email }}" required>
+      </label>
+
+      <button type="submit" class="sp42-primary">Guardar cambios</button>
+    </form>
+  </section>
+
+  <section class="sp42-card">
+    <div class="sp42-title">CAMBIAR CONTRASEÑA</div>
+    <form method="post" action="{{ url_for('change_password') }}" class="sp42-form">
+      <label>
+        <span>Contraseña actual</span>
+        <input type="password" name="current_password" autocomplete="current-password" required>
+      </label>
+
+      <label>
+        <span>Nueva contraseña</span>
+        <input type="password" name="new_password" minlength="8" autocomplete="new-password" required>
+      </label>
+
+      <label>
+        <span>Repetir nueva contraseña</span>
+        <input type="password" name="confirm_password" minlength="8" autocomplete="new-password" required>
+      </label>
+
+      <button type="submit" class="sp42-primary">Cambiar contraseña</button>
+    </form>
+  </section>
+
+  <section class="sp42-card danger">
+    <div class="sp42-title">SESIONES ABIERTAS</div>
+    <p class="sp42-copy">
+      Si crees que tu cuenta quedó abierta en otro teléfono o computador,
+      puedes cerrar todas las sesiones de una sola vez.
+    </p>
+
+    <form method="post" action="{{ url_for('logout_all_sessions') }}"
+          onsubmit="return confirm('¿Cerrar todas las sesiones de SwimPro?');">
+      <button type="submit" class="sp42-danger">Cerrar todas las sesiones</button>
+    </form>
+  </section>
+
+</div>
+{% endblock %}

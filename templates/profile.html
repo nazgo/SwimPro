@@ -131,6 +131,7 @@
         <small>Solo tú puedes ver tus registros.</small>
       </div>
     </div>
+    <a href="{{ url_for('account_settings') }}" class="sp42-account-link">Administrar cuenta</a>
     <form method="post" action="{{ url_for('logout') }}">
       <button type="submit" class="sp41-logout">Cerrar sesión</button>
     </form>
