@@ -1,4 +1,9 @@
 import os
+from urllib.parse import urljoin
+from email.message import EmailMessage
+import smtplib
+import hashlib
+import secrets
 from flask import Flask, render_template, request, redirect, url_for, jsonify, Response, session, has_request_context
 import sqlite3
 try:
@@ -263,6 +268,21 @@ def init_auth_db():
         conn.execute("CREATE UNIQUE INDEX IF NOT EXISTS uq_users_username_lower ON users (LOWER(username))")
         conn.execute("CREATE UNIQUE INDEX IF NOT EXISTS uq_users_email_lower ON users (LOWER(email))")
 
+        conn.execute("""
+            CREATE TABLE IF NOT EXISTS password_reset_tokens (
+                id BIGSERIAL PRIMARY KEY,
+                user_id BIGINT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+                token_hash VARCHAR(64) NOT NULL UNIQUE,
+                created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                expires_at TIMESTAMPTZ NOT NULL,
+                used_at TIMESTAMPTZ
+            )
+        """)
+        conn.execute(
+            "CREATE INDEX IF NOT EXISTS ix_password_reset_tokens_user "
+            "ON password_reset_tokens(user_id, expires_at)"
+        )
+
         owned_tables = ("profile", "competitions", "swims", "competition_events", "goals", "splits")
 
         # Dedicated runtime role. Roles created with SQL in Neon do not
@@ -429,7 +449,7 @@ def pb_for(conn, distance, stroke, pool_length):
     return row["pb"] if row else None
 
 
-AUTH_PUBLIC_ENDPOINTS = {"login", "register", "offline", "static"}
+AUTH_PUBLIC_ENDPOINTS = {"login", "register", "forgot_password", "reset_password", "offline", "static"}
 
 
 @app.before_request
@@ -468,6 +488,66 @@ def require_login():
     session["email"] = user["email"]
 
     return None
+
+
+
+def _password_reset_configured():
+    return all([
+        os.environ.get("SMTP_HOST"),
+        os.environ.get("SMTP_USERNAME"),
+        os.environ.get("SMTP_PASSWORD"),
+        os.environ.get("MAIL_FROM"),
+    ])
+
+
+def _send_password_reset_email(to_email, username, reset_url):
+    """Send reset email using SMTP credentials stored only in Render env vars."""
+    host = os.environ.get("SMTP_HOST")
+    port = int(os.environ.get("SMTP_PORT", "587"))
+    username_smtp = os.environ.get("SMTP_USERNAME")
+    password_smtp = os.environ.get("SMTP_PASSWORD")
+    mail_from = os.environ.get("MAIL_FROM")
+    use_ssl = os.environ.get("SMTP_SSL", "").lower() in ("1", "true", "yes")
+
+    if not _password_reset_configured():
+        raise RuntimeError("SMTP no está configurado.")
+
+    msg = EmailMessage()
+    msg["Subject"] = "Restablece tu contraseña de SwimPro"
+    msg["From"] = mail_from
+    msg["To"] = to_email
+    msg.set_content(
+        f"""Hola {username},
+
+Recibimos una solicitud para restablecer la contraseña de tu cuenta SwimPro.
+
+Usa este enlace:
+{reset_url}
+
+El enlace vence en 30 minutos y solo puede utilizarse una vez.
+
+Si no solicitaste este cambio, puedes ignorar este correo.
+
+SwimPro
+"""
+    )
+
+    if use_ssl:
+        with smtplib.SMTP_SSL(host, port, timeout=20) as smtp:
+            smtp.login(username_smtp, password_smtp)
+            smtp.send_message(msg)
+    else:
+        with smtplib.SMTP(host, port, timeout=20) as smtp:
+            smtp.ehlo()
+            smtp.starttls()
+            smtp.ehlo()
+            smtp.login(username_smtp, password_smtp)
+            smtp.send_message(msg)
+
+
+def _hash_reset_token(token):
+    return hashlib.sha256(token.encode("utf-8")).hexdigest()
+
 
 
 @app.route("/register", methods=["GET", "POST"])
@@ -536,6 +616,159 @@ def register():
                 conn.close()
 
     return render_template("register.html", error=error)
+
+
+
+@app.route("/forgot-password", methods=["GET", "POST"])
+def forgot_password():
+    message = None
+    error = None
+
+    if request.method == "POST":
+        identity = request.form.get("identity", "").strip()
+
+        # Always show the same message to avoid exposing whether an account exists.
+        message = "Si existe una cuenta con esos datos, recibirás un correo con las instrucciones."
+
+        conn = get_admin_db()
+        try:
+            user = conn.execute("""
+                SELECT id, username, email
+                FROM users
+                WHERE is_active=TRUE
+                  AND (LOWER(email)=LOWER(?) OR LOWER(username)=LOWER(?))
+                LIMIT 1
+            """, (identity, identity)).fetchone()
+
+            if user:
+                # Basic anti-spam cooldown: don't send more than one valid token per minute.
+                recent = conn.execute("""
+                    SELECT id
+                    FROM password_reset_tokens
+                    WHERE user_id=?
+                      AND used_at IS NULL
+                      AND created_at > CURRENT_TIMESTAMP - INTERVAL '60 seconds'
+                    LIMIT 1
+                """, (user["id"],)).fetchone()
+
+                if not recent:
+                    # Invalidate older unused tokens.
+                    conn.execute("""
+                        UPDATE password_reset_tokens
+                        SET used_at=CURRENT_TIMESTAMP
+                        WHERE user_id=? AND used_at IS NULL
+                    """, (user["id"],))
+
+                    raw_token = secrets.token_urlsafe(32)
+                    token_hash = _hash_reset_token(raw_token)
+
+                    conn.execute("""
+                        INSERT INTO password_reset_tokens
+                        (user_id, token_hash, expires_at)
+                        VALUES (?, ?, CURRENT_TIMESTAMP + INTERVAL '30 minutes')
+                    """, (user["id"], token_hash))
+                    conn.commit()
+
+                    base_url = os.environ.get("APP_BASE_URL", request.url_root)
+                    reset_path = url_for("reset_password", token=raw_token)
+                    reset_url = urljoin(base_url.rstrip("/") + "/", reset_path.lstrip("/"))
+
+                    if _password_reset_configured():
+                        try:
+                            _send_password_reset_email(
+                                user["email"],
+                                user["username"],
+                                reset_url
+                            )
+                        except Exception as exc:
+                            app.logger.exception("No se pudo enviar correo de recuperación")
+                    else:
+                        app.logger.warning(
+                            "Solicitud de recuperación creada, pero SMTP no está configurado."
+                        )
+        finally:
+            conn.close()
+
+    return render_template(
+        "forgot_password.html",
+        message=message,
+        error=error,
+        mail_configured=_password_reset_configured()
+    )
+
+
+@app.route("/reset-password/<token>", methods=["GET", "POST"])
+def reset_password(token):
+    token_hash = _hash_reset_token(token)
+    conn = get_admin_db()
+
+    try:
+        reset = conn.execute("""
+            SELECT prt.id, prt.user_id, prt.expires_at, prt.used_at, u.username, u.email
+            FROM password_reset_tokens prt
+            JOIN users u ON u.id=prt.user_id
+            WHERE prt.token_hash=?
+              AND prt.used_at IS NULL
+              AND prt.expires_at > CURRENT_TIMESTAMP
+              AND u.is_active=TRUE
+            LIMIT 1
+        """, (token_hash,)).fetchone()
+
+        if not reset:
+            return render_template(
+                "reset_password.html",
+                invalid=True,
+                error="Este enlace es inválido, ya fue utilizado o ha vencido."
+            )
+
+        error = None
+
+        if request.method == "POST":
+            password = request.form.get("password", "")
+            confirm = request.form.get("confirm_password", "")
+
+            if len(password) < 8:
+                error = "La contraseña debe tener al menos 8 caracteres."
+            elif password != confirm:
+                error = "Las contraseñas no coinciden."
+            else:
+                user = conn.execute(
+                    "SELECT session_version FROM users WHERE id=?",
+                    (reset["user_id"],)
+                ).fetchone()
+
+                new_version = int(user["session_version"]) + 1
+
+                conn.execute("""
+                    UPDATE users
+                    SET password_hash=?, session_version=?
+                    WHERE id=?
+                """, (
+                    generate_password_hash(password),
+                    new_version,
+                    reset["user_id"]
+                ))
+
+                conn.execute("""
+                    UPDATE password_reset_tokens
+                    SET used_at=CURRENT_TIMESTAMP
+                    WHERE user_id=? AND used_at IS NULL
+                """, (reset["user_id"],))
+
+                conn.commit()
+                session.clear()
+
+                return redirect(url_for("login", reset="success"))
+
+        return render_template(
+            "reset_password.html",
+            invalid=False,
+            reset=reset,
+            error=error
+        )
+    finally:
+        conn.close()
+
 
 
 @app.route("/login", methods=["GET", "POST"])
