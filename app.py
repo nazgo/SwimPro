@@ -111,6 +111,11 @@ def get_db():
                 "SELECT set_config('app.user_id', %s, false)",
                 (str(session["user_id"]),)
             )
+            # Critical V41.1 security fix:
+            # DATABASE_URL connects as neondb_owner. Table owners can bypass
+            # ordinary RLS in some privileged configurations, so normal user
+            # queries run as a dedicated non-owner role.
+            raw.execute("SET ROLE swimpro_app")
 
         return PostgresConnection(raw)
 
@@ -258,6 +263,22 @@ def init_auth_db():
 
         owned_tables = ("profile", "competitions", "swims", "competition_events", "goals", "splits")
 
+        # Dedicated runtime role. Roles created with SQL in Neon do not
+        # automatically receive neon_superuser privileges.
+        conn.execute("""
+            DO $$
+            BEGIN
+              IF NOT EXISTS (SELECT 1 FROM pg_roles WHERE rolname='swimpro_app') THEN
+                CREATE ROLE swimpro_app NOLOGIN NOSUPERUSER NOCREATEDB NOCREATEROLE NOINHERIT NOBYPASSRLS;
+              END IF;
+            END
+            $$;
+        """)
+        conn.execute("GRANT swimpro_app TO CURRENT_USER")
+        conn.execute("GRANT USAGE ON SCHEMA public TO swimpro_app")
+        conn.execute("GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA public TO swimpro_app")
+        conn.execute("GRANT USAGE, SELECT ON ALL SEQUENCES IN SCHEMA public TO swimpro_app")
+
         for table in owned_tables:
             conn.execute(
                 f"ALTER TABLE {table} ADD COLUMN IF NOT EXISTS user_id BIGINT REFERENCES users(id) ON DELETE CASCADE"
@@ -295,7 +316,21 @@ def init_auth_db():
                 f"USING {policy_expr} WITH CHECK {policy_expr}"
             )
 
+        # Re-apply privileges after any schema migration and verify RLS.
+        conn.execute("GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA public TO swimpro_app")
+        conn.execute("GRANT USAGE, SELECT ON ALL SEQUENCES IN SCHEMA public TO swimpro_app")
         conn.commit()
+
+        checks = conn.execute("""
+            SELECT relname, relrowsecurity, relforcerowsecurity
+            FROM pg_class
+            WHERE relname IN ('profile','competitions','swims','competition_events','goals','splits')
+            ORDER BY relname
+        """).fetchall()
+        bad = [r["relname"] for r in checks if not r["relrowsecurity"]]
+        if bad:
+            raise RuntimeError("RLS no está activo en: " + ", ".join(bad))
+        print("✅ V41.1: aislamiento por usuario activo (RLS + rol swimpro_app)")
     except Exception:
         conn.rollback()
         raise
