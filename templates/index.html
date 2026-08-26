@@ -1,0 +1,168 @@
+{% extends "base.html" %}
+{% block title %}SwimPro{% endblock %}
+
+{% block content %}
+<div class="sp18-home">
+
+  <section class="sp18-hero">
+    <div class="sp18-water" aria-hidden="true"></div>
+
+    <button class="sp18-top-btn sp18-menu" aria-label="Menú" type="button">
+      <svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+    </button>
+
+    <button class="sp18-top-btn sp18-bell" aria-label="Notificaciones" type="button">
+      <svg viewBox="0 0 24 24">
+        <path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 7h18s-3 0-3-7"/>
+        <path d="M10 19h4"/>
+      </svg>
+    </button>
+
+    <div class="sp18-logo-wrap">
+      <img src="{{ url_for('static', filename='swimpro_logo_user.png') }}"
+           alt="SwimPro Professional Swimming App">
+    </div>
+
+    <div class="sp18-greeting">
+      <h1>Hola, {{ profile.name }} 👋</h1>
+      <p>Categoría: {{ category or '—' }}{% if age is not none %} años{% endif %}</p>
+    </div>
+  </section>
+
+  <div class="sp31-home-quick">
+    <a href="{{ url_for('goals_dashboard') }}">
+      <span>🎯</span>
+      Objetivos
+    </a>
+    <a href="{{ url_for('achievements') }}">
+      <span>🏆</span>
+      Logros
+    </a>
+    <a href="{{ url_for('stats') }}">
+      <span>📊</span>
+      Estadísticas
+    </a>
+  </div>
+
+
+  <section class="sp18-panel">
+    <div class="sp18-panel-head">
+      <h2>MEJORES MARCAS</h2>
+      <div class="sp25-home-head-actions"><a href="{{ url_for('goals_dashboard') }}">Objetivos</a><a href="{{ url_for('stats') }}">Estadísticas</a><a href="{{ url_for('marks') }}">Ver todas</a></div>
+    </div>
+
+    <div class="sp18-pb-grid">
+      {% for r in pbs %}
+        <a class="sp18-pb" href="{{ url_for('history', distance=r.distance, stroke=r.stroke, pool_length=r.pool_length) }}">
+          <span>{{ r.distance }} {{ r.stroke|upper }}</span>
+          <small>{{ r.pool_length }} m</small>
+          <div class="sp18-pb-value">
+            <strong>{{ r.best_cs|swimtime }}</strong>
+            <em>PB</em>
+          </div>
+          <small>{{ r.last_date }}</small>
+        </a>
+      {% else %}
+        <div class="sp18-empty">Aún no tienes marcas registradas.</div>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="sp18-panel">
+    <div class="sp18-panel-head">
+      <h2>ÚLTIMOS TIEMPOS</h2>
+      <a href="{{ url_for('marks') }}">Ver todos</a>
+    </div>
+
+    <div class="sp18-recent-list">
+      {% for r in recent %}
+        <a class="sp18-recent-row" href="{{ url_for('swim_detail', swim_id=r.id) }}">
+          <div class="sp18-swim-icon sp18-{{ r.stroke|lower }}">
+            {% if r.stroke == 'Mariposa' %}
+            <svg class="sp37-home-style-icon" viewBox="0 0 32 24" aria-hidden="true">
+              <path d="M3 14c3-2.2 5.5-2.2 8.5 0s5.5 2.2 8.5 0 5.5-2.2 9 0"/>
+              <path d="M4 19c3-2.2 5.5-2.2 8.5 0s5.5 2.2 8.5 0 5-2.2 8 0"/>
+              <path d="M10 11c2-2.6 4-3.7 6-3.7s4 1.1 6 3.7"/>
+            </svg>
+            {% elif r.stroke == 'Libre' %}
+            <svg class="sp37-home-style-icon" viewBox="0 0 32 24" aria-hidden="true">
+              <path d="M3 14c3-2.2 5.5-2.2 8.5 0s5.5 2.2 8.5 0 5.5-2.2 9 0"/>
+              <path d="M4 19c3-2.2 5.5-2.2 8.5 0s5.5 2.2 8.5 0 5-2.2 8 0"/>
+              <path d="M9 10c4-3.4 8-3.4 13 0"/>
+            </svg>
+            {% elif r.stroke == 'Pecho' %}
+            <svg class="sp37-home-style-icon" viewBox="0 0 32 24" aria-hidden="true">
+              <path d="M3 14c3-2.2 5.5-2.2 8.5 0s5.5 2.2 8.5 0 5.5-2.2 9 0"/>
+              <path d="M4 19c3-2.2 5.5-2.2 8.5 0s5.5 2.2 8.5 0 5-2.2 8 0"/>
+              <path d="M10 10c2.2-2 4.2-2.8 6-2.8s3.8.8 6 2.8"/>
+            </svg>
+            {% elif r.stroke == 'Espalda' %}
+            <svg class="sp37-home-style-icon" viewBox="0 0 32 24" aria-hidden="true">
+              <path d="M3 14c3-2.2 5.5-2.2 8.5 0s5.5 2.2 8.5 0 5.5-2.2 9 0"/>
+              <path d="M4 19c3-2.2 5.5-2.2 8.5 0s5.5 2.2 8.5 0 5-2.2 8 0"/>
+              <path d="M9 10c4 2.5 8 2.5 14 0"/>
+            </svg>
+            {% else %}
+            <svg class="sp37-home-style-icon" viewBox="0 0 32 24" aria-hidden="true">
+              <path d="M3 14c3-2.2 5.5-2.2 8.5 0s5.5 2.2 8.5 0 5.5-2.2 9 0"/>
+              <path d="M4 19c3-2.2 5.5-2.2 8.5 0s5.5 2.2 8.5 0 5-2.2 8 0"/>
+              <path d="M9 10c4-3 8-3 14 0"/>
+            </svg>
+            {% endif %}
+          </div>
+
+          <div class="sp18-recent-main">
+            <strong>{{ r.distance }} {{ r.stroke|upper }}</strong>
+            <span>{{ r.pool_length }} m · {{ r.kind }}</span>
+          </div>
+
+          <div class="sp18-recent-result">
+            <strong>{{ r.time_cs|swimtime }}</strong>
+            {% if r.prior_pb %}
+              {% set d = r.time_cs - r.prior_pb %}
+              <small class="{% if d < 0 %}sp18-good{% elif d > 0 %}sp18-bad{% endif %}">
+                {% if d < 0 %}▲ PB {{ d|signed_seconds }}{% else %}{{ d|signed_seconds }}{% endif %}
+              </small>
+            {% else %}
+              <small class="sp18-good">Primera marca</small>
+            {% endif %}
+          </div>
+
+          <svg class="sp18-down" viewBox="0 0 24 24"><path d="m7 10 5 5 5-5"/></svg>
+        </a>
+      {% else %}
+        <div class="sp18-empty">No hay tiempos todavía.</div>
+      {% endfor %}
+    </div>
+  </section>
+
+  {% if upcoming %}
+  <section class="sp18-panel">
+    <div class="sp18-panel-head">
+      <h2>PRÓXIMA COMPETENCIA</h2>
+      <a href="{{ url_for('competitions') }}">Ver todas</a>
+    </div>
+
+    <a class="sp18-next" href="{{ url_for('competition_detail', competition_id=upcoming.id) }}">
+      <div class="sp18-purple"></div>
+      <div class="sp18-next-info">
+        <strong>{{ upcoming.name }}</strong>
+        <span>
+          <svg viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M8 3v4M16 3v4M4 10h16"/></svg>
+          {{ upcoming.competition_date }}
+        </span>
+        <span>
+          <svg viewBox="0 0 24 24"><path d="M12 21s6-5 6-11a6 6 0 1 0-12 0c0 6 6 11 6 11Z"/><circle cx="12" cy="10" r="2"/></svg>
+          {{ upcoming.location or 'Sin ubicación' }}
+        </span>
+      </div>
+      <div class="sp18-next-count">
+        <strong>{{ upcoming.event_count }}</strong>
+        <small>pruebas</small>
+      </div>
+    </a>
+  </section>
+  {% endif %}
+
+</div>
+{% endblock %}

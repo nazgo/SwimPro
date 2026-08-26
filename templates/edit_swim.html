@@ -1,0 +1,376 @@
+{% extends "base.html" %}
+{% block title %}Editar tiempo · SwimPro{% endblock %}
+
+{% block content %}
+<style>
+/* ============================================================
+   Editar tiempo · diseño SwimPro
+   ============================================================ */
+.sp-edit-time,
+.sp-edit-time *{box-sizing:border-box}
+
+.sp-edit-time{
+  width:100%;
+  color:#f5fbff;
+  padding-bottom:8px;
+}
+
+.sp-edit-time svg{
+  fill:none;
+  stroke:currentColor;
+  stroke-width:1.8;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+}
+
+.sp-edit-head{
+  min-height:108px;
+  margin:-18px -10px 12px;
+  padding:12px 16px 17px;
+  background:
+    linear-gradient(rgba(2,28,48,.12),rgba(2,28,48,.18)),
+    url("{{ url_for('static', filename='swimpro_water_bg_user.png') }}");
+  background-size:cover;
+  background-position:center 46%;
+  border-bottom:1px solid rgba(39,216,244,.10);
+}
+
+.sp-edit-top{
+  display:grid;
+  grid-template-columns:38px minmax(0,1fr) 38px;
+  align-items:center;
+  min-height:38px;
+}
+
+.sp-edit-back{
+  width:38px;
+  height:38px;
+  display:grid;
+  place-items:center;
+  margin-left:-8px;
+  color:#fff;
+}
+
+.sp-edit-back svg{width:21px;height:21px}
+
+.sp-edit-head h1{
+  margin:9px 0 0;
+  font-size:27px;
+  line-height:1.05;
+  font-weight:760;
+  letter-spacing:-.02em;
+}
+
+.sp-edit-head p{
+  margin:6px 0 0;
+  color:#aac1cb;
+  font-size:9px;
+}
+
+.sp-edit-error{
+  margin-bottom:10px;
+  padding:9px 10px;
+  border:1px solid rgba(255,98,120,.38);
+  border-radius:9px;
+  background:rgba(90,29,45,.48);
+  color:#ffd7df;
+  font-size:9px;
+}
+
+.sp-edit-card{
+  margin-bottom:9px;
+  overflow:hidden;
+  border:1px solid rgba(39,216,244,.25);
+  border-radius:11px;
+  background:linear-gradient(180deg,#073956,#062f49);
+}
+
+.sp-edit-card-head{
+  min-height:38px;
+  display:flex;
+  align-items:center;
+  padding:0 11px;
+  border-bottom:1px solid rgba(39,216,244,.12);
+  color:#27def4;
+  font-size:9px;
+  font-weight:850;
+  letter-spacing:.03em;
+}
+
+.sp-edit-form{
+  display:grid;
+  gap:12px;
+  padding:12px;
+}
+
+.sp-edit-form label{
+  display:block;
+  min-width:0;
+}
+
+.sp-edit-form label>span{
+  display:block;
+  margin-bottom:6px;
+  color:#f5fbff;
+  font-size:9px;
+  font-weight:600;
+}
+
+.sp-edit-grid-2{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:9px;
+}
+
+.sp-edit-field{
+  position:relative;
+  min-width:0;
+}
+
+.sp-edit-form select,
+.sp-edit-form input,
+.sp-edit-form textarea{
+  width:100%;
+  min-width:0;
+  border:1px solid #176886;
+  border-radius:8px;
+  outline:none;
+  background:#082f49;
+  color:#f5fbff;
+  font-size:11px;
+}
+
+.sp-edit-form select,
+.sp-edit-form input{
+  height:42px;
+  padding:0 10px;
+}
+
+.sp-edit-form textarea{
+  min-height:105px;
+  padding:10px;
+  resize:vertical;
+  line-height:1.45;
+}
+
+.sp-edit-form select:focus,
+.sp-edit-form input:focus,
+.sp-edit-form textarea:focus{
+  border-color:#28def5;
+  box-shadow:0 0 0 2px rgba(40,222,245,.07);
+}
+
+.sp-edit-form input::placeholder,
+.sp-edit-form textarea::placeholder{color:#7694a2}
+
+.sp-edit-icon-field svg{
+  position:absolute;
+  z-index:2;
+  left:10px;
+  top:50%;
+  width:17px;
+  height:17px;
+  transform:translateY(-50%);
+  color:#27def4;
+  pointer-events:none;
+}
+
+.sp-edit-icon-field input,
+.sp-edit-icon-field select{padding-left:36px}
+
+.sp-edit-time-value input{
+  color:#ffd84b;
+  font-weight:800;
+  font-size:14px;
+}
+
+.sp-edit-save{
+  width:100%;
+  min-height:45px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  margin-top:2px;
+  border:0;
+  border-radius:9px;
+  background:linear-gradient(90deg,#27d4eb,#3d91f0);
+  color:#052b3d;
+  font-size:11px;
+  font-weight:850;
+}
+
+.sp-edit-save svg{width:18px;height:18px}
+
+.sp-edit-help{
+  display:block;
+  margin-top:4px;
+  color:#7997a5;
+  font-size:7px;
+  line-height:1.35;
+}
+
+@media(max-width:350px){
+  .sp-edit-grid-2{grid-template-columns:1fr}
+  .sp-edit-head h1{font-size:24px}
+}
+</style>
+
+<div class="sp-edit-time">
+  <section class="sp-edit-head">
+    <div class="sp-edit-top">
+      <a href="{{ url_for('swim_detail', swim_id=swim.id) }}"
+         class="sp-edit-back" aria-label="Volver">
+        <svg viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></svg>
+      </a>
+      <span></span>
+      <span></span>
+    </div>
+
+    <h1>Editar tiempo</h1>
+    <p>{{ swim.distance }} m · {{ swim.stroke }} · {{ swim.pool_length }} m</p>
+  </section>
+
+  {% if error %}<div class="sp-edit-error">{{ error }}</div>{% endif %}
+
+  <section class="sp-edit-card">
+    <div class="sp-edit-card-head">DATOS DEL REGISTRO</div>
+
+    <form class="sp-edit-form" method="post">
+      <label>
+        <span>Competencia</span>
+        <select name="competition_id" id="competition_id">
+          <option value="">Sin competencia</option>
+          {% for c in competitions %}
+            <option value="{{ c.id }}"
+                    data-pool="{{ c.pool_length }}"
+                    data-date="{{ c.competition_date }}"
+                    {% if swim.competition_id == c.id %}selected{% endif %}>
+              {{ c.name }}
+            </option>
+          {% endfor %}
+        </select>
+      </label>
+
+      <div class="sp-edit-grid-2">
+        <label>
+          <span>Estilo</span>
+          <select name="stroke" id="stroke">
+            {% for s in styles %}
+              <option value="{{ s }}" {% if swim.stroke == s %}selected{% endif %}>{{ s }}</option>
+            {% endfor %}
+          </select>
+        </label>
+
+        <label>
+          <span>Distancia</span>
+          <select name="distance" id="distance"></select>
+        </label>
+      </div>
+
+      <div class="sp-edit-grid-2">
+        <label>
+          <span>Piscina</span>
+          <select name="pool_length" id="pool_length">
+            <option value="25" {% if swim.pool_length == 25 %}selected{% endif %}>25 m (Corta)</option>
+            <option value="50" {% if swim.pool_length == 50 %}selected{% endif %}>50 m (Larga)</option>
+          </select>
+        </label>
+
+        <label>
+          <span>Fecha</span>
+          <div class="sp-edit-field sp-edit-icon-field">
+            <svg viewBox="0 0 24 24">
+              <rect x="4" y="5" width="16" height="15" rx="2"/>
+              <path d="M8 3v4M16 3v4M4 10h16"/>
+            </svg>
+            <input type="date" name="swim_date" id="swim_date" value="{{ swim.swim_date }}">
+          </div>
+        </label>
+      </div>
+
+      <div class="sp-edit-grid-2">
+        <label>
+          <span>Tipo</span>
+          <select name="kind">
+            {% for k in ['Competencia','Entrenamiento','Control'] %}
+              <option value="{{ k }}" {% if swim.kind == k %}selected{% endif %}>{{ k }}</option>
+            {% endfor %}
+          </select>
+        </label>
+
+        <label>
+          <span>Tiempo</span>
+          <div class="sp-edit-field sp-edit-icon-field sp-edit-time-value">
+            <svg viewBox="0 0 24 24">
+              <circle cx="12" cy="13" r="7"/>
+              <path d="M12 13V9M9 3h6M12 6V4"/>
+            </svg>
+            <input name="time" value="{{ swim.time_cs|swimtime }}" required inputmode="decimal">
+          </div>
+          <small class="sp-edit-help">Formato: 1:15.40 o 36.25</small>
+        </label>
+      </div>
+
+      <label>
+        <span>Notas</span>
+        <textarea name="notes" rows="4" placeholder="Observaciones del registro">{{ swim.notes or '' }}</textarea>
+      </label>
+
+      <button class="sp-edit-save" type="submit">
+        <svg viewBox="0 0 24 24">
+          <path d="M5 4h12l2 2v14H5z"/>
+          <path d="M8 4v6h8V4M8 16h8"/>
+        </svg>
+        Guardar cambios
+      </button>
+    </form>
+  </section>
+</div>
+
+<script>
+const officialEvents = {{ official_events|tojson }};
+const pool = document.getElementById("pool_length");
+const stroke = document.getElementById("stroke");
+const distance = document.getElementById("distance");
+const competition = document.getElementById("competition_id");
+const swimDate = document.getElementById("swim_date");
+let selectedDistance = {{ swim.distance }};
+
+function refreshDistances() {
+  const values = officialEvents[stroke.value][Number(pool.value)] || [];
+  distance.innerHTML = "";
+
+  values.forEach(value => {
+    const option = document.createElement("option");
+    option.value = value;
+    option.textContent = value + " m";
+    if (value === selectedDistance) option.selected = true;
+    distance.appendChild(option);
+  });
+
+  if (!values.includes(selectedDistance) && values.length) {
+    selectedDistance = values[0];
+    distance.value = selectedDistance;
+  }
+}
+
+distance.addEventListener("change", () => {
+  selectedDistance = Number(distance.value);
+});
+
+stroke.addEventListener("change", refreshDistances);
+pool.addEventListener("change", refreshDistances);
+
+competition.addEventListener("change", () => {
+  const option = competition.options[competition.selectedIndex];
+  if (option.value) {
+    pool.value = option.dataset.pool;
+    swimDate.value = option.dataset.date;
+    refreshDistances();
+  }
+});
+
+refreshDistances();
+</script>
+{% endblock %}

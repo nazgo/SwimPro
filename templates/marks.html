@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% block title %}Mis marcas · SwimPro{% endblock %}
+{% block content %}
+<div class="sp22-marks sp30-marks">
+  <header class="sp22-header">
+    <a href="{{ url_for('index') }}" aria-label="Volver">
+      <svg viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></svg>
+    </a>
+    <h1>Mis marcas</h1>
+    <span></span>
+  </header>
+
+  <div class="sp30-season-row">
+    <div class="sp22-course-tabs">
+      <a href="{{ url_for('marks', pool=25, year=selected_year) }}" class="{% if selected_pool == 25 %}active{% endif %}">25 m (Corta)</a>
+      <a href="{{ url_for('marks', pool=50, year=selected_year) }}" class="{% if selected_pool == 50 %}active{% endif %}">50 m (Larga)</a>
+    </div>
+
+    <form method="get" class="sp30-season-select">
+      <input type="hidden" name="pool" value="{{ selected_pool }}">
+      <select name="year" onchange="this.form.submit()">
+        <option value="">Histórico</option>
+        {% for y in seasons %}
+          <option value="{{ y }}" {% if selected_year == y %}selected{% endif %}>Temporada {{ y }}</option>
+        {% endfor %}
+      </select>
+    </form>
+  </div>
+
+  {% for stroke, rows in grouped.items() %}
+  <section class="sp22-stroke-card">
+    <div class="sp22-stroke-head">
+      <div class="sp22-stroke-title">
+        <div class="sp22-stroke-icon">
+          <svg viewBox="0 0 32 24">
+            <path d="M2 18c3-2.4 6-2.4 9 0s6 2.4 9 0 6-2.4 10 0"/>
+            <path d="M7 11c3-3 6-3 10 0"/>
+          </svg>
+        </div>
+        <strong>{{ stroke|upper }}</strong>
+      </div>
+      <svg class="sp22-collapse" viewBox="0 0 24 24"><path d="m7 14 5-5 5 5"/></svg>
+    </div>
+
+    <div class="sp22-times">
+      {% for r in rows %}
+        <a class="sp22-time-cell"
+           href="{{ url_for('history', distance=r.distance, stroke=stroke, pool_length=selected_pool, year=selected_year) }}">
+          <span>{{ r.distance }} m</span>
+
+          {% if selected_year %}
+            <small class="sp30-label">PB {{ selected_year }}</small>
+            <strong>{% if r.season_pb %}{{ r.season_pb|swimtime }}{% else %}—{% endif %}</strong>
+            <small class="sp30-historical">Histórico: {{ r.historical_pb|swimtime }}</small>
+          {% else %}
+            <small class="sp30-label">PB histórico</small>
+            <strong>{{ r.historical_pb|swimtime }}</strong>
+            <small>{{ r.attempts }} registros</small>
+          {% endif %}
+
+          <em>PB</em>
+        </a>
+      {% endfor %}
+    </div>
+  </section>
+  {% endfor %}
+</div>
+{% endblock %}

@@ -1,0 +1,148 @@
+{% extends "base.html" %}
+{% block title %}Perfil · SwimPro
+<section class="pwa-install-card" id="pwaInstallCard">
+  <img src="{{ url_for('static', filename='pwa/icon-192.png') }}" alt="">
+  <div><strong>Instalar SwimPro</strong><span id="pwaInstallText">Usa SwimPro como una app en tu teléfono.</span></div>
+  <button type="button" id="pwaInstallButton">Instalar</button>
+</section>
+<style>
+.pwa-install-card{display:grid;grid-template-columns:48px minmax(0,1fr) auto;gap:10px;align-items:center;margin:10px 0;padding:10px;border:1px solid rgba(39,216,244,.25);border-radius:10px;background:#06334f}
+.pwa-install-card>img{width:48px;height:48px;border-radius:11px}.pwa-install-card strong,.pwa-install-card span{display:block}.pwa-install-card strong{font-size:10px}.pwa-install-card span{margin-top:3px;color:#9fb8c4;font-size:8px;line-height:1.35}.pwa-install-card button{min-height:34px;padding:0 10px;border:0;border-radius:7px;background:linear-gradient(90deg,#27d4eb,#3c91ef);color:#052b3d;font-size:8px;font-weight:850}.pwa-install-card.installed button{display:none}
+</style>
+<script>
+(()=>{const c=document.getElementById("pwaInstallCard"),b=document.getElementById("pwaInstallButton"),t=document.getElementById("pwaInstallText");if(!c||!b||!t||!window.SwimProPWA)return;
+if(SwimProPWA.isStandalone()){c.classList.add("installed");t.textContent="SwimPro ya está instalada en este dispositivo.";return;}
+if(SwimProPWA.isIOS()){b.textContent="Cómo instalar";b.addEventListener("click",()=>t.textContent="En Safari toca Compartir y luego “Añadir a pantalla de inicio”.");return;}
+b.addEventListener("click",async()=>{const ok=await SwimProPWA.install();if(ok){c.classList.add("installed");t.textContent="SwimPro fue instalada correctamente.";}else if(!SwimProPWA.canInstall()){t.textContent="Abre SwimPro en Chrome y usa “Instalar app” o “Añadir a pantalla de inicio”.";}});})();
+</script>
+{% endblock %}
+
+{% block content %}
+<div class="sp-profile-v13">
+
+  <header class="sp-profile-header">
+    <a href="{{ url_for('index') }}" class="sp-profile-back" aria-label="Volver">
+      <svg viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></svg>
+    </a>
+    <h1>Mi perfil</h1>
+    <span class="sp-profile-header-space"></span>
+  </header>
+
+  <section class="sp-profile-brand">
+    <img src="{{ url_for('static', filename='swimpro_logo_user.png') }}"
+         alt="SwimPro Professional Swimming App">
+  </section>
+
+  <section class="sp-profile-person">
+    <div class="sp-profile-avatar">
+      {{ (profile.name or 'S')[0]|upper }}
+    </div>
+
+    <div class="sp-profile-person-copy">
+      <span class="sp-profile-kicker">NADADOR</span>
+      <strong>{{ profile.name }}</strong>
+
+      {% if age is not none %}
+        <small>{{ age }} años · Categoría {{ category }}</small>
+      {% else %}
+        <small>Completa tu fecha de nacimiento</small>
+      {% endif %}
+    </div>
+  </section>
+
+  {% if age is not none %}
+  <section class="sp-profile-stats">
+    <article>
+      <span>EDAD ACTUAL</span>
+      <strong>{{ age }}</strong>
+      <small>años</small>
+    </article>
+
+    <article>
+      <span>CATEGORÍA MÁSTER</span>
+      <strong>{{ category }}</strong>
+      <small>grupo por edad</small>
+    </article>
+  </section>
+  {% endif %}
+
+  <section class="sp-profile-card">
+    <div class="sp-profile-card-title">DATOS PERSONALES</div>
+
+    <form class="sp-profile-form" method="post">
+      <label>
+        <span>Nombre</span>
+        <input name="name" value="{{ profile.name }}" required>
+      </label>
+
+      <label>
+        <span>Fecha de nacimiento</span>
+        <input type="date"
+               name="birth_date"
+               value="{{ profile.birth_date or '' }}">
+        <small>Se utiliza para calcular automáticamente tu edad y categoría.</small>
+      </label>
+
+      <label>
+        <span>Sexo</span>
+        <select name="sex">
+          <option value="">Sin especificar</option>
+          <option value="M" {% if profile.sex == 'M' %}selected{% endif %}>Masculino</option>
+          <option value="F" {% if profile.sex == 'F' %}selected{% endif %}>Femenino</option>
+        </select>
+      </label>
+
+      <button type="submit" class="sp-profile-save">
+        Guardar cambios
+      </button>
+    </form>
+  </section>
+
+  <section class="sp-profile-card">
+    <div class="sp-profile-card-title">MIS DATOS</div>
+
+    <div class="sp-profile-downloads">
+      <a href="{{ url_for('export_json') }}">
+        <div class="sp-profile-download-icon">
+          <svg viewBox="0 0 24 24">
+            <path d="M12 3v12M7 10l5 5 5-5"/>
+            <path d="M5 20h14"/>
+          </svg>
+        </div>
+        <div>
+          <strong>Respaldo completo</strong>
+          <span>Descargar JSON con todos tus datos</span>
+        </div>
+        <svg class="sp-profile-chevron" viewBox="0 0 24 24">
+          <path d="m9 6 6 6-6 6"/>
+        </svg>
+      </a>
+
+      <a href="{{ url_for('export_csv') }}">
+        <div class="sp-profile-download-icon">
+          <svg viewBox="0 0 24 24">
+            <path d="M6 3h9l4 4v14H6z"/>
+            <path d="M15 3v5h5M9 13h6M9 17h6"/>
+          </svg>
+        </div>
+        <div>
+          <strong>Exportar tiempos</strong>
+          <span>Descargar CSV para Excel</span>
+        </div>
+        <svg class="sp-profile-chevron" viewBox="0 0 24 24">
+          <path d="m9 6 6 6-6 6"/>
+        </svg>
+      </a>
+    </div>
+  </section>
+
+  <section class="sp-profile-info">
+    <strong>Sobre la categoría máster</strong>
+    <p>
+      SwimPro calcula automáticamente los grupos de edad en bloques de
+      5 años: 25–29, 30–34, 35–39, 40–44, 45–49, etc.
+    </p>
+  </section>
+
+</div>
+{% endblock %}

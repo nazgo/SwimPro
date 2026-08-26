@@ -1,0 +1,4622 @@
+
+:root{
+  --bg:#021a2a;
+  --bg2:#05283e;
+  --panel:#062f4a;
+  --panel2:#073a59;
+  --field:#0a3551;
+  --line:#165f80;
+  --line-soft:rgba(76,165,200,.25);
+  --cyan:#21d8f3;
+  --cyan2:#34bde9;
+  --blue:#3e78eb;
+  --text:#f5fbff;
+  --muted:#9ab8c6;
+  --yellow:#ffd84a;
+  --green:#3ce3b6;
+  --red:#ff8294;
+}
+
+*{box-sizing:border-box}
+html,body{
+  margin:0;
+  background:linear-gradient(180deg,#021827 0%,#04243a 55%,#021a2a 100%);
+  color:var(--text);
+  font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;
+}
+body{min-height:100vh}
+a{text-decoration:none;color:inherit}
+button,input,select,textarea{font:inherit}
+svg{fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+
+.app-shell{
+  width:min(390px,100%);
+  margin:0 auto;
+  min-height:100vh;
+  padding:18px 10px 96px;
+  background:
+    radial-gradient(circle at 75% 0%,rgba(19,105,166,.15),transparent 28%),
+    radial-gradient(circle at 10% 16%,rgba(34,74,155,.09),transparent 26%);
+}
+
+.home-header-pro{
+  display:grid;
+  grid-template-columns:40px 1fr 40px;
+  align-items:start;
+  margin-bottom:4px;
+}
+.top-icon-btn{
+  width:40px;height:40px;
+  display:grid;place-items:center;
+  border:0;background:none;color:white;
+}
+.top-icon-btn svg{width:24px;height:24px}
+.home-brand-lockup{
+  height:174px;
+  overflow:hidden;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+.home-brand-lockup img{
+  width:230px;
+  height:174px;
+  object-fit:cover;
+  object-position:center 49%;
+  transform:scale(1.48);
+  border-radius:18px;
+}
+
+.hello-block{margin:2px 10px 16px}
+.hello-block h1{font-size:21px;margin:0 0 2px;font-weight:700}
+.hello-block p{font-size:12px;color:#c6d7df;margin:0}
+
+.dash-card{
+  background:rgba(5,47,74,.92);
+  border:1px solid rgba(33,216,243,.30);
+  border-radius:12px;
+  overflow:hidden;
+  margin-bottom:12px;
+}
+.dash-card-head{
+  height:42px;
+  padding:0 13px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  border-bottom:1px solid rgba(33,216,243,.16);
+}
+.dash-card-head h2{margin:0;color:var(--cyan);font-size:12px;font-weight:800}
+.dash-card-head a{color:var(--cyan);font-size:11px}
+
+.best-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:10px}
+.best-card{
+  position:relative;
+  min-height:108px;
+  padding:11px;
+  border:1px solid rgba(78,151,184,.24);
+  border-radius:9px;
+  background:linear-gradient(180deg,#073957,#062e49);
+}
+.best-card span,.best-card small,.best-card strong{display:block}
+.event-name{font-size:11px}
+.course-name{font-size:10px;color:#b8ccd6;margin-top:2px}
+.best-card strong{font-size:22px;color:var(--yellow);margin-top:9px}
+.best-card em{
+  position:absolute;right:8px;bottom:28px;
+  background:var(--cyan);color:#043047;
+  border-radius:7px;padding:2px 6px;
+  font-size:8px;font-weight:900;font-style:normal
+}
+.best-card small{font-size:9px;color:#c6d6de;margin-top:4px}
+
+.latest-list{padding:0 10px 4px}
+.latest-item{
+  display:grid;
+  grid-template-columns:28px 1fr auto 13px;
+  gap:8px;
+  align-items:center;
+  padding:10px 0;
+  border-bottom:1px solid rgba(108,159,180,.16);
+}
+.latest-item:last-child{border-bottom:0}
+.latest-style-icon{
+  width:28px;height:28px;border-radius:50%;
+  display:grid;place-items:center;color:#04273c
+}
+.latest-style-icon svg{width:19px;height:19px;stroke-width:2}
+.latest-style-icon.style-mariposa{background:#ffd849}
+.latest-style-icon.style-libre{background:#41dbcf}
+.latest-style-icon.style-pecho{background:#55bff0}
+.latest-style-icon.style-espalda{background:#5ea9f3}
+.latest-main strong,.latest-main span,.latest-result strong,.latest-result small{display:block}
+.latest-main strong{font-size:12px}
+.latest-main span{font-size:10px;color:#b3c9d3;margin-top:2px}
+.latest-result{text-align:right}
+.latest-result strong{font-size:17px}
+.latest-result small{font-size:9px;margin-top:2px}
+.good{color:var(--green)!important}.bad{color:var(--red)!important}
+.mini-chevron{font-size:12px;color:var(--cyan)}
+
+.next-event-card{
+  display:grid;
+  grid-template-columns:5px 1fr 55px;
+  min-height:78px;
+  gap:9px;
+  padding:10px;
+}
+.next-accent{background:linear-gradient(180deg,#b64cff,#6959f5);border-radius:999px}
+.next-event-info strong,.next-event-info span{display:block}
+.next-event-info strong{font-size:11px;margin-bottom:5px}
+.next-event-info span{
+  display:flex;align-items:center;gap:5px;
+  font-size:9px;color:#c5d5dc;margin-top:3px
+}
+.next-event-info svg{width:11px;height:11px}
+.next-event-count{
+  border-left:1px solid rgba(95,153,179,.18);
+  display:grid;place-content:center;text-align:center
+}
+.next-event-count strong{font-size:19px}
+.next-event-count small{font-size:8px;color:#c5d5dc;margin-top:2px}
+
+.screen-head-pro{
+  display:grid;
+  grid-template-columns:38px 1fr 38px;
+  align-items:center;
+  height:44px;
+  margin-bottom:10px;
+}
+.screen-head-pro h1{text-align:center;font-size:18px;margin:0}
+.screen-back{
+  width:38px;height:38px;display:grid;place-items:center;color:white
+}
+.screen-back svg{width:22px;height:22px}
+
+.register-brand{
+  height:84px;
+  overflow:hidden;
+  border-radius:10px;
+  border:1px solid rgba(33,216,243,.13);
+  background:#06243a;
+  margin-bottom:13px;
+}
+.register-brand img{
+  width:100%;height:100%;object-fit:cover;object-position:center 48%;transform:scale(1.16)
+}
+
+.form-pro{display:grid;gap:10px}
+.form-pro>label{font-size:12px;color:#fff}
+.type-tabs{
+  display:grid;grid-template-columns:1fr 1fr 1fr;
+  border:1px solid #17749a;border-radius:8px;overflow:hidden;
+  margin-bottom:2px
+}
+.type-tabs input{display:none}
+.type-tabs span{
+  display:block;text-align:center;padding:9px 2px;
+  font-size:11px;color:#cbd8dd
+}
+.type-tabs input:checked+span{
+  background:linear-gradient(180deg,#0b5d86,#08415f);
+  color:#fff;box-shadow:inset 0 -2px 0 var(--cyan)
+}
+.select-pro,.field-pro{
+  position:relative;margin-top:5px
+}
+.select-pro select,.field-pro input,.field-pro select,.form-pro textarea{
+  width:100%;height:39px;
+  background:#0a3551;color:#fff;
+  border:1px solid #1a5f7e;border-radius:7px;
+  padding:0 12px;outline:none
+}
+.form-pro textarea{height:auto;padding:11px 12px;resize:vertical}
+.with-leading-icon select,.with-leading-icon input{padding-left:43px}
+.leading-wave{
+  position:absolute;left:12px;top:50%;transform:translateY(-50%);
+  z-index:2;color:var(--cyan);font-size:23px
+}
+.leading-svg{
+  position:absolute;left:12px;top:50%;transform:translateY(-50%);
+  width:17px;height:17px;color:var(--cyan);z-index:2
+}
+.subsection-title{font-size:11px;color:var(--cyan);font-weight:900;margin-top:3px}
+.split-table{display:grid;gap:4px}
+.split-row-pro{display:grid;grid-template-columns:1fr 1fr 38px}
+.split-row-pro input{
+  height:35px;background:#0a3551;color:white;border:1px solid #1a5f7e;padding:0 11px
+}
+.split-row-pro input:first-child{border-radius:7px 0 0 7px}
+.split-row-pro button{
+  background:#0a3551;color:white;border:1px solid #1a5f7e;border-radius:0 7px 7px 0
+}
+.split-row-pro button svg{width:15px;height:15px}
+.add-split-pro{
+  height:37px;border-radius:7px;background:transparent;
+  border:1px solid var(--cyan);color:#dffcff;font-size:11px
+}
+.save-pro,.big-add-event{
+  min-height:42px;border:0;border-radius:8px;
+  background:linear-gradient(90deg,#28c9ea,#39b8e9);
+  color:white;font-size:14px;font-weight:800;
+  display:grid;place-items:center
+}
+
+.course-switch{
+  display:grid;grid-template-columns:1fr 1fr;
+  border:1px solid #1b5c7a;border-radius:8px;overflow:hidden;
+  margin-bottom:13px
+}
+.course-switch-btn{
+  height:36px;border:0;background:#082d46;color:#bdcbd2;font-size:11px
+}
+.course-switch-btn.active{
+  background:#0a3d5c;color:#fff;box-shadow:inset 0 -2px 0 var(--cyan)
+}
+.marks-style-card{
+  background:rgba(5,44,68,.94);
+  border:1px solid rgba(33,216,243,.22);
+  border-radius:11px;overflow:hidden;margin-bottom:11px
+}
+.marks-style-head{
+  display:grid;grid-template-columns:32px 1fr 18px;align-items:center;
+  height:49px;padding:0 12px;border-bottom:1px solid rgba(33,216,243,.13)
+}
+.stroke-symbol{font-size:25px;color:var(--cyan)}
+.marks-style-head strong{font-size:12px}
+.marks-style-head>span{font-size:13px}
+.marks-row-grid{
+  display:grid;grid-template-columns:repeat(4,1fr)
+}
+.marks-row-grid a{
+  padding:13px 9px;min-height:79px;
+  border-right:1px solid rgba(101,154,177,.26)
+}
+.marks-row-grid a:last-child{border-right:0}
+.marks-row-grid span,.marks-row-grid strong{display:block}
+.marks-row-grid span{font-size:10px}
+.marks-row-grid strong{font-size:15px;margin-top:6px}
+.marks-row-grid em{
+  display:inline-block;background:var(--cyan);color:#043047;
+  border-radius:6px;padding:2px 5px;font-size:7px;font-weight:900;font-style:normal;margin-top:6px
+}
+.highlight-time{color:var(--yellow)}
+.course-empty-pro{padding:17px;color:#9cb9c6;font-size:10px;text-align:center}
+
+.competition-topbar{
+  display:flex;justify-content:space-between;align-items:center;height:44px;margin-bottom:6px
+}
+.comp-top-actions{display:flex;align-items:center;gap:9px}
+.top-edit-icon{width:34px;height:34px;display:grid;place-items:center}
+.top-edit-icon svg{width:17px;height:17px}
+.top-more{font-size:24px}
+.competition-main-head{position:relative;margin:0 2px 14px}
+.competition-main-head h1{font-size:19px;margin:0 0 10px}
+.competition-meta-line{
+  display:flex;align-items:center;gap:6px;color:#c4d6de;font-size:11px;margin-top:6px
+}
+.competition-meta-line svg{width:14px;height:14px;color:#6fc7f5}
+.comp-course-badge{
+  position:absolute;right:0;bottom:3px;
+  padding:7px 10px;border-radius:8px;border:1px solid #155f7e;
+  color:#dffcff;font-size:10px
+}
+.competition-kpi-card{
+  position:relative;overflow:hidden;
+  display:grid;grid-template-columns:repeat(3,1fr);
+  min-height:108px;border-radius:10px;
+  background:linear-gradient(180deg,#0a4365,#07314d);
+  border:1px solid rgba(33,216,243,.23);
+  margin-bottom:13px
+}
+.competition-kpi-card>div:not(.competition-wave-bg){
+  display:grid;place-content:center;text-align:center;z-index:2
+}
+.competition-kpi-card strong{font-size:22px}
+.competition-kpi-card span{font-size:9px;color:#c5d7df;margin-top:4px}
+.competition-wave-bg{
+  position:absolute;left:0;right:0;bottom:-10px;height:54px;
+  background:
+    radial-gradient(70px 20px at 10% 55%,rgba(25,157,218,.35),transparent 70%),
+    radial-gradient(110px 25px at 40% 70%,rgba(0,192,235,.25),transparent 70%),
+    radial-gradient(100px 28px at 75% 45%,rgba(30,120,215,.30),transparent 70%);
+}
+.competition-events-card{margin-bottom:11px}
+.competition-events-list{padding:0 11px 4px}
+.competition-event-row,.pending-event-row>a{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:11px 0;border-bottom:1px solid rgba(106,157,178,.16)
+}
+.competition-event-row:last-child{border-bottom:0}
+.competition-event-row strong,.competition-event-row span,.competition-event-row small,
+.pending-event-row strong,.pending-event-row span,.pending-event-row small{display:block}
+.competition-event-row strong,.pending-event-row strong{font-size:11px}
+.competition-event-row span,.pending-event-row span,
+.competition-event-row small,.pending-event-row small{font-size:9px;color:#a9c1cb;margin-top:3px}
+.competition-event-row>div:last-child,.pending-event-row>a>div:last-child{text-align:right}
+.competition-event-row em{
+  display:inline-block;background:var(--cyan);color:#043047;
+  border-radius:6px;padding:2px 5px;font-size:7px;font-style:normal;font-weight:900;margin-top:4px
+}
+.pending-event-row{
+  display:grid;grid-template-columns:1fr 30px;align-items:center;
+  border-bottom:1px solid rgba(106,157,178,.16)
+}
+.pending-event-row>a{border-bottom:0}
+.pending-event-row form{margin:0}
+.pending-event-row button{
+  width:26px;height:26px;border-radius:50%;
+  border:1px solid rgba(255,130,148,.25);
+  background:rgba(110,30,45,.3);color:#ffcbd4
+}
+
+.bottom-nav-pro{
+  position:fixed;left:50%;bottom:0;transform:translateX(-50%);
+  width:min(390px,100%);
+  height:75px;
+  background:rgba(3,25,42,.98);
+  border-top:1px solid rgba(33,216,243,.16);
+  display:grid;grid-template-columns:repeat(5,1fr);
+  padding:7px 5px calc(7px + env(safe-area-inset-bottom));
+  z-index:100
+}
+.bottom-nav-pro>a{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:3px;color:#d5e2e7;font-size:8px
+}
+.bottom-nav-pro>a>svg{width:19px;height:19px}
+.center-time-btn{margin-top:-26px}
+.center-time-btn>div{
+  width:54px;height:54px;border-radius:50%;
+  display:grid;place-items:center;
+  background:linear-gradient(145deg,#32d5ef,#4976eb);
+  box-shadow:0 10px 22px rgba(14,115,177,.36)
+}
+.center-time-btn>div svg{width:25px;height:25px;color:white}
+.center-time-btn span{margin-top:1px}
+
+.error{background:#4c2230;border:1px solid #8b3a50;padding:10px;border-radius:8px;color:#ffd6df;font-size:11px}
+.empty-premium{padding:16px;text-align:center;color:#9cb9c6;font-size:10px}
+
+/* Keep existing profile/detail/manage views readable */
+.profile-brand-card{height:105px!important}
+.profile-brand-card img{transform:scale(1.08)!important}
+.profile-identity-card,.profile-metrics>div,.profile-panel,.result-premium-card{
+  background:#073452!important;border-color:rgba(33,216,243,.18)!important
+}
+.premium-form input,.premium-form select,.premium-form textarea{
+  background:#0a3551!important;border-color:#1a5f7e!important;color:white!important
+}
+.primary-premium{
+  background:linear-gradient(90deg,#28c9ea,#39b8e9)!important;border-radius:8px!important
+}
+
+@media(max-width:350px){
+  .marks-row-grid{grid-template-columns:repeat(2,1fr)}
+  .home-brand-lockup img{width:210px}
+}
+
+
+/* ============================================================
+   SwimPro V13 — PROFILE ISOLATION
+   Every selector is scoped under .sp-profile-v13 on purpose.
+   Global UI changes cannot alter this screen.
+   ============================================================ */
+
+.sp-profile-v13,
+.sp-profile-v13 * {
+  box-sizing: border-box;
+}
+
+.sp-profile-v13 {
+  width: 100%;
+  min-width: 0;
+  overflow: hidden;
+  color: #f5fbff;
+}
+
+.sp-profile-v13 svg {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.sp-profile-header {
+  width: 100%;
+  min-height: 44px;
+  display: grid;
+  grid-template-columns: 42px minmax(0, 1fr) 42px;
+  align-items: center;
+  margin: 0 0 12px;
+}
+
+.sp-profile-header h1 {
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  text-align: center;
+  font-size: 18px;
+  line-height: 1.2;
+  font-weight: 700;
+  color: #f5fbff;
+}
+
+.sp-profile-back {
+  width: 42px;
+  height: 42px;
+  display: grid;
+  place-items: center;
+  color: #f5fbff;
+  text-decoration: none;
+}
+
+.sp-profile-back svg {
+  width: 22px;
+  height: 22px;
+}
+
+.sp-profile-header-space {
+  width: 42px;
+  height: 42px;
+}
+
+.sp-profile-brand {
+  width: 100%;
+  height: 96px;
+  margin: 0 0 11px;
+  overflow: hidden;
+  border: 1px solid rgba(33,216,243,.16);
+  border-radius: 12px;
+  background: #051f34;
+}
+
+.sp-profile-brand img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  object-fit: cover;
+  object-position: 50% 50%;
+  transform: none !important;
+  margin: 0;
+  padding: 0;
+}
+
+.sp-profile-person {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 52px minmax(0, 1fr);
+  gap: 12px;
+  align-items: center;
+  padding: 13px;
+  margin: 0 0 9px;
+  border: 1px solid rgba(33,216,243,.18);
+  border-radius: 11px;
+  background: linear-gradient(180deg,#073954,#062e48);
+}
+
+.sp-profile-avatar {
+  width: 52px;
+  height: 52px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: linear-gradient(145deg,#31d5ef,#4977eb);
+  color: #fff;
+  font-size: 21px;
+  font-weight: 900;
+}
+
+.sp-profile-person-copy {
+  min-width: 0;
+}
+
+.sp-profile-person-copy > * {
+  display: block;
+}
+
+.sp-profile-kicker {
+  margin-bottom: 2px;
+  color: #21d8f3;
+  font-size: 9px;
+  line-height: 1.2;
+  font-weight: 900;
+  letter-spacing: .08em;
+}
+
+.sp-profile-person-copy strong {
+  overflow: hidden;
+  color: #f5fbff;
+  font-size: 17px;
+  line-height: 1.25;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.sp-profile-person-copy small {
+  margin-top: 3px;
+  color: #9ab8c6;
+  font-size: 10px;
+  line-height: 1.3;
+}
+
+.sp-profile-stats {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin: 0 0 10px;
+}
+
+.sp-profile-stats article {
+  min-width: 0;
+  padding: 12px;
+  border: 1px solid rgba(33,216,243,.16);
+  border-radius: 10px;
+  background: #07344f;
+}
+
+.sp-profile-stats span,
+.sp-profile-stats strong,
+.sp-profile-stats small {
+  display: block;
+}
+
+.sp-profile-stats span {
+  color: #9ab8c6;
+  font-size: 8px;
+  line-height: 1.2;
+  font-weight: 800;
+}
+
+.sp-profile-stats strong {
+  margin-top: 4px;
+  overflow-wrap: anywhere;
+  color: #f5fbff;
+  font-size: 21px;
+  line-height: 1.15;
+}
+
+.sp-profile-stats small {
+  margin-top: 2px;
+  color: #9ab8c6;
+  font-size: 8px;
+}
+
+.sp-profile-card {
+  width: 100%;
+  min-width: 0;
+  margin: 0 0 10px;
+  overflow: hidden;
+  border: 1px solid rgba(33,216,243,.19);
+  border-radius: 11px;
+  background: rgba(5,47,74,.95);
+}
+
+.sp-profile-card-title {
+  min-height: 39px;
+  display: flex;
+  align-items: center;
+  padding: 0 12px;
+  border-bottom: 1px solid rgba(33,216,243,.14);
+  color: #21d8f3;
+  font-size: 10px;
+  line-height: 1;
+  font-weight: 900;
+  letter-spacing: .02em;
+}
+
+.sp-profile-form {
+  width: 100%;
+  min-width: 0;
+  display: grid;
+  gap: 11px;
+  padding: 12px;
+  margin: 0;
+}
+
+.sp-profile-form label {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  color: #f5fbff;
+  font-size: 11px;
+  line-height: 1.3;
+  font-weight: 500;
+}
+
+.sp-profile-form label > span {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.sp-profile-form input,
+.sp-profile-form select {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  height: 40px;
+  margin: 0;
+  padding: 0 11px;
+  border: 1px solid #1a5f7e;
+  border-radius: 7px;
+  outline: none;
+  background: #0a3551;
+  color: #f5fbff;
+  font-size: 16px;
+  line-height: 40px;
+  appearance: auto;
+}
+
+.sp-profile-form input:focus,
+.sp-profile-form select:focus {
+  border-color: #21d8f3;
+  box-shadow: 0 0 0 2px rgba(33,216,243,.08);
+}
+
+.sp-profile-form label small {
+  display: block;
+  margin-top: 5px;
+  color: #9ab8c6;
+  font-size: 9px;
+  line-height: 1.35;
+  font-weight: 400;
+}
+
+.sp-profile-save {
+  width: 100%;
+  min-height: 42px;
+  margin: 1px 0 0;
+  padding: 0 12px;
+  border: 0;
+  border-radius: 8px;
+  background: linear-gradient(90deg,#28c9ea,#39b8e9);
+  color: #fff;
+  font-size: 13px;
+  line-height: 1;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.sp-profile-downloads {
+  display: grid;
+  gap: 7px;
+  width: 100%;
+  padding: 10px;
+}
+
+.sp-profile-downloads > a {
+  width: 100%;
+  min-width: 0;
+  min-height: 55px;
+  display: grid;
+  grid-template-columns: 38px minmax(0, 1fr) 18px;
+  gap: 9px;
+  align-items: center;
+  padding: 9px;
+  border: 1px solid rgba(33,216,243,.12);
+  border-radius: 9px;
+  background: #082f49;
+  color: #f5fbff;
+  text-decoration: none;
+}
+
+.sp-profile-download-icon {
+  width: 38px;
+  height: 38px;
+  display: grid;
+  place-items: center;
+  border-radius: 9px;
+  background: rgba(33,216,243,.09);
+  color: #21d8f3;
+}
+
+.sp-profile-download-icon svg {
+  width: 19px;
+  height: 19px;
+}
+
+.sp-profile-downloads > a > div:nth-child(2) {
+  min-width: 0;
+}
+
+.sp-profile-downloads strong,
+.sp-profile-downloads span {
+  display: block;
+}
+
+.sp-profile-downloads strong {
+  overflow: hidden;
+  color: #f5fbff;
+  font-size: 11px;
+  line-height: 1.3;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.sp-profile-downloads span {
+  margin-top: 2px;
+  color: #9ab8c6;
+  font-size: 8px;
+  line-height: 1.3;
+}
+
+.sp-profile-chevron {
+  width: 16px;
+  height: 16px;
+  color: #76cfe5;
+}
+
+.sp-profile-info {
+  width: 100%;
+  margin: 0;
+  padding: 11px;
+  border: 1px solid rgba(33,216,243,.10);
+  border-radius: 9px;
+  background: rgba(33,216,243,.045);
+}
+
+.sp-profile-info strong {
+  display: block;
+  color: #dffbff;
+  font-size: 10px;
+}
+
+.sp-profile-info p {
+  margin: 5px 0 0;
+  color: #9ab8c6;
+  font-size: 9px;
+  line-height: 1.45;
+}
+
+@media (max-width: 340px) {
+  .sp-profile-stats {
+    grid-template-columns: 1fr;
+  }
+
+  .sp-profile-brand {
+    height: 86px;
+  }
+}
+
+
+/* ============================================================
+   SwimPro V14 — HOME REFERENCE MATCH
+   Scoped so it cannot break the isolated V13 profile.
+   ============================================================ */
+
+.sp-home-v14,
+.sp-home-v14 * {
+  box-sizing: border-box;
+}
+
+.sp-home-v14 {
+  width: 100%;
+  color: #f6fbff;
+}
+
+.sp-home-v14 svg,
+.sp-bottom-nav-v14 svg {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.sp-home-topbar {
+  display: grid;
+  grid-template-columns: 36px minmax(0, 1fr) 36px;
+  align-items: start;
+  margin: -3px 0 0;
+}
+
+.sp-home-icon-btn {
+  width: 36px;
+  height: 36px;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: #f4fbff;
+}
+
+.sp-home-icon-btn svg {
+  width: 20px;
+  height: 20px;
+}
+
+.sp-home-logo {
+  height: 136px;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.sp-home-logo img {
+  display: block;
+  width: 180px;
+  height: 136px;
+  max-width: none;
+  object-fit: cover;
+  object-position: center 49%;
+  transform: scale(1.46);
+  border-radius: 14px;
+}
+
+.sp-home-greeting {
+  margin: 0 0 12px;
+  padding: 0 0 0 1px;
+}
+
+.sp-home-greeting h1 {
+  margin: 0 0 2px;
+  font-size: 17px;
+  line-height: 1.15;
+  font-weight: 700;
+}
+
+.sp-home-greeting p {
+  margin: 0;
+  color: #c2d3dc;
+  font-size: 10px;
+  line-height: 1.3;
+}
+
+.sp-home-panel {
+  width: 100%;
+  overflow: hidden;
+  margin: 0 0 9px;
+  border: 1px solid rgba(32,213,241,.28);
+  border-radius: 10px;
+  background: rgba(4,47,74,.94);
+}
+
+.sp-home-panel-head {
+  min-height: 35px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 10px;
+  border-bottom: 1px solid rgba(32,213,241,.13);
+}
+
+.sp-home-panel-head h2 {
+  margin: 0;
+  color: #26ddf5;
+  font-size: 9px;
+  line-height: 1;
+  font-weight: 800;
+}
+
+.sp-home-panel-head a {
+  color: #25dafa;
+  font-size: 9px;
+  line-height: 1;
+}
+
+.sp-home-pb-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+  padding: 8px;
+}
+
+.sp-home-pb-card {
+  position: relative;
+  min-width: 0;
+  min-height: 83px;
+  padding: 9px;
+  border: 1px solid rgba(66,147,183,.24);
+  border-radius: 8px;
+  background: linear-gradient(180deg,#073958,#062e49);
+}
+
+.sp-home-pb-card span,
+.sp-home-pb-card strong,
+.sp-home-pb-card small {
+  display: block;
+}
+
+.sp-home-event {
+  overflow: hidden;
+  color: #f5fbff;
+  font-size: 9px;
+  line-height: 1.2;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.sp-home-course {
+  margin-top: 2px;
+  color: #bed0d9;
+  font-size: 9px;
+}
+
+.sp-home-pb-card strong {
+  margin-top: 6px;
+  color: #ffd94e;
+  font-size: 18px;
+  line-height: 1;
+  font-weight: 700;
+}
+
+.sp-home-pb-card em {
+  position: absolute;
+  right: 7px;
+  bottom: 22px;
+  padding: 2px 5px;
+  border-radius: 6px;
+  background: #25d8ef;
+  color: #043047;
+  font-size: 7px;
+  line-height: 1.1;
+  font-weight: 900;
+  font-style: normal;
+}
+
+.sp-home-pb-card small {
+  margin-top: 4px;
+  color: #c1d1d8;
+  font-size: 8px;
+  line-height: 1.2;
+}
+
+.sp-home-recent-list {
+  padding: 0 8px 2px;
+}
+
+.sp-home-recent-row {
+  min-height: 48px;
+  display: grid;
+  grid-template-columns: 24px minmax(0, 1fr) auto 10px;
+  gap: 7px;
+  align-items: center;
+  border-bottom: 1px solid rgba(104,158,181,.14);
+}
+
+.sp-home-recent-row:last-child {
+  border-bottom: 0;
+}
+
+.sp-home-style-badge {
+  width: 24px;
+  height: 24px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  color: #073149;
+}
+
+.sp-home-style-badge svg {
+  width: 17px;
+  height: 17px;
+  stroke-width: 2;
+}
+
+.badge-mariposa { background: #ffd84b; }
+.badge-libre { background: #42d8ca; }
+.badge-pecho { background: #55b7ec; }
+.badge-espalda { background: #65abf5; }
+.badge-combinado { background: #7bd2ef; }
+
+.sp-home-recent-main {
+  min-width: 0;
+}
+
+.sp-home-recent-main strong,
+.sp-home-recent-main span,
+.sp-home-recent-time strong,
+.sp-home-recent-time small {
+  display: block;
+}
+
+.sp-home-recent-main strong {
+  overflow: hidden;
+  color: #f4fbff;
+  font-size: 9px;
+  line-height: 1.15;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.sp-home-recent-main span {
+  margin-top: 2px;
+  color: #b8cad3;
+  font-size: 8px;
+  line-height: 1.2;
+}
+
+.sp-home-recent-time {
+  text-align: right;
+}
+
+.sp-home-recent-time strong {
+  color: #f6fbff;
+  font-size: 14px;
+  line-height: 1;
+}
+
+.sp-home-recent-time small {
+  margin-top: 2px;
+  font-size: 7.5px;
+  line-height: 1.1;
+}
+
+.sp-home-good { color: #3ce0b1; }
+.sp-home-bad { color: #ff8495; }
+
+.sp-home-chevron {
+  color: #25d8ef;
+  font-size: 9px;
+}
+
+.sp-home-next-card {
+  min-height: 66px;
+  display: grid;
+  grid-template-columns: 4px minmax(0, 1fr) 44px;
+  gap: 7px;
+  padding: 8px;
+}
+
+.sp-home-next-accent {
+  border-radius: 999px;
+  background: linear-gradient(180deg,#c14dff,#7655f1);
+}
+
+.sp-home-next-info {
+  min-width: 0;
+}
+
+.sp-home-next-info strong,
+.sp-home-next-info span {
+  display: block;
+}
+
+.sp-home-next-info strong {
+  overflow: hidden;
+  color: #f6fbff;
+  font-size: 9px;
+  line-height: 1.25;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.sp-home-next-info span {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 3px;
+  color: #c3d2d9;
+  font-size: 7.5px;
+  line-height: 1.2;
+}
+
+.sp-home-next-info svg {
+  width: 9px;
+  height: 9px;
+}
+
+.sp-home-next-count {
+  display: grid;
+  place-content: center;
+  text-align: center;
+  border-left: 1px solid rgba(101,153,177,.17);
+}
+
+.sp-home-next-count strong {
+  color: #f5fbff;
+  font-size: 16px;
+  line-height: 1;
+}
+
+.sp-home-next-count small {
+  margin-top: 2px;
+  color: #c5d4da;
+  font-size: 7px;
+}
+
+.sp-home-empty {
+  grid-column: 1 / -1;
+  padding: 14px;
+  color: #9ebbc7;
+  font-size: 9px;
+  text-align: center;
+}
+
+/* Bottom nav exact proportions closer to reference */
+.sp-bottom-nav-v14 {
+  position: fixed;
+  z-index: 100;
+  left: 50%;
+  bottom: 0;
+  transform: translateX(-50%);
+  width: min(390px,100%);
+  height: 70px;
+  display: grid;
+  grid-template-columns: repeat(5,1fr);
+  padding: 6px 4px calc(6px + env(safe-area-inset-bottom));
+  border-top: 1px solid rgba(32,213,241,.13);
+  background: rgba(2,26,43,.985);
+}
+
+.sp-bottom-nav-v14 > a {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  color: #d2e1e7;
+  font-size: 7px;
+}
+
+.sp-bottom-nav-v14 > a.active {
+  color: #43dff3;
+}
+
+.sp-bottom-nav-v14 > a > svg {
+  width: 17px;
+  height: 17px;
+}
+
+.sp-nav-center {
+  margin-top: -21px;
+}
+
+.sp-nav-center > div {
+  width: 45px;
+  height: 45px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: linear-gradient(145deg,#33d5f0,#4775eb);
+  box-shadow: 0 8px 18px rgba(22,113,177,.36);
+}
+
+.sp-nav-center > div svg {
+  width: 21px;
+  height: 21px;
+  color: #fff;
+}
+
+.sp-nav-center span {
+  margin-top: 1px;
+}
+
+@media (max-width: 350px) {
+  .sp-home-logo {
+    height: 126px;
+  }
+
+  .sp-home-logo img {
+    width: 165px;
+    height: 126px;
+  }
+
+  .sp-home-pb-card strong {
+    font-size: 16px;
+  }
+}
+
+
+/* ============================================================
+   SwimPro V15 — EXACT TOP HEADER FROM USER REFERENCE
+   Uses the supplied reference artwork directly, without a card.
+   ============================================================ */
+
+.sp-home-reference-header {
+  position: relative;
+  width: calc(100% + 20px);
+  height: 128px;
+  margin: -18px -10px 0;
+  overflow: hidden;
+  border: 0;
+  border-radius: 0;
+  background: #05233a;
+}
+
+.sp-home-reference-header > img {
+  display: block;
+  width: 100%;
+  height: auto;
+  min-height: 170px;
+  max-width: none;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  object-fit: cover;
+  object-position: top center;
+  transform: none !important;
+}
+
+.sp-home-reference-hit {
+  position: absolute;
+  top: 7px;
+  width: 42px;
+  height: 42px;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+.sp-home-reference-menu {
+  left: 0;
+}
+
+.sp-home-reference-bell {
+  right: 0;
+}
+
+.sp-home-greeting-v15 {
+  margin: 0 -2px 12px !important;
+  padding: 0 !important;
+}
+
+.sp-home-greeting-v15 h1 {
+  margin: 0 0 2px !important;
+  font-size: 17px !important;
+  line-height: 1.15 !important;
+  font-weight: 700 !important;
+}
+
+.sp-home-greeting-v15 p {
+  margin: 0 !important;
+  color: #c2d3dc !important;
+  font-size: 10px !important;
+  line-height: 1.3 !important;
+}
+
+@media (max-width: 350px) {
+  .sp-home-reference-header {
+    height: 123px;
+  }
+}
+
+
+/* ============================================================
+   SwimPro V16 — corrected responsive hero
+   Rebuilds the header instead of displaying a screenshot crop.
+   ============================================================ */
+.sp-home-v16-hero{
+  position:relative;
+  width:calc(100% + 20px);
+  height:168px;
+  margin:-18px -10px 10px;
+  overflow:hidden;
+  background:
+    radial-gradient(circle at 50% -30%,rgba(15,116,174,.30),transparent 55%),
+    linear-gradient(180deg,#03233b 0%,#042945 66%,#052b45 100%);
+}
+
+.sp-home-v16-water{
+  position:absolute;
+  inset:0;
+  overflow:hidden;
+  pointer-events:none;
+}
+.sp-home-v16-water::before,
+.sp-home-v16-water::after{
+  content:"";
+  position:absolute;
+  left:-12%;
+  width:125%;
+  height:78px;
+  border-radius:50%;
+  border-top:1px solid rgba(28,132,189,.20);
+  transform:rotate(-3deg);
+}
+.sp-home-v16-water::before{
+  bottom:-28px;
+  box-shadow:
+    0 -10px 0 -9px rgba(34,139,196,.17),
+    0 -21px 0 -20px rgba(34,139,196,.13),
+    0 -33px 0 -32px rgba(34,139,196,.10);
+}
+.sp-home-v16-water::after{
+  bottom:-47px;
+  transform:rotate(5deg);
+  box-shadow:
+    0 -12px 0 -11px rgba(25,115,173,.14),
+    0 -27px 0 -26px rgba(25,115,173,.11);
+}
+
+.sp-home-v16-icon{
+  position:absolute;
+  z-index:5;
+  top:8px;
+  width:38px;
+  height:38px;
+  display:grid;
+  place-items:center;
+  padding:0;
+  border:0;
+  background:transparent;
+  color:#f4fbff;
+}
+.sp-home-v16-icon svg{width:20px;height:20px}
+.sp-home-v16-menu{left:4px}
+.sp-home-v16-bell{right:4px}
+
+.sp-home-v16-brand{
+  position:absolute;
+  z-index:2;
+  top:6px;
+  left:50%;
+  width:160px;
+  height:111px;
+  transform:translateX(-50%);
+  overflow:hidden;
+  background:transparent;
+}
+.sp-home-v16-brand img{
+  position:absolute;
+  width:230px;
+  height:144px;
+  max-width:none;
+  left:50%;
+  top:50%;
+  margin:0;
+  border:0;
+  border-radius:0;
+  object-fit:cover;
+  object-position:50% 48%;
+  transform:translate(-50%,-50%) scale(1.04) !important;
+  mix-blend-mode:normal;
+}
+
+.sp-home-v16-greeting{
+  position:absolute;
+  z-index:4;
+  left:9px;
+  right:9px;
+  bottom:9px;
+}
+.sp-home-v16-greeting h1{
+  margin:0 0 2px;
+  color:#fff;
+  font-size:16px;
+  line-height:1.12;
+  font-weight:700;
+}
+.sp-home-v16-greeting p{
+  margin:0;
+  color:#c8d7df;
+  font-size:9px;
+  line-height:1.2;
+}
+
+@media(max-width:350px){
+  .sp-home-v16-hero{height:164px}
+  .sp-home-v16-brand{width:150px}
+}
+
+
+/* ============================================================
+   SwimPro V17 — Approved Home
+   Exact visual direction from approved mockup.
+   ============================================================ */
+
+.sp-home-v17,
+.sp-home-v17 * {
+  box-sizing: border-box;
+}
+
+.sp-home-v17 {
+  width: 100%;
+  color: #f4fbff;
+}
+
+.sp-home-v17 svg,
+.sp17-nav svg {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* HERO */
+.sp17-hero {
+  position: relative;
+  width: calc(100% + 20px);
+  height: 245px;
+  margin: -18px -10px 14px;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 55% -15%, rgba(27,118,190,.28), transparent 55%),
+    linear-gradient(180deg,#02213a 0%,#032a49 61%,#062c49 100%);
+}
+
+.sp17-water-lines {
+  position: absolute;
+  inset: 0;
+  opacity: .75;
+  pointer-events: none;
+}
+
+.sp17-water-lines::before,
+.sp17-water-lines::after {
+  content: "";
+  position: absolute;
+  width: 130%;
+  height: 150px;
+  left: -15%;
+  bottom: -74px;
+  border-radius: 50%;
+  border-top: 1px solid rgba(30,135,196,.21);
+  transform: rotate(-4deg);
+}
+
+.sp17-water-lines::before {
+  box-shadow:
+    0 -16px 0 -15px rgba(28,124,184,.17),
+    0 -31px 0 -30px rgba(28,124,184,.13),
+    0 -47px 0 -46px rgba(28,124,184,.10);
+}
+
+.sp17-water-lines::after {
+  bottom: -98px;
+  transform: rotate(6deg);
+  box-shadow:
+    0 -18px 0 -17px rgba(21,107,170,.14),
+    0 -37px 0 -36px rgba(21,107,170,.11),
+    0 -57px 0 -56px rgba(21,107,170,.09);
+}
+
+.sp17-top-button {
+  position: absolute;
+  z-index: 5;
+  top: 15px;
+  width: 42px;
+  height: 42px;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: #fff;
+}
+
+.sp17-top-button svg {
+  width: 24px;
+  height: 24px;
+}
+
+.sp17-menu { left: 9px; }
+.sp17-bell { right: 9px; }
+
+.sp17-brand {
+  position: absolute;
+  z-index: 3;
+  top: 6px;
+  left: 50%;
+  width: 235px;
+  height: 175px;
+  transform: translateX(-50%);
+  overflow: hidden;
+  background: transparent;
+}
+
+.sp17-brand img {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  display: block;
+  width: 320px;
+  height: 190px;
+  max-width: none;
+  object-fit: cover;
+  object-position: 50% 48%;
+  transform: translate(-50%,-50%) scale(1.02) !important;
+  border: 0;
+  border-radius: 0;
+  margin: 0;
+  padding: 0;
+}
+
+.sp17-welcome {
+  position: absolute;
+  z-index: 4;
+  left: 19px;
+  right: 19px;
+  bottom: 19px;
+}
+
+.sp17-welcome h1 {
+  margin: 0 0 5px;
+  font-size: 25px;
+  line-height: 1.1;
+  font-weight: 700;
+  letter-spacing: -.02em;
+}
+
+.sp17-welcome p {
+  margin: 0;
+  color: #c5d5df;
+  font-size: 14px;
+  line-height: 1.2;
+}
+
+/* CARDS */
+.sp17-card {
+  width: 100%;
+  overflow: hidden;
+  margin-bottom: 12px;
+  border: 1px solid rgba(31,205,240,.35);
+  border-radius: 13px;
+  background: linear-gradient(180deg,rgba(5,47,75,.97),rgba(4,40,65,.97));
+}
+
+.sp17-card-head {
+  min-height: 46px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 14px;
+  border-bottom: 1px solid rgba(32,207,241,.13);
+}
+
+.sp17-card-head h2 {
+  margin: 0;
+  color: #29dff6;
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: .01em;
+}
+
+.sp17-card-head a {
+  color: #27daf4;
+  font-size: 13px;
+}
+
+.sp17-pb-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 9px;
+  padding: 12px;
+}
+
+.sp17-pb {
+  min-width: 0;
+  min-height: 132px;
+  padding: 14px;
+  border: 1px solid rgba(63,148,186,.28);
+  border-radius: 11px;
+  background: linear-gradient(180deg,#073a59,#062f4b);
+}
+
+.sp17-pb span,
+.sp17-pb strong,
+.sp17-pb small {
+  display: block;
+}
+
+.sp17-event {
+  font-size: 15px;
+  line-height: 1.15;
+}
+
+.sp17-course {
+  margin-top: 5px;
+  color: #bdd0da;
+  font-size: 13px;
+}
+
+.sp17-pb-line {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: minmax(0,1fr) auto;
+  gap: 8px;
+  align-items: center;
+  margin-top: 11px;
+}
+
+.sp17-pb-line strong {
+  min-width: 0;
+  overflow: hidden;
+  color: #ffda4d;
+  font-size: 28px;
+  line-height: 1;
+  font-weight: 700;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.sp17-pb-line em {
+  display: inline-grid;
+  place-items: center;
+  min-width: 34px;
+  height: 26px;
+  padding: 0 8px;
+  border-radius: 8px;
+  background: #25d9ef;
+  color: #06344a;
+  font-size: 12px;
+  font-weight: 900;
+  font-style: normal;
+}
+
+.sp17-pb small {
+  margin-top: 8px;
+  color: #c2d2da;
+  font-size: 12px;
+}
+
+/* RECENT */
+.sp17-recent {
+  padding: 0 13px 5px;
+}
+
+.sp17-recent-row {
+  min-height: 75px;
+  display: grid;
+  grid-template-columns: 45px minmax(0,1fr) auto 20px;
+  gap: 11px;
+  align-items: center;
+  border-bottom: 1px solid rgba(92,153,180,.18);
+}
+
+.sp17-recent-row:last-child {
+  border-bottom: 0;
+}
+
+.sp17-swim-icon {
+  width: 43px;
+  height: 43px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  color: #062d42;
+}
+
+.sp17-swim-icon svg {
+  width: 28px;
+  height: 28px;
+  stroke-width: 2;
+}
+
+.sp17-mariposa { background: #ffd94c; }
+.sp17-libre { background: #35dbca; }
+.sp17-pecho { background: #53bff2; }
+.sp17-espalda { background: #63acf5; }
+.sp17-combinado { background: #57bfe8; }
+
+.sp17-recent-main {
+  min-width: 0;
+}
+
+.sp17-recent-main strong,
+.sp17-recent-main span,
+.sp17-recent-time strong,
+.sp17-recent-time small {
+  display: block;
+}
+
+.sp17-recent-main strong {
+  overflow: hidden;
+  color: #f4fbff;
+  font-size: 16px;
+  line-height: 1.15;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.sp17-recent-main span {
+  margin-top: 4px;
+  color: #c2d1d9;
+  font-size: 13px;
+}
+
+.sp17-recent-time {
+  text-align: right;
+}
+
+.sp17-recent-time strong {
+  color: #f6fbff;
+  font-size: 22px;
+  line-height: 1;
+}
+
+.sp17-recent-time small {
+  margin-top: 5px;
+  font-size: 13px;
+  line-height: 1.1;
+}
+
+.sp17-good { color: #3be2ae; }
+.sp17-bad { color: #ff8295; }
+
+.sp17-down {
+  width: 18px;
+  height: 18px;
+  color: #27d8ef;
+}
+
+/* NEXT COMPETITION */
+.sp17-next-section {
+  margin-bottom: 16px;
+}
+
+.sp17-next {
+  min-height: 108px;
+  display: grid;
+  grid-template-columns: 6px minmax(0,1fr) 88px;
+  gap: 12px;
+  padding: 12px;
+}
+
+.sp17-purple-bar {
+  border-radius: 999px;
+  background: linear-gradient(180deg,#c84cff,#7854ee);
+}
+
+.sp17-next-info {
+  min-width: 0;
+}
+
+.sp17-next-info strong,
+.sp17-next-info span {
+  display: block;
+}
+
+.sp17-next-info strong {
+  overflow: hidden;
+  color: #f6fbff;
+  font-size: 16px;
+  line-height: 1.25;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.sp17-next-info span {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
+  color: #c5d3db;
+  font-size: 13px;
+}
+
+.sp17-next-info svg {
+  width: 16px;
+  height: 16px;
+}
+
+.sp17-next-count {
+  display: grid;
+  place-content: center;
+  text-align: center;
+  border-left: 1px solid rgba(96,151,177,.18);
+}
+
+.sp17-next-count strong {
+  color: #f5fbff;
+  font-size: 36px;
+  line-height: 1;
+}
+
+.sp17-next-count small {
+  margin-top: 7px;
+  color: #c6d4db;
+  font-size: 13px;
+}
+
+.sp17-empty {
+  grid-column: 1 / -1;
+  padding: 18px;
+  color: #9ebbc7;
+  font-size: 12px;
+  text-align: center;
+}
+
+/* NAV */
+.sp17-nav {
+  position: fixed;
+  z-index: 100;
+  left: 50%;
+  bottom: 0;
+  transform: translateX(-50%);
+  width: min(390px,100%);
+  height: 86px;
+  display: grid;
+  grid-template-columns: repeat(5,1fr);
+  padding: 8px 7px calc(8px + env(safe-area-inset-bottom));
+  border-top: 1px solid rgba(32,207,241,.15);
+  background: rgba(3,25,43,.99);
+}
+
+.sp17-nav > a {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  color: #d4e0e6;
+  font-size: 10px;
+}
+
+.sp17-nav > a > svg {
+  width: 23px;
+  height: 23px;
+}
+
+.sp17-nav-active {
+  color: #39dff2 !important;
+}
+
+.sp17-nav-time {
+  margin-top: -31px;
+}
+
+.sp17-nav-time > div {
+  width: 61px;
+  height: 61px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: linear-gradient(145deg,#32d8ef,#445fea);
+  box-shadow: 0 9px 25px rgba(23,105,184,.42);
+}
+
+.sp17-nav-time > div svg {
+  width: 29px;
+  height: 29px;
+  color: #fff;
+}
+
+.sp17-nav-time span {
+  margin-top: 0;
+}
+
+@media (max-width: 360px) {
+  .sp17-hero {
+    height: 225px;
+  }
+
+  .sp17-brand {
+    width: 210px;
+    height: 160px;
+  }
+
+  .sp17-welcome h1 {
+    font-size: 22px;
+  }
+
+  .sp17-welcome p {
+    font-size: 12px;
+  }
+
+  .sp17-pb-line strong {
+    font-size: 23px;
+  }
+
+  .sp17-recent-main strong {
+    font-size: 14px;
+  }
+
+  .sp17-recent-time strong {
+    font-size: 19px;
+  }
+}
+
+
+/* ============================================================
+   SwimPro V18 — corrected home proportions + transparent logo
+   ============================================================ */
+
+.sp18-home,.sp18-home *{box-sizing:border-box}
+.sp18-home{width:100%;color:#f6fbff}
+.sp18-home svg,.sp18-nav svg{fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+
+.sp18-hero{
+  position:relative;
+  width:calc(100% + 20px);
+  height:248px;
+  margin:-18px -10px 14px;
+  overflow:hidden;
+  background:
+    radial-gradient(circle at 50% -10%,rgba(25,118,185,.27),transparent 52%),
+    linear-gradient(180deg,#02223b 0%,#032b49 62%,#082d49 100%);
+}
+.sp18-water{position:absolute;inset:0;overflow:hidden;pointer-events:none}
+.sp18-water::before,.sp18-water::after{
+  content:"";position:absolute;left:-15%;width:130%;height:150px;border-radius:50%;
+  border-top:1px solid rgba(26,130,190,.20)
+}
+.sp18-water::before{
+  bottom:-70px;transform:rotate(-4deg);
+  box-shadow:0 -17px 0 -16px rgba(34,135,195,.16),0 -34px 0 -33px rgba(34,135,195,.12),0 -52px 0 -51px rgba(34,135,195,.09)
+}
+.sp18-water::after{
+  bottom:-95px;transform:rotate(6deg);
+  box-shadow:0 -20px 0 -19px rgba(24,113,178,.13),0 -42px 0 -41px rgba(24,113,178,.10)
+}
+
+.sp18-top-btn{
+  position:absolute;z-index:5;top:15px;width:42px;height:42px;display:grid;place-items:center;
+  padding:0;border:0;background:transparent;color:#fff
+}
+.sp18-top-btn svg{width:23px;height:23px}
+.sp18-menu{left:10px}.sp18-bell{right:10px}
+
+.sp18-logo-wrap{
+  position:absolute;z-index:4;top:18px;left:50%;width:245px;height:165px;
+  transform:translateX(-50%);display:flex;align-items:center;justify-content:center
+}
+.sp18-logo-wrap img{
+  display:block;max-width:100%;max-height:100%;width:auto;height:auto;
+  object-fit:contain;filter:drop-shadow(0 5px 10px rgba(0,0,0,.12))
+}
+
+.sp18-greeting{position:absolute;z-index:5;left:19px;right:19px;bottom:18px}
+.sp18-greeting h1{margin:0 0 4px;font-size:25px;line-height:1.08;font-weight:700;letter-spacing:-.02em}
+.sp18-greeting p{margin:0;color:#c4d4dd;font-size:14px;line-height:1.15}
+
+.sp18-panel{
+  overflow:hidden;margin-bottom:12px;border:1px solid rgba(33,216,243,.34);border-radius:13px;
+  background:linear-gradient(180deg,rgba(5,48,76,.98),rgba(4,41,66,.98))
+}
+.sp18-panel-head{
+  min-height:46px;display:flex;justify-content:space-between;align-items:center;padding:0 14px;
+  border-bottom:1px solid rgba(33,216,243,.13)
+}
+.sp18-panel-head h2{margin:0;color:#28def5;font-size:14px;font-weight:800}
+.sp18-panel-head a{color:#29dcef;font-size:13px}
+
+.sp18-pb-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;padding:12px}
+.sp18-pb{
+  min-height:132px;padding:14px;border-radius:11px;border:1px solid rgba(67,149,185,.28);
+  background:linear-gradient(180deg,#073a59,#062f4b)
+}
+.sp18-pb>span,.sp18-pb>small{display:block}
+.sp18-pb>span{font-size:15px}
+.sp18-pb>small{margin-top:5px;color:#bdd0da;font-size:12px}
+.sp18-pb-value{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:7px;align-items:center;margin-top:10px}
+.sp18-pb-value strong{overflow:hidden;color:#ffda4d;font-size:27px;line-height:1;white-space:nowrap;text-overflow:ellipsis}
+.sp18-pb-value em{
+  min-width:33px;height:25px;display:grid;place-items:center;padding:0 7px;border-radius:8px;
+  background:#25d9ef;color:#063449;font-size:11px;font-weight:900;font-style:normal
+}
+
+.sp18-recent-list{padding:0 13px 5px}
+.sp18-recent-row{
+  min-height:75px;display:grid;grid-template-columns:43px minmax(0,1fr) auto 19px;gap:11px;align-items:center;
+  border-bottom:1px solid rgba(95,154,180,.18)
+}
+.sp18-recent-row:last-child{border-bottom:0}
+.sp18-swim-icon{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;color:#062e43}
+.sp18-swim-icon svg{width:27px;height:27px;stroke-width:2}
+.sp18-mariposa{background:#ffd84c}.sp18-libre{background:#35daca}.sp18-pecho{background:#55bff1}.sp18-espalda{background:#65acf4}.sp18-combinado{background:#61c8eb}
+.sp18-recent-main{min-width:0}
+.sp18-recent-main strong,.sp18-recent-main span,.sp18-recent-result strong,.sp18-recent-result small{display:block}
+.sp18-recent-main strong{overflow:hidden;font-size:16px;line-height:1.15;white-space:nowrap;text-overflow:ellipsis}
+.sp18-recent-main span{margin-top:4px;color:#c1d0d8;font-size:13px}
+.sp18-recent-result{text-align:right}
+.sp18-recent-result strong{font-size:22px;line-height:1}
+.sp18-recent-result small{margin-top:5px;font-size:13px}
+.sp18-good{color:#3ce2b2}.sp18-bad{color:#ff8496}
+.sp18-down{width:17px;height:17px;color:#27daf0}
+
+.sp18-next{min-height:106px;display:grid;grid-template-columns:6px minmax(0,1fr) 86px;gap:12px;padding:12px}
+.sp18-purple{border-radius:999px;background:linear-gradient(180deg,#c64cff,#7854ee)}
+.sp18-next-info{min-width:0}
+.sp18-next-info strong,.sp18-next-info span{display:block}
+.sp18-next-info strong{overflow:hidden;font-size:16px;line-height:1.25;white-space:nowrap;text-overflow:ellipsis}
+.sp18-next-info span{display:flex;align-items:center;gap:8px;margin-top:8px;color:#c4d3da;font-size:13px}
+.sp18-next-info svg{width:15px;height:15px}
+.sp18-next-count{display:grid;place-content:center;text-align:center;border-left:1px solid rgba(96,151,177,.18)}
+.sp18-next-count strong{font-size:36px;line-height:1}.sp18-next-count small{margin-top:7px;color:#c5d4db;font-size:13px}
+
+.sp18-empty{grid-column:1/-1;padding:18px;color:#9dbac6;font-size:12px;text-align:center}
+
+.sp18-nav{
+  position:fixed;z-index:100;left:50%;bottom:0;transform:translateX(-50%);
+  width:min(390px,100%);height:86px;display:grid;grid-template-columns:repeat(5,1fr);
+  padding:8px 7px calc(8px + env(safe-area-inset-bottom));
+  border-top:1px solid rgba(33,216,243,.15);background:rgba(3,25,43,.99)
+}
+.sp18-nav>a{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;color:#d4e1e7;font-size:10px}
+.sp18-nav>a.active{color:#3adff2}
+.sp18-nav>a>svg{width:23px;height:23px}
+.sp18-time{margin-top:-31px}
+.sp18-time>div{
+  width:61px;height:61px;border-radius:50%;display:grid;place-items:center;
+  background:linear-gradient(145deg,#33d8ef,#465eea);box-shadow:0 9px 25px rgba(23,105,184,.42)
+}
+.sp18-time>div svg{width:29px;height:29px;color:#fff}
+
+@media(max-width:360px){
+  .sp18-hero{height:230px}
+  .sp18-logo-wrap{width:220px;height:150px}
+  .sp18-greeting h1{font-size:22px}
+  .sp18-greeting p{font-size:12px}
+  .sp18-pb-value strong{font-size:23px}
+  .sp18-recent-main strong{font-size:14px}
+  .sp18-recent-result strong{font-size:19px}
+}
+
+
+/* ============================================================
+   SwimPro V19 — exact user-supplied logo + water background
+   No generated/reconstructed header artwork.
+   ============================================================ */
+
+.sp18-hero {
+  height: 245px !important;
+  background-image: url("/static/swimpro_water_bg_user.png") !important;
+  background-size: cover !important;
+  background-position: 50% 48% !important;
+  background-repeat: no-repeat !important;
+}
+
+.sp18-water {
+  display: none !important;
+}
+
+.sp18-logo-wrap {
+  top: 12px !important;
+  left: 50% !important;
+  width: 205px !important;
+  height: 160px !important;
+  transform: translateX(-50%) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  overflow: visible !important;
+  background: transparent !important;
+}
+
+.sp18-logo-wrap img {
+  position: static !important;
+  display: block !important;
+  width: 100% !important;
+  height: 100% !important;
+  max-width: 100% !important;
+  max-height: 100% !important;
+  object-fit: contain !important;
+  object-position: center !important;
+  transform: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  filter: none !important;
+}
+
+.sp18-top-btn {
+  top: 10px !important;
+}
+
+.sp18-menu {
+  left: 8px !important;
+}
+
+.sp18-bell {
+  right: 8px !important;
+}
+
+.sp18-greeting {
+  left: 10px !important;
+  right: 10px !important;
+  bottom: 12px !important;
+}
+
+.sp18-greeting h1 {
+  margin: 0 0 2px !important;
+  font-size: 17px !important;
+  line-height: 1.12 !important;
+  font-weight: 700 !important;
+}
+
+.sp18-greeting p {
+  margin: 0 !important;
+  font-size: 10px !important;
+  line-height: 1.2 !important;
+  color: #c9d8e0 !important;
+}
+
+@media (max-width: 360px) {
+  .sp18-hero {
+    height: 220px !important;
+  }
+
+  .sp18-logo-wrap {
+    width: 185px !important;
+    height: 145px !important;
+  }
+
+  .sp18-greeting h1 {
+    font-size: 16px !important;
+  }
+}
+
+
+/* ============================================================
+   SwimPro V20 — reference-match sizing
+   Keeps exact user logo/background, adjusts proportions to the
+   approved second screenshot.
+   ============================================================ */
+
+.sp18-home {
+  padding: 0 7px 12px !important;
+}
+
+.sp18-hero {
+  width: calc(100% + 34px) !important;
+  height: 170px !important;
+  margin: -18px -17px 8px !important;
+  background-image: url("/static/swimpro_water_bg_user.png") !important;
+  background-size: cover !important;
+  background-position: center 54% !important;
+}
+
+.sp18-logo-wrap {
+  top: 8px !important;
+  width: 142px !important;
+  height: 108px !important;
+}
+
+.sp18-logo-wrap img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: contain !important;
+}
+
+.sp18-top-btn {
+  top: 5px !important;
+  width: 34px !important;
+  height: 34px !important;
+}
+
+.sp18-top-btn svg {
+  width: 18px !important;
+  height: 18px !important;
+}
+
+.sp18-menu { left: 7px !important; }
+.sp18-bell { right: 7px !important; }
+
+.sp18-greeting {
+  left: 9px !important;
+  right: 9px !important;
+  bottom: 9px !important;
+}
+
+.sp18-greeting h1 {
+  margin: 0 0 1px !important;
+  font-size: 15px !important;
+  line-height: 1.08 !important;
+}
+
+.sp18-greeting p {
+  font-size: 9px !important;
+  line-height: 1.15 !important;
+}
+
+.sp18-panel {
+  margin-bottom: 8px !important;
+  border-radius: 9px !important;
+}
+
+.sp18-panel-head {
+  min-height: 34px !important;
+  padding: 0 10px !important;
+}
+
+.sp18-panel-head h2 {
+  font-size: 10px !important;
+}
+
+.sp18-panel-head a {
+  font-size: 9px !important;
+}
+
+.sp18-pb-grid {
+  gap: 6px !important;
+  padding: 8px !important;
+}
+
+.sp18-pb {
+  min-height: 82px !important;
+  padding: 9px !important;
+  border-radius: 8px !important;
+}
+
+.sp18-pb > span {
+  font-size: 9px !important;
+  line-height: 1.15 !important;
+}
+
+.sp18-pb > small {
+  margin-top: 2px !important;
+  font-size: 8px !important;
+}
+
+.sp18-pb-value {
+  margin-top: 6px !important;
+  gap: 5px !important;
+}
+
+.sp18-pb-value strong {
+  font-size: 18px !important;
+}
+
+.sp18-pb-value em {
+  min-width: 24px !important;
+  height: 17px !important;
+  padding: 0 5px !important;
+  border-radius: 6px !important;
+  font-size: 7px !important;
+}
+
+.sp18-recent-list {
+  padding: 0 8px 2px !important;
+}
+
+.sp18-recent-row {
+  min-height: 48px !important;
+  grid-template-columns: 25px minmax(0,1fr) auto 12px !important;
+  gap: 7px !important;
+}
+
+.sp18-swim-icon {
+  width: 25px !important;
+  height: 25px !important;
+}
+
+.sp18-swim-icon svg {
+  width: 17px !important;
+  height: 17px !important;
+}
+
+.sp18-recent-main strong {
+  font-size: 9px !important;
+}
+
+.sp18-recent-main span {
+  margin-top: 2px !important;
+  font-size: 8px !important;
+}
+
+.sp18-recent-result strong {
+  font-size: 14px !important;
+}
+
+.sp18-recent-result small {
+  margin-top: 2px !important;
+  font-size: 8px !important;
+}
+
+.sp18-down {
+  width: 10px !important;
+  height: 10px !important;
+}
+
+.sp18-next {
+  min-height: 64px !important;
+  grid-template-columns: 4px minmax(0,1fr) 46px !important;
+  gap: 7px !important;
+  padding: 8px !important;
+}
+
+.sp18-next-info strong {
+  font-size: 9px !important;
+}
+
+.sp18-next-info span {
+  gap: 4px !important;
+  margin-top: 4px !important;
+  font-size: 7.5px !important;
+}
+
+.sp18-next-info svg {
+  width: 9px !important;
+  height: 9px !important;
+}
+
+.sp18-next-count strong {
+  font-size: 17px !important;
+}
+
+.sp18-next-count small {
+  margin-top: 2px !important;
+  font-size: 7px !important;
+}
+
+.sp18-nav {
+  height: 68px !important;
+  padding: 5px 4px calc(5px + env(safe-area-inset-bottom)) !important;
+}
+
+.sp18-nav > a {
+  gap: 2px !important;
+  font-size: 7px !important;
+}
+
+.sp18-nav > a > svg {
+  width: 17px !important;
+  height: 17px !important;
+}
+
+.sp18-time {
+  margin-top: -21px !important;
+}
+
+.sp18-time > div {
+  width: 45px !important;
+  height: 45px !important;
+}
+
+.sp18-time > div svg {
+  width: 21px !important;
+  height: 21px !important;
+}
+
+/* keep content above fixed nav */
+body {
+  padding-bottom: 72px !important;
+}
+
+
+/* ============================================================
+   SwimPro V21 — larger home logo
+   Only changes the logo sizing/position in the approved V20 hero.
+   ============================================================ */
+
+.sp18-logo-wrap {
+  top: 2px !important;
+  width: 205px !important;
+  height: 132px !important;
+}
+
+.sp18-logo-wrap img {
+  width: 100% !important;
+  height: 100% !important;
+  max-width: 100% !important;
+  max-height: 100% !important;
+  object-fit: contain !important;
+  object-position: center !important;
+  transform: none !important;
+}
+
+/* preserve enough breathing room between logo and greeting */
+.sp18-greeting {
+  bottom: 8px !important;
+}
+
+@media (max-width: 360px) {
+  .sp18-logo-wrap {
+    width: 190px !important;
+    height: 124px !important;
+  }
+}
+
+
+/* ============================================================
+   SwimPro V22 — MIS MARCAS
+   ============================================================ */
+.sp22-marks,.sp22-marks *{box-sizing:border-box}
+.sp22-marks{width:100%;padding:0 4px 14px;color:#f5fbff}
+.sp22-marks svg{fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+
+.sp22-header{
+  min-height:48px;display:grid;grid-template-columns:40px minmax(0,1fr) 40px;
+  align-items:center;margin:-8px 0 7px
+}
+.sp22-header>a{width:40px;height:40px;display:grid;place-items:center;color:#f4fbff}
+.sp22-header>a svg{width:22px;height:22px}
+.sp22-header h1{margin:0;text-align:center;font-size:18px;line-height:1.2;font-weight:700}
+
+.sp22-course-tabs{
+  height:42px;display:grid;grid-template-columns:1fr 1fr;margin:0 0 13px;
+  overflow:hidden;border:1px solid #185774;border-radius:8px;background:#082c45
+}
+.sp22-course-tabs a{
+  position:relative;display:grid;place-items:center;color:#b9cbd5;font-size:12px;text-decoration:none
+}
+.sp22-course-tabs a.active{color:#fff;background:linear-gradient(180deg,#0a3a58,#0b334d);font-weight:700}
+.sp22-course-tabs a.active::after{
+  content:"";position:absolute;left:24%;right:24%;bottom:0;height:2px;border-radius:99px;background:#24dff4
+}
+
+.sp22-stroke-card{
+  overflow:hidden;margin-bottom:10px;border:1px solid #165a78;border-radius:10px;
+  background:linear-gradient(180deg,#073652,#052b44)
+}
+.sp22-stroke-head{
+  height:51px;display:flex;justify-content:space-between;align-items:center;padding:0 13px;
+  border-bottom:1px solid rgba(55,146,181,.22)
+}
+.sp22-stroke-title{display:flex;align-items:center;gap:10px;min-width:0}
+.sp22-stroke-title strong{font-size:13px;line-height:1}
+.sp22-stroke-icon{width:32px;height:28px;display:grid;place-items:center;color:#28d9f3}
+.sp22-stroke-icon svg{width:31px;height:24px;stroke-width:2}
+.sp22-collapse{width:16px;height:16px;color:#e6f2f7}
+
+.sp22-times{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  min-height:92px
+}
+.sp22-time-cell{
+  position:relative;min-width:0;padding:12px 10px 10px;border-right:1px solid rgba(60,137,168,.28);
+  color:#f5fbff;text-decoration:none
+}
+.sp22-time-cell:last-child{border-right:0}
+.sp22-time-cell span,.sp22-time-cell strong,.sp22-time-cell small{display:block}
+.sp22-time-cell span{color:#d6e2e7;font-size:11px}
+.sp22-time-cell strong{
+  margin-top:6px;overflow:hidden;font-size:15px;line-height:1.05;font-weight:700;
+  text-overflow:ellipsis;white-space:nowrap
+}
+.sp22-time-cell em{
+  display:inline-grid;place-items:center;margin-top:7px;min-width:25px;height:17px;padding:0 5px;
+  border-radius:6px;background:#25d9ef;color:#063449;font-size:7px;font-weight:900;font-style:normal
+}
+.sp22-time-cell small{margin-top:4px;color:#8faeba;font-size:7px}
+
+.sp22-empty{
+  display:flex;flex-direction:column;align-items:center;text-align:center;padding:34px 20px;
+  border:1px solid #165a78;border-radius:10px;background:#062e49
+}
+.sp22-empty strong{font-size:14px}
+.sp22-empty span{max-width:260px;margin-top:7px;color:#9eb8c4;font-size:10px;line-height:1.4}
+.sp22-empty a{
+  margin-top:16px;padding:10px 18px;border-radius:8px;background:#25c9e7;color:#fff;
+  font-size:11px;font-weight:700
+}
+
+@media(max-width:360px){
+  .sp22-times{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .sp22-time-cell:nth-child(4){border-top:1px solid rgba(60,137,168,.28)}
+}
+
+
+/* ============================================================
+   SwimPro V23 — COMPETENCIAS + EVOLUCIÓN
+   ============================================================ */
+
+.sp23-screen,
+.sp23-screen * {
+  box-sizing: border-box;
+}
+
+.sp23-screen {
+  width: 100%;
+  color: #f5fbff;
+}
+
+.sp23-screen svg {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.sp23-water-head {
+  position: relative;
+  width: calc(100% + 20px);
+  margin: -18px -10px 14px;
+  padding: 10px 17px 19px;
+  overflow: hidden;
+  background-image:
+    linear-gradient(rgba(2,29,49,.28),rgba(2,29,49,.28)),
+    url("/static/swimpro_water_bg_user.png");
+  background-size: cover;
+  background-position: center 46%;
+  border-bottom: 1px solid rgba(32,213,241,.12);
+}
+
+.sp23-water-head::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(180deg,rgba(0,0,0,0),rgba(2,26,43,.12));
+}
+
+.sp23-head-row {
+  position: relative;
+  z-index: 2;
+  min-height: 38px;
+  display: grid;
+  grid-template-columns: 38px minmax(0,1fr) 38px;
+  align-items: center;
+}
+
+.sp23-head-icon {
+  width: 38px;
+  height: 38px;
+  display: grid;
+  place-items: center;
+  color: #f5fbff;
+}
+
+.sp23-head-icon svg {
+  width: 20px;
+  height: 20px;
+}
+
+.sp23-water-head h1 {
+  position: relative;
+  z-index: 2;
+  margin: 25px 0 0;
+  color: #fff;
+  font-size: 31px;
+  line-height: 1.05;
+  font-weight: 750;
+  letter-spacing: -.02em;
+}
+
+.sp23-list-card {
+  overflow: hidden;
+  border: 1px solid rgba(32,213,241,.32);
+  border-radius: 13px;
+  background: linear-gradient(180deg,rgba(5,48,75,.97),rgba(4,40,64,.98));
+}
+
+.sp23-comp-row {
+  min-height: 104px;
+  display: grid;
+  grid-template-columns: 38px minmax(0,1fr) 18px;
+  gap: 10px;
+  align-items: start;
+  padding: 14px 13px;
+  border-bottom: 1px solid rgba(70,145,175,.25);
+}
+
+.sp23-comp-row:last-child {
+  border-bottom: 0;
+}
+
+.sp23-calendar-icon {
+  width: 32px;
+  height: 32px;
+  display: grid;
+  place-items: center;
+  color: #24dcf4;
+}
+
+.sp23-calendar-icon svg {
+  width: 25px;
+  height: 25px;
+  stroke-width: 2;
+}
+
+.sp23-comp-main {
+  min-width: 0;
+}
+
+.sp23-comp-main > * {
+  display: block;
+}
+
+.sp23-comp-date {
+  margin-bottom: 5px;
+  color: #27dff5;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.sp23-comp-main strong {
+  color: #f7fbff;
+  font-size: 14px;
+  line-height: 1.25;
+}
+
+.sp23-comp-main > span:not(.sp23-comp-date) {
+  margin-top: 5px;
+  color: #d1dce2;
+  font-size: 11px;
+}
+
+.sp23-comp-main small {
+  margin-top: 6px;
+  color: #d1dce2;
+  font-size: 10px;
+}
+
+.sp23-chevron {
+  width: 18px;
+  height: 18px;
+  align-self: center;
+  color: #22daf2;
+  stroke-width: 2.4 !important;
+}
+
+.sp23-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 30px 20px;
+  text-align: center;
+  color: #a6bdc7;
+}
+
+.sp23-empty strong {
+  color: #f5fbff;
+  font-size: 14px;
+}
+
+.sp23-empty span {
+  margin-top: 6px;
+  font-size: 10px;
+  line-height: 1.4;
+}
+
+.sp23-empty a {
+  margin-top: 15px;
+  padding: 10px 16px;
+  border-radius: 8px;
+  background: #25cce8;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 800;
+}
+
+/* HISTORY / EVOLUTION */
+.sp23-history-head {
+  min-height: 191px;
+  padding-bottom: 22px;
+}
+
+.sp23-history-head .sp23-head-row {
+  margin-bottom: 16px;
+}
+
+.sp23-kicker {
+  position: relative;
+  z-index: 2;
+  display: block;
+  color: #27dcf3;
+  font-size: 12px;
+  letter-spacing: .02em;
+}
+
+.sp23-history-head h1 {
+  margin-top: 17px;
+  font-size: 31px;
+}
+
+.sp23-history-head p {
+  position: relative;
+  z-index: 2;
+  margin: 16px 0 0;
+  color: #edf6fa;
+  font-size: 13px;
+}
+
+.sp23-kpis {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  overflow: hidden;
+  margin-bottom: 12px;
+  border: 1px solid rgba(32,213,241,.32);
+  border-radius: 13px;
+  background: linear-gradient(180deg,#073a59,#062f4b);
+}
+
+.sp23-kpis > div {
+  min-height: 100px;
+  display: grid;
+  place-content: center;
+  text-align: center;
+}
+
+.sp23-kpis > div:first-child {
+  border-right: 1px solid rgba(70,145,175,.22);
+}
+
+.sp23-kpis span,
+.sp23-kpis strong {
+  display: block;
+}
+
+.sp23-kpis span {
+  color: #d1dce2;
+  font-size: 12px;
+}
+
+.sp23-kpis strong {
+  margin-top: 8px;
+  color: #fff;
+  font-size: 25px;
+}
+
+.sp23-kpis > div:first-child strong {
+  color: #ffd74a;
+}
+
+.sp23-chart-card {
+  height: 330px;
+  margin-bottom: 12px;
+  padding: 16px 12px 12px;
+  border: 1px solid rgba(32,213,241,.32);
+  border-radius: 13px;
+  background: linear-gradient(180deg,#073a59,#062f4b);
+}
+
+.sp23-chart-card canvas {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.sp23-goal-card,
+.sp23-history-card {
+  margin-bottom: 12px;
+  overflow: hidden;
+  border: 1px solid rgba(32,213,241,.32);
+  border-radius: 13px;
+  background: linear-gradient(180deg,#073a59,#062f4b);
+}
+
+.sp23-goal-card {
+  padding: 14px;
+}
+
+.sp23-section-title,
+.sp23-history-card-head h2 {
+  margin: 0;
+  color: #28dff5;
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.sp23-goal-current {
+  display: block;
+  margin-top: 9px;
+  color: #fff;
+  font-size: 15px;
+}
+
+.sp23-goal-form {
+  display: grid;
+  grid-template-columns: minmax(0,1fr) 92px;
+  gap: 9px;
+  margin-top: 11px;
+}
+
+.sp23-goal-form input {
+  width: 100%;
+  min-width: 0;
+  height: 40px;
+  padding: 0 10px;
+  border: 1px solid #1a5f7e;
+  border-radius: 7px;
+  background: #fff;
+  color: #09293c;
+  font-size: 14px;
+}
+
+.sp23-goal-form button {
+  height: 40px;
+  border: 0;
+  border-radius: 8px;
+  background: linear-gradient(90deg,#27cbe8,#31d7ec);
+  color: #05344a;
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.sp23-history-card-head {
+  min-height: 46px;
+  display: flex;
+  align-items: center;
+  padding: 0 14px;
+  border-bottom: 1px solid rgba(32,213,241,.13);
+}
+
+.sp23-history-list {
+  padding: 0 13px 4px;
+}
+
+.sp23-history-row {
+  min-height: 70px;
+  display: grid;
+  grid-template-columns: minmax(0,1fr) auto;
+  gap: 12px;
+  align-items: center;
+  border-bottom: 1px solid rgba(90,151,177,.18);
+}
+
+.sp23-history-row:last-child {
+  border-bottom: 0;
+}
+
+.sp23-history-row > div {
+  min-width: 0;
+}
+
+.sp23-history-row > div strong,
+.sp23-history-row > div span {
+  display: block;
+}
+
+.sp23-history-row > div strong {
+  color: #24d9f1;
+  font-size: 11px;
+}
+
+.sp23-history-row > div span {
+  margin-top: 5px;
+  overflow: hidden;
+  color: #d1dce2;
+  font-size: 10px;
+  line-height: 1.3;
+  text-overflow: ellipsis;
+}
+
+.sp23-history-time {
+  color: #ffd74a;
+  font-size: 20px;
+}
+
+@media (max-width: 360px) {
+  .sp23-water-head h1,
+  .sp23-history-head h1 {
+    font-size: 27px;
+  }
+
+  .sp23-chart-card {
+    height: 290px;
+  }
+
+  .sp23-goal-form {
+    grid-template-columns: 1fr 78px;
+  }
+}
+
+
+/* ============================================================
+   SwimPro V24 — approved Competencias / Nueva competencia
+   + compact Home viewport
+   ============================================================ */
+
+.sp24-page,
+.sp24-page * { box-sizing: border-box; }
+
+.sp24-page {
+  width: 100%;
+  min-width: 0;
+  color: #f5fbff;
+}
+
+.sp24-page svg,
+.sp24-nav svg {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* Shared water header */
+.sp24-water-header {
+  position: relative;
+  width: calc(100% + 20px);
+  margin: -18px -10px 14px;
+  overflow: hidden;
+  background:
+    linear-gradient(rgba(2,30,50,.16),rgba(2,30,50,.20)),
+    url("/static/swimpro_water_bg_user.png");
+  background-size: cover;
+  background-position: center 44%;
+  border-bottom: 1px solid rgba(31,214,241,.10);
+}
+
+.sp24-top-icons {
+  height: 44px;
+  display: grid;
+  grid-template-columns: 42px minmax(0,1fr) 42px;
+  align-items: center;
+  padding: 0 8px;
+}
+
+.sp24-icon-btn {
+  width: 42px;
+  height: 42px;
+  display: grid;
+  place-items: center;
+  color: #f5fbff;
+}
+
+.sp24-icon-btn svg { width: 22px; height: 22px; }
+
+.sp24-title-row {
+  min-height: 80px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 5px 16px 17px;
+}
+
+.sp24-title-row h1,
+.sp24-form-header h1 {
+  margin: 0;
+  font-size: 27px;
+  line-height: 1.06;
+  font-weight: 760;
+  letter-spacing: -.02em;
+}
+
+.sp24-square-plus {
+  width: 48px;
+  height: 48px;
+  flex: 0 0 48px;
+  display: grid;
+  place-items: center;
+  border-radius: 11px;
+  background: linear-gradient(145deg,#2ad5ed,#3d81f2);
+  color: #fff;
+  box-shadow: 0 9px 24px rgba(20,121,187,.30);
+}
+
+.sp24-square-plus svg { width: 26px; height: 26px; }
+
+/* Competition list */
+.sp24-competition-list {
+  overflow: hidden;
+  border: 1px solid rgba(31,214,241,.34);
+  border-radius: 12px;
+  background: linear-gradient(180deg,rgba(5,49,76,.98),rgba(4,39,64,.98));
+}
+
+.sp24-competition-row {
+  min-height: 92px;
+  display: grid;
+  grid-template-columns: 32px minmax(0,1fr) 17px;
+  gap: 10px;
+  align-items: start;
+  padding: 13px 12px;
+  border-bottom: 1px solid rgba(61,145,176,.28);
+}
+
+.sp24-competition-row:last-child { border-bottom: 0; }
+
+.sp24-calendar {
+  width: 30px;
+  height: 30px;
+  display: grid;
+  place-items: center;
+  color: #22dcf3;
+}
+
+.sp24-calendar svg { width: 24px; height: 24px; stroke-width: 2; }
+
+.sp24-competition-copy { min-width: 0; }
+
+.sp24-competition-copy > * { display: block; }
+
+.sp24-competition-copy .date {
+  margin-bottom: 4px;
+  color: #26dff5;
+  font-size: 10px;
+  line-height: 1.1;
+  font-weight: 850;
+}
+
+.sp24-competition-copy strong {
+  color: #f7fbff;
+  font-size: 12px;
+  line-height: 1.25;
+}
+
+.sp24-competition-copy > span:not(.date) {
+  margin-top: 4px;
+  color: #d1dce2;
+  font-size: 9px;
+}
+
+.sp24-competition-copy small {
+  margin-top: 5px;
+  color: #d1dce2;
+  font-size: 8px;
+}
+
+.sp24-row-chevron {
+  width: 17px;
+  height: 17px;
+  align-self: center;
+  color: #22daf2;
+  stroke-width: 2.4 !important;
+}
+
+.sp24-empty-state {
+  display: grid;
+  place-items: center;
+  min-height: 230px;
+  padding: 25px;
+  text-align: center;
+}
+
+.sp24-empty-state strong { font-size: 14px; }
+.sp24-empty-state span { margin-top: 6px; color: #9fb8c3; font-size: 10px; }
+.sp24-empty-state a {
+  margin-top: 14px;
+  padding: 10px 15px;
+  border-radius: 8px;
+  background: #25cde8;
+  color: #fff;
+  font-size: 10px;
+  font-weight: 800;
+}
+
+/* New competition */
+.sp24-form-header {
+  min-height: 145px;
+  padding: 10px 16px 22px;
+}
+
+.sp24-back {
+  width: 38px;
+  height: 38px;
+  display: grid;
+  place-items: center;
+  margin-left: -8px;
+  color: #fff;
+}
+
+.sp24-back svg { width: 21px; height: 21px; }
+
+.sp24-form-header h1 {
+  margin-top: 26px;
+  font-size: 28px;
+}
+
+.sp24-competition-form {
+  display: grid;
+  gap: 15px;
+  padding: 0 2px;
+}
+
+.sp24-competition-form label {
+  display: block;
+  min-width: 0;
+}
+
+.sp24-competition-form label > span {
+  display: block;
+  margin-bottom: 7px;
+  color: #f6fbff;
+  font-size: 12px;
+}
+
+.sp24-form-two {
+  display: grid;
+  grid-template-columns: minmax(0,1.25fr) minmax(0,.9fr);
+  gap: 10px;
+}
+
+.sp24-competition-form input,
+.sp24-competition-form select,
+.sp24-competition-form textarea {
+  width: 100%;
+  min-width: 0;
+  border: 1px solid #176886;
+  border-radius: 8px;
+  outline: none;
+  background: #082f49;
+  color: #f5fbff;
+  font-size: 12px;
+}
+
+.sp24-competition-form input,
+.sp24-competition-form select {
+  height: 44px;
+  padding: 0 12px;
+}
+
+.sp24-competition-form textarea {
+  min-height: 118px;
+  padding: 12px;
+  resize: vertical;
+}
+
+.sp24-competition-form input::placeholder,
+.sp24-competition-form textarea::placeholder {
+  color: #809cab;
+}
+
+.sp24-competition-form input:focus,
+.sp24-competition-form select:focus,
+.sp24-competition-form textarea:focus {
+  border-color: #28dff4;
+  box-shadow: 0 0 0 2px rgba(40,223,244,.07);
+}
+
+.sp24-date-field { position: relative; }
+
+.sp24-date-field input { padding-right: 38px; }
+
+.sp24-date-field svg {
+  position: absolute;
+  right: 11px;
+  top: 50%;
+  width: 18px;
+  height: 18px;
+  transform: translateY(-50%);
+  color: #d9e7ed;
+  pointer-events: none;
+}
+
+.sp24-create-button {
+  width: 100%;
+  height: 48px;
+  margin-top: 5px;
+  border: 0;
+  border-radius: 9px;
+  background: linear-gradient(90deg,#27d4eb,#3a9af0);
+  color: #041e2c;
+  font-size: 13px;
+  font-weight: 850;
+}
+
+/* Context-aware bottom nav */
+.sp24-nav {
+  position: fixed;
+  z-index: 120;
+  left: 50%;
+  bottom: 0;
+  transform: translateX(-50%);
+  width: min(390px,100%);
+  height: 68px;
+  display: grid;
+  grid-template-columns: repeat(5,1fr);
+  padding: 5px 4px calc(5px + env(safe-area-inset-bottom));
+  border-top: 1px solid rgba(31,214,241,.14);
+  background: rgba(3,25,43,.99);
+}
+
+.sp24-nav > a {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  color: #d3e0e6;
+  font-size: 7px;
+}
+
+.sp24-nav > a.active { color: #30def3; }
+
+.sp24-nav > a > svg { width: 17px; height: 17px; }
+
+.sp24-time { margin-top: -21px; }
+
+.sp24-time > div {
+  width: 45px;
+  height: 45px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: linear-gradient(145deg,#32d7ef,#4775ea);
+  box-shadow: 0 8px 19px rgba(22,111,183,.38);
+}
+
+.sp24-time > div svg { width: 21px; height: 21px; color: #fff; }
+
+/* Home compactness: keep Próxima competencia visible above nav. */
+.sp18-hero {
+  height: 158px !important;
+}
+
+.sp18-logo-wrap {
+  top: 1px !important;
+  width: 190px !important;
+  height: 122px !important;
+}
+
+.sp18-greeting {
+  bottom: 7px !important;
+}
+
+.sp18-greeting h1 {
+  font-size: 14px !important;
+}
+
+.sp18-greeting p {
+  font-size: 8px !important;
+}
+
+.sp18-panel {
+  margin-bottom: 7px !important;
+}
+
+.sp18-panel-head {
+  min-height: 31px !important;
+}
+
+.sp18-pb-grid {
+  padding: 7px !important;
+  gap: 5px !important;
+}
+
+.sp18-pb {
+  min-height: 76px !important;
+  padding: 8px !important;
+}
+
+.sp18-pb-value strong {
+  font-size: 17px !important;
+}
+
+.sp18-recent-row {
+  min-height: 44px !important;
+}
+
+.sp18-next {
+  min-height: 60px !important;
+  padding: 7px !important;
+}
+
+@media (max-width: 350px) {
+  .sp24-form-two { grid-template-columns: 1fr; }
+  .sp24-form-header { min-height: 132px; }
+}
+
+
+/* SwimPro V25 · Advanced Stats */
+.sp25-page,.sp25-page *{box-sizing:border-box}.sp25-page{width:100%;color:#f5fbff}.sp25-page svg{fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.sp25-water-header{position:relative;width:calc(100% + 20px);min-height:180px;margin:-18px -10px 12px;padding:12px 17px 20px;overflow:hidden;background:linear-gradient(rgba(2,27,47,.14),rgba(2,27,47,.20)),url("/static/swimpro_water_bg_user.png");background-size:cover;background-position:center 48%;border-bottom:1px solid rgba(37,216,241,.10)}
+.sp25-back{width:38px;height:38px;display:grid;place-items:center;color:#fff}.sp25-back svg{width:21px;height:21px}.sp25-kicker{display:block;margin-top:14px;color:#28def5;font-size:11px;font-weight:800;letter-spacing:.03em}.sp25-water-header h1{margin:12px 0 0;font-size:30px;line-height:1.05;letter-spacing:-.02em}.sp25-water-header p{margin:12px 0 0;color:#e0edf2;font-size:12px}.sp25-stats-header{min-height:165px}
+.sp25-main-kpis{display:grid;grid-template-columns:1fr 1fr;margin-bottom:9px;overflow:hidden;border:1px solid rgba(37,216,241,.30);border-radius:11px;background:linear-gradient(180deg,#073956,#062f49)}.sp25-main-kpis article{min-height:100px;padding:14px;display:grid;align-content:center}.sp25-main-kpis article:first-child{border-right:1px solid rgba(81,146,171,.22)}.sp25-main-kpis span,.sp25-main-kpis strong,.sp25-main-kpis small{display:block}.sp25-main-kpis span{font-size:9px;color:#9fb8c4;font-weight:800}.sp25-main-kpis strong{margin-top:7px;color:#ffd84b;font-size:24px}.sp25-main-kpis article:nth-child(2) strong{color:#f5fbff}.sp25-main-kpis small{margin-top:5px;color:#9fb8c4;font-size:8px}
+.sp25-metrics-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:9px}.sp25-metrics-grid article{min-height:80px;padding:11px;border:1px solid rgba(37,216,241,.20);border-radius:10px;background:#06334f}.sp25-metrics-grid span,.sp25-metrics-grid strong,.sp25-metrics-grid small{display:block}.sp25-metrics-grid span{font-size:8px;color:#9fb8c4;font-weight:800}.sp25-metrics-grid strong{margin-top:6px;font-size:16px}.sp25-metrics-grid small{margin-top:3px;color:#8eabb7;font-size:7px}
+.sp25-chart-card,.sp25-goal-card,.sp25-history-card{margin-bottom:9px;overflow:hidden;border:1px solid rgba(37,216,241,.28);border-radius:11px;background:linear-gradient(180deg,#073956,#062f49)}.sp25-card-title{min-height:39px;padding:0 11px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid rgba(37,216,241,.12)}.sp25-card-title h2{margin:0;color:#27def4;font-size:10px;font-weight:850}.sp25-card-title span{color:#9fb8c4;font-size:8px}.sp25-chart-wrap{height:270px;padding:10px}
+.sp25-goal-card{padding:0 11px 12px}.sp25-goal-card .sp25-card-title{margin:0 -11px}.sp25-goal-info{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding-top:11px}.sp25-goal-info div{padding:9px;border-radius:8px;background:#082f49;border:1px solid rgba(37,216,241,.12)}.sp25-goal-info span,.sp25-goal-info strong{display:block}.sp25-goal-info span{font-size:8px;color:#9fb8c4}.sp25-goal-info strong{margin-top:4px;font-size:14px}.sp25-progress-track{height:7px;margin-top:10px;overflow:hidden;border-radius:999px;background:#04263c}.sp25-progress-track>div{height:100%;border-radius:999px;background:linear-gradient(90deg,#26d8ef,#4a76ef)}.sp25-goal-form{display:grid;grid-template-columns:minmax(0,1fr) 76px;gap:7px;margin-top:10px}.sp25-goal-form input{height:36px;border:1px solid #176886;border-radius:7px;padding:0 9px;background:#fff;color:#08283b;font-size:12px}.sp25-goal-form button{height:36px;border:0;border-radius:7px;background:linear-gradient(90deg,#27d4eb,#3b9cf0);color:#04283a;font-size:10px;font-weight:850}
+.sp25-history-list,.sp25-progress-list{padding:0 11px 4px}.sp25-history-row,.sp25-progress-row{min-height:61px;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:center;border-bottom:1px solid rgba(90,151,177,.16)}.sp25-history-row:last-child,.sp25-progress-row:last-child{border-bottom:0}.sp25-history-copy,.sp25-progress-row>div:first-child{min-width:0}.sp25-history-copy strong,.sp25-history-copy span,.sp25-progress-row strong,.sp25-progress-row span,.sp25-progress-values small{display:block}.sp25-history-copy strong{font-size:9px;color:#26d9f1}.sp25-history-copy span{margin-top:4px;overflow:hidden;color:#c8d6dd;font-size:8px;white-space:nowrap;text-overflow:ellipsis}.sp25-history-result{text-align:right}.sp25-history-result strong{font-size:17px;color:#ffd74a}.sp25-history-result em{display:inline-block;margin-top:4px;padding:2px 5px;border-radius:6px;background:#25d9ef;color:#063449;font-size:7px;font-weight:900;font-style:normal}
+.sp25-filters{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-bottom:9px}.sp25-filters select{height:34px;min-width:0;border:1px solid #176886;border-radius:7px;background:#082f49;color:#f5fbff;padding:0 7px;font-size:8px}.sp25-stats-kpis{display:grid;grid-template-columns:repeat(3,1fr);margin-bottom:9px;overflow:hidden;border:1px solid rgba(37,216,241,.28);border-radius:11px;background:#06334f}.sp25-stats-kpis article{min-height:72px;display:grid;place-content:center;text-align:center;border-right:1px solid rgba(81,146,171,.18)}.sp25-stats-kpis article:last-child{border-right:0}.sp25-stats-kpis span,.sp25-stats-kpis strong{display:block}.sp25-stats-kpis span{font-size:7px;color:#9fb8c4}.sp25-stats-kpis strong{margin-top:5px;font-size:21px}.sp25-progress-row>div:first-child strong{font-size:9px}.sp25-progress-row>div:first-child span{margin-top:3px;color:#9fb8c4;font-size:8px}.sp25-progress-values{text-align:right}.sp25-progress-values strong{font-size:15px;color:#ffd74a}.sp25-progress-values small{margin-top:3px;color:#9fb8c4;font-size:8px}.sp25-good{color:#3ce1ae!important}.sp25-empty{padding:17px;color:#9eb9c5;font-size:9px;text-align:center}.sp25-home-head-actions{display:flex;align-items:center;gap:8px}.sp25-home-head-actions a:first-child{color:#8fd9e8!important}
+@media(max-width:350px){.sp25-water-header h1{font-size:26px}.sp25-filters{grid-template-columns:1fr}.sp25-chart-wrap{height:235px}}
+
+
+/* ============================================================
+   SwimPro V26 — DETAIL DEL TIEMPO
+   ============================================================ */
+
+.sp26-page,
+.sp26-page * { box-sizing: border-box; }
+
+.sp26-page {
+  width: 100%;
+  color: #f5fbff;
+}
+
+.sp26-page svg {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.sp26-water-header {
+  position: relative;
+  width: calc(100% + 20px);
+  min-height: 112px;
+  margin: -18px -10px 12px;
+  padding: 12px 16px 18px;
+  background:
+    linear-gradient(rgba(2,28,48,.10),rgba(2,28,48,.15)),
+    url("/static/swimpro_water_bg_user.png");
+  background-size: cover;
+  background-position: center 45%;
+  border-bottom: 1px solid rgba(33,216,243,.11);
+}
+
+.sp26-back {
+  width: 38px;
+  height: 38px;
+  display: grid;
+  place-items: center;
+  margin-left: -8px;
+  color: #fff;
+}
+
+.sp26-back svg {
+  width: 22px;
+  height: 22px;
+}
+
+.sp26-water-header h1 {
+  margin: 13px 0 0;
+  color: #fff;
+  font-size: 24px;
+  line-height: 1.05;
+  font-weight: 760;
+  letter-spacing: -.02em;
+}
+
+.sp26-result-card {
+  margin-bottom: 10px;
+  padding: 13px;
+  overflow: hidden;
+  border: 1px solid rgba(33,216,243,.33);
+  border-radius: 12px;
+  background:
+    radial-gradient(circle at 50% 0%,rgba(30,145,205,.10),transparent 44%),
+    linear-gradient(180deg,#073956,#062e49);
+}
+
+.sp26-result-top {
+  display: grid;
+  grid-template-columns: 48px minmax(0,1fr) auto;
+  gap: 10px;
+  align-items: center;
+}
+
+.sp26-style-icon {
+  width: 48px;
+  height: 48px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: linear-gradient(145deg,#29d8ee,#4b63ef);
+  color: #fff;
+}
+
+.sp26-style-icon svg {
+  width: 29px;
+  height: 29px;
+  stroke-width: 2;
+}
+
+.sp26-event-copy {
+  min-width: 0;
+}
+
+.sp26-event-copy strong,
+.sp26-event-copy span {
+  display: block;
+}
+
+.sp26-event-copy strong {
+  overflow: hidden;
+  color: #f7fbff;
+  font-size: 15px;
+  line-height: 1.2;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.sp26-event-copy span {
+  margin-top: 4px;
+  color: #c0d0d8;
+  font-size: 11px;
+}
+
+.sp26-result-badge {
+  min-width: 40px;
+  height: 27px;
+  display: grid;
+  place-items: center;
+  padding: 0 9px;
+  border-radius: 9px;
+  background: #25d9ef;
+  color: #06344a;
+  font-size: 10px;
+  font-weight: 900;
+}
+
+.sp26-main-time {
+  margin-top: 16px;
+  color: #ffd84b;
+  font-size: 42px;
+  line-height: 1;
+  font-weight: 760;
+  text-align: center;
+  letter-spacing: -.03em;
+}
+
+.sp26-status {
+  margin-top: 8px;
+  color: #3ce0ae;
+  font-size: 11px;
+  text-align: center;
+}
+
+.sp26-meta-grid {
+  display: grid;
+  grid-template-columns: repeat(3,1fr);
+  margin-top: 16px;
+  padding-top: 13px;
+  border-top: 1px solid rgba(75,146,175,.24);
+}
+
+.sp26-meta-grid > div {
+  min-width: 0;
+  padding: 0 7px;
+  text-align: center;
+  border-right: 1px solid rgba(75,146,175,.24);
+}
+
+.sp26-meta-grid > div:last-child {
+  border-right: 0;
+}
+
+.sp26-meta-grid svg {
+  width: 19px;
+  height: 19px;
+  margin-bottom: 5px;
+  color: #50b9ed;
+}
+
+.sp26-meta-grid strong,
+.sp26-meta-grid span {
+  display: block;
+}
+
+.sp26-meta-grid strong {
+  overflow: hidden;
+  color: #f5fbff;
+  font-size: 9px;
+  line-height: 1.2;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.sp26-meta-grid span {
+  margin-top: 3px;
+  color: #8faab6;
+  font-size: 7px;
+}
+
+.sp26-card {
+  margin-bottom: 10px;
+  overflow: hidden;
+  border: 1px solid rgba(33,216,243,.28);
+  border-radius: 11px;
+  background: linear-gradient(180deg,#073956,#062f49);
+}
+
+.sp26-card-title {
+  min-height: 40px;
+  display: flex;
+  align-items: center;
+  padding: 0 11px;
+  color: #27def4;
+  font-size: 10px;
+  font-weight: 850;
+  letter-spacing: .02em;
+}
+
+.sp26-info-list {
+  padding: 0 11px 3px;
+}
+
+.sp26-info-row {
+  min-height: 51px;
+  display: grid;
+  grid-template-columns: 25px minmax(0,1fr) auto;
+  gap: 9px;
+  align-items: center;
+  border-top: 1px solid rgba(80,145,171,.18);
+}
+
+.sp26-info-row svg {
+  width: 18px;
+  height: 18px;
+  color: #57b9e8;
+}
+
+.sp26-info-row span {
+  color: #b9cbd4;
+  font-size: 9px;
+}
+
+.sp26-info-row strong {
+  max-width: 170px;
+  overflow: hidden;
+  color: #f3f9fc;
+  font-size: 9px;
+  text-align: right;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.sp26-notes-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.sp26-notes-head .sp26-card-title {
+  flex: 1;
+}
+
+.sp26-notes-head > a {
+  width: 40px;
+  height: 40px;
+  display: grid;
+  place-items: center;
+  color: #27def4;
+}
+
+.sp26-notes-head svg {
+  width: 18px;
+  height: 18px;
+}
+
+.sp26-notes-box {
+  min-height: 90px;
+  margin: 0 11px 11px;
+  padding: 12px;
+  border: 1px solid rgba(33,216,243,.20);
+  border-radius: 9px;
+  background: #082f49;
+  color: #eef6f9;
+  font-size: 10px;
+  line-height: 1.45;
+}
+
+.sp26-notes-box span {
+  color: #809ca9;
+}
+
+.sp26-splits {
+  padding: 0 11px 4px;
+}
+
+.sp26-split-row {
+  min-height: 48px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid rgba(80,145,171,.18);
+}
+
+.sp26-split-row strong,
+.sp26-split-row span {
+  display: block;
+}
+
+.sp26-split-row strong {
+  font-size: 10px;
+}
+
+.sp26-split-row span {
+  margin-top: 2px;
+  color: #8eaab6;
+  font-size: 8px;
+}
+
+.sp26-actions {
+  display: grid;
+  gap: 8px;
+  margin-bottom: 12px;
+  padding: 10px;
+  border: 1px solid rgba(33,216,243,.16);
+  border-radius: 11px;
+  background: rgba(5,43,67,.72);
+}
+
+.sp26-actions form {
+  margin: 0;
+}
+
+.sp26-edit,
+.sp26-delete {
+  width: 100%;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border-radius: 9px;
+  font-size: 11px;
+  font-weight: 850;
+}
+
+.sp26-edit {
+  background: linear-gradient(90deg,#27d4eb,#3d91f0);
+  color: #052b3d;
+}
+
+.sp26-edit svg,
+.sp26-delete svg {
+  width: 18px;
+  height: 18px;
+}
+
+.sp26-delete {
+  border: 1px solid #ff536b;
+  background: transparent;
+  color: #ff6177;
+}
+
+@media (max-width: 350px) {
+  .sp26-main-time {
+    font-size: 37px;
+  }
+
+  .sp26-event-copy strong {
+    font-size: 13px;
+  }
+
+  .sp26-info-row strong {
+    max-width: 135px;
+  }
+}
+
+/* SwimPro V27 · Competition Pro */
+.sp27-page,.sp27-page *{box-sizing:border-box}.sp27-page{width:100%;color:#f5fbff}.sp27-page svg{fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.sp27-water-head{position:relative;width:calc(100% + 20px);min-height:190px;margin:-18px -10px 10px;padding:10px 16px 18px;overflow:hidden;background:linear-gradient(rgba(2,28,48,.12),rgba(2,28,48,.18)),url("/static/swimpro_water_bg_user.png");background-size:cover;background-position:center 45%;border-bottom:1px solid rgba(33,216,243,.11)}
+.sp27-topbar{min-height:40px;display:flex;justify-content:space-between;align-items:center}.sp27-top-actions{display:flex;gap:5px}.sp27-icon-btn{width:38px;height:38px;display:grid;place-items:center;color:#fff}.sp27-icon-btn svg{width:20px;height:20px}.sp27-water-head h1{margin:17px 0 10px;font-size:23px;line-height:1.12;letter-spacing:-.02em}.sp27-meta-line{display:flex;align-items:center;gap:6px;margin-top:5px;color:#d8e6ec;font-size:9px}.sp27-meta-line svg{width:13px;height:13px;color:#6ec9f3}.sp27-course{position:absolute;right:15px;bottom:18px;padding:6px 9px;border:1px solid #176886;border-radius:8px;background:rgba(5,42,65,.6);font-size:9px}
+.sp27-summary{display:grid;grid-template-columns:repeat(4,1fr);margin-bottom:9px;overflow:hidden;border:1px solid rgba(33,216,243,.28);border-radius:10px;background:#06334f}.sp27-summary article{min-height:65px;display:grid;place-content:center;text-align:center;border-right:1px solid rgba(79,145,171,.18)}.sp27-summary article:last-child{border-right:0}.sp27-summary strong,.sp27-summary span{display:block}.sp27-summary strong{font-size:18px}.sp27-summary span{margin-top:3px;color:#9fb8c4;font-size:7px}
+.sp27-card{margin-bottom:10px;overflow:hidden;border:1px solid rgba(33,216,243,.28);border-radius:11px;background:linear-gradient(180deg,#073956,#062f49)}.sp27-card-head{min-height:40px;display:flex;justify-content:space-between;align-items:center;padding:0 11px;border-bottom:1px solid rgba(33,216,243,.12)}.sp27-card-head h2{margin:0;color:#27def4;font-size:10px}.sp27-card-head a{color:#27def4;font-size:9px}.sp27-events{padding:8px}
+.sp27-event-card{margin-bottom:8px;padding:10px;border:1px solid rgba(58,144,179,.22);border-radius:9px;background:#082f49}.sp27-event-card:last-child{margin-bottom:0}.sp27-event-card.completed{background:linear-gradient(180deg,#083753,#072f48)}.sp27-event-main{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}.sp27-event-main strong,.sp27-event-main span,.sp27-event-status strong,.sp27-event-status small{display:block}.sp27-event-main>div:first-child strong{font-size:11px}.sp27-event-main>div:first-child span{margin-top:2px;color:#9fb8c4;font-size:8px}.sp27-event-status{text-align:right}.sp27-event-status strong{font-size:14px}.sp27-event-status small{margin-top:3px;color:#9fb8c4;font-size:8px}.sp27-event-status em{display:inline-block;margin-top:4px;padding:2px 5px;border-radius:6px;background:#25d9ef;color:#063449;font-size:7px;font-style:normal;font-weight:900}.sp27-good{color:#3ce0ae!important}
+.sp27-event-details{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;margin-top:10px;padding-top:9px;border-top:1px solid rgba(78,145,171,.16)}.sp27-event-details div{min-width:0;text-align:center}.sp27-event-details span,.sp27-event-details strong{display:block}.sp27-event-details span{color:#8faab6;font-size:7px}.sp27-event-details strong{margin-top:3px;overflow:hidden;font-size:9px;text-overflow:ellipsis;white-space:nowrap}
+.sp27-splits{margin-top:10px;padding-top:9px;border-top:1px solid rgba(78,145,171,.16)}.sp27-subtitle{margin-bottom:5px;color:#27def4;font-size:8px;font-weight:850}.sp27-split-row{display:grid;grid-template-columns:55px auto 1fr;gap:8px;align-items:center;min-height:28px;border-bottom:1px solid rgba(78,145,171,.10)}.sp27-split-row span{font-size:8px}.sp27-split-row strong{font-size:9px}.sp27-split-row small{text-align:right;color:#8faab6;font-size:7px}.sp27-event-notes{margin-top:9px;padding:8px;border-radius:7px;background:#06283e;color:#c8d6dd;font-size:8px;line-height:1.35}
+.sp27-event-actions{display:grid;grid-template-columns:1fr 1fr auto;gap:6px;margin-top:10px}.sp27-event-actions a,.sp27-event-actions button{min-height:32px;display:grid;place-items:center;padding:0 8px;border-radius:7px;border:1px solid #176886;background:#07334e;color:#dce9ee;font-size:8px;font-weight:750}.sp27-event-actions a.primary{border:0;background:linear-gradient(90deg,#27d4eb,#3b9cf0);color:#052a3b}.sp27-event-actions form{margin:0}.sp27-event-actions button{width:100%;border-color:#8c3e50;color:#ff8797;background:rgba(92,30,45,.18)}.sp27-empty{padding:20px;text-align:center;color:#9fb8c4;font-size:9px}
+.sp27-edit-head{min-height:165px}.sp27-kicker{display:block;margin-top:9px;color:#27def4;font-size:9px;font-weight:850}.sp27-edit-head h1{margin-top:8px}.sp27-edit-head p{margin:7px 0 0;color:#cbd9df;font-size:9px}.sp27-edit-form{display:grid;gap:12px}.sp27-edit-form label span{display:block;margin-bottom:5px;font-size:10px}.sp27-edit-form input,.sp27-edit-form textarea{width:100%;border:1px solid #176886;border-radius:8px;background:#082f49;color:#fff;padding:0 10px;font-size:11px}.sp27-edit-form input{height:40px}.sp27-edit-form textarea{min-height:100px;padding:10px}.sp27-edit-form button{height:42px;border:0;border-radius:8px;background:linear-gradient(90deg,#27d4eb,#3b9cf0);color:#052a3b;font-size:11px;font-weight:850}.sp27-error{margin-bottom:10px;padding:9px;border-radius:7px;background:#4b2230;color:#ffd7de;font-size:9px}
+@media(max-width:350px){.sp27-summary{grid-template-columns:1fr 1fr}.sp27-summary article:nth-child(2){border-right:0}.sp27-event-details{grid-template-columns:1fr 1fr}.sp27-event-actions{grid-template-columns:1fr}}
+
+
+/* ============================================================
+   SwimPro V27.1 — EDITAR COMPETENCIA FIXED
+   ============================================================ */
+
+.sp271-page,
+.sp271-page * {
+  box-sizing: border-box;
+}
+
+.sp271-page {
+  width: 100%;
+  color: #f5fbff;
+}
+
+.sp271-page svg {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.sp271-water-header {
+  position: relative;
+  width: calc(100% + 20px);
+  min-height: 164px;
+  margin: -18px -10px 14px;
+  padding: 12px 16px 20px;
+  overflow: hidden;
+  background:
+    linear-gradient(rgba(2,27,47,.12),rgba(2,27,47,.18)),
+    url("/static/swimpro_water_bg_user.png");
+  background-size: cover;
+  background-position: center 46%;
+  border-bottom: 1px solid rgba(33,216,243,.11);
+}
+
+.sp271-back {
+  width: 38px;
+  height: 38px;
+  display: grid;
+  place-items: center;
+  margin-left: -8px;
+  color: #fff;
+}
+
+.sp271-back svg {
+  width: 21px;
+  height: 21px;
+}
+
+.sp271-kicker {
+  display: block;
+  margin-top: 11px;
+  color: #28def5;
+  font-size: 9px;
+  font-weight: 850;
+  letter-spacing: .04em;
+}
+
+.sp271-water-header h1 {
+  margin: 8px 0 0;
+  color: #fff;
+  font-size: 27px;
+  line-height: 1.06;
+  font-weight: 760;
+  letter-spacing: -.02em;
+}
+
+.sp271-water-header p {
+  margin: 7px 0 0;
+  color: #cad8df;
+  font-size: 9px;
+}
+
+.sp271-form {
+  display: grid;
+  gap: 13px;
+  width: 100%;
+}
+
+.sp271-form label {
+  display: block;
+  min-width: 0;
+}
+
+.sp271-form label > span {
+  display: block;
+  margin-bottom: 6px;
+  color: #f5fbff;
+  font-size: 10px;
+  font-weight: 500;
+}
+
+.sp271-two {
+  display: grid;
+  grid-template-columns: minmax(0,1fr) minmax(0,1fr);
+  gap: 9px;
+}
+
+.sp271-form input,
+.sp271-form select,
+.sp271-form textarea {
+  width: 100%;
+  min-width: 0;
+  border: 1px solid #176886;
+  border-radius: 8px;
+  outline: none;
+  background: #082f49;
+  color: #f5fbff;
+  font-size: 11px;
+}
+
+.sp271-form input,
+.sp271-form select {
+  height: 42px;
+  padding: 0 11px;
+}
+
+.sp271-form textarea {
+  min-height: 110px;
+  padding: 11px;
+  resize: vertical;
+  line-height: 1.4;
+}
+
+.sp271-form input:focus,
+.sp271-form select:focus,
+.sp271-form textarea:focus {
+  border-color: #28def5;
+  box-shadow: 0 0 0 2px rgba(40,222,245,.07);
+}
+
+.sp271-form input::placeholder,
+.sp271-form textarea::placeholder {
+  color: #7d99a7;
+}
+
+.sp271-date {
+  position: relative;
+}
+
+.sp271-date input {
+  padding-right: 38px;
+}
+
+.sp271-date svg {
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  width: 17px;
+  height: 17px;
+  transform: translateY(-50%);
+  color: #cfe0e6;
+  pointer-events: none;
+}
+
+.sp271-save {
+  width: 100%;
+  min-height: 45px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 2px;
+  border: 0;
+  border-radius: 9px;
+  background: linear-gradient(90deg,#26d3ea,#3d91f0);
+  color: #052b3d;
+  font-size: 11px;
+  font-weight: 850;
+}
+
+.sp271-save svg {
+  width: 18px;
+  height: 18px;
+}
+
+.sp271-error {
+  margin-bottom: 10px;
+  padding: 9px 10px;
+  border: 1px solid rgba(255,112,132,.35);
+  border-radius: 8px;
+  background: rgba(88,26,42,.38);
+  color: #ffd7df;
+  font-size: 9px;
+}
+
+@media (max-width: 350px) {
+  .sp271-two {
+    grid-template-columns: 1fr;
+  }
+
+  .sp271-water-header h1 {
+    font-size: 24px;
+  }
+}
+
+
+/* ============================================================
+   SwimPro V27.2 — AGREGAR PRUEBA
+   ============================================================ */
+
+.sp272-page,
+.sp272-page * {
+  box-sizing: border-box;
+}
+
+.sp272-page {
+  width: 100%;
+  color: #f5fbff;
+}
+
+.sp272-page svg {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.sp272-water-header {
+  position: relative;
+  width: calc(100% + 20px);
+  min-height: 190px;
+  margin: -18px -10px 13px;
+  padding: 12px 16px 19px;
+  overflow: hidden;
+  background:
+    linear-gradient(rgba(2,27,47,.10),rgba(2,27,47,.17)),
+    url("/static/swimpro_water_bg_user.png");
+  background-size: cover;
+  background-position: center 46%;
+  border-bottom: 1px solid rgba(33,216,243,.11);
+}
+
+.sp272-back {
+  width: 38px;
+  height: 38px;
+  display: grid;
+  place-items: center;
+  margin-left: -8px;
+  color: #fff;
+}
+
+.sp272-back svg {
+  width: 21px;
+  height: 21px;
+}
+
+.sp272-kicker {
+  display: block;
+  margin-top: 10px;
+  color: #27def4;
+  font-size: 9px;
+  font-weight: 850;
+  letter-spacing: .04em;
+}
+
+.sp272-water-header h1 {
+  margin: 8px 0 0;
+  color: #fff;
+  font-size: 27px;
+  line-height: 1.05;
+  font-weight: 760;
+  letter-spacing: -.02em;
+}
+
+.sp272-comp-name {
+  margin-top: 11px;
+  color: #f5fbff;
+  font-size: 11px;
+  line-height: 1.25;
+  font-weight: 700;
+}
+
+.sp272-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 11px;
+  margin-top: 8px;
+}
+
+.sp272-meta span {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: #c9d8df;
+  font-size: 8px;
+}
+
+.sp272-meta svg {
+  width: 12px;
+  height: 12px;
+  color: #66c7ef;
+}
+
+.sp272-card {
+  overflow: hidden;
+  border: 1px solid rgba(33,216,243,.28);
+  border-radius: 11px;
+  background: linear-gradient(180deg,#073956,#062f49);
+}
+
+.sp272-card-head {
+  min-height: 40px;
+  display: flex;
+  align-items: center;
+  padding: 0 11px;
+  border-bottom: 1px solid rgba(33,216,243,.12);
+}
+
+.sp272-card-head h2 {
+  margin: 0;
+  color: #27def4;
+  font-size: 10px;
+  font-weight: 850;
+}
+
+.sp272-form {
+  display: grid;
+  gap: 13px;
+  padding: 12px;
+}
+
+.sp272-form label {
+  display: block;
+  min-width: 0;
+}
+
+.sp272-form label > span {
+  display: block;
+  margin-bottom: 6px;
+  color: #f5fbff;
+  font-size: 10px;
+}
+
+.sp272-form label > span small {
+  color: #91abb7;
+  font-size: 8px;
+  font-weight: 400;
+}
+
+.sp272-form select,
+.sp272-form input {
+  width: 100%;
+  min-width: 0;
+  height: 42px;
+  border: 1px solid #176886;
+  border-radius: 8px;
+  outline: none;
+  background: #082f49;
+  color: #f5fbff;
+  font-size: 11px;
+}
+
+.sp272-form select {
+  padding: 0 10px;
+}
+
+.sp272-form input {
+  padding: 0 11px;
+}
+
+.sp272-form select:focus,
+.sp272-form input:focus {
+  border-color: #28def5;
+  box-shadow: 0 0 0 2px rgba(40,222,245,.07);
+}
+
+.sp272-form input::placeholder {
+  color: #7c98a6;
+}
+
+.sp272-time-field {
+  position: relative;
+}
+
+.sp272-time-field svg {
+  position: absolute;
+  z-index: 2;
+  top: 50%;
+  left: 11px;
+  width: 17px;
+  height: 17px;
+  transform: translateY(-50%);
+  color: #27def4;
+  pointer-events: none;
+}
+
+.sp272-time-field input {
+  padding-left: 38px;
+}
+
+.sp272-help {
+  display: block;
+  margin-top: 5px;
+  color: #8faab6;
+  font-size: 8px;
+  line-height: 1.35;
+}
+
+.sp272-submit {
+  width: 100%;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 2px;
+  border: 0;
+  border-radius: 9px;
+  background: linear-gradient(90deg,#27d4eb,#3c91f0);
+  color: #052b3d;
+  font-size: 11px;
+  font-weight: 850;
+}
+
+.sp272-submit svg {
+  width: 18px;
+  height: 18px;
+}
+
+.sp272-error {
+  margin-bottom: 10px;
+  padding: 9px 10px;
+  border: 1px solid rgba(255,112,132,.35);
+  border-radius: 8px;
+  background: rgba(88,26,42,.38);
+  color: #ffd7df;
+  font-size: 9px;
+}
+
+@media (max-width: 350px) {
+  .sp272-water-header h1 {
+    font-size: 24px;
+  }
+}
+
+/* SwimPro V28 · Smart Time Entry */
+.sp28-preview{min-height:58px;display:grid;grid-template-columns:38px minmax(0,1fr);gap:9px;align-items:center;padding:9px 10px;margin:2px 0 1px;border:1px solid rgba(39,216,243,.18);border-radius:9px;background:#082f49;transition:border-color .18s ease,background .18s ease}
+.sp28-preview-icon{width:38px;height:38px;display:grid;place-items:center;border-radius:9px;background:rgba(39,216,243,.09);font-size:18px}.sp28-preview-copy{min-width:0}.sp28-preview-copy strong,.sp28-preview-copy span{display:block}.sp28-preview-copy strong{font-size:10px;color:#f5fbff}.sp28-preview-copy span{margin-top:3px;color:#9fb8c4;font-size:8px;line-height:1.3}
+.sp28-preview.new_pb{border-color:rgba(61,226,174,.55);background:linear-gradient(180deg,rgba(8,65,69,.75),rgba(7,48,61,.92))}.sp28-preview.new_pb .sp28-preview-icon{background:rgba(61,226,174,.12)}.sp28-preview.new_pb strong{color:#45e8b7}
+.sp28-preview.first{border-color:rgba(39,216,243,.40)}.sp28-preview.first strong{color:#27def4}
+.sp28-preview.equal_pb{border-color:rgba(255,216,75,.42)}.sp28-preview.equal_pb strong{color:#ffd84b}
+.sp28-preview.slower{border-color:rgba(98,161,190,.30)}.sp28-preview.slower strong{color:#e8f3f7}
+.sp28-preview.duplicate{border-color:rgba(255,91,113,.58);background:rgba(84,28,43,.55)}.sp28-preview.duplicate .sp28-preview-icon{background:rgba(255,91,113,.10)}.sp28-preview.duplicate strong{color:#ff8295}.sp28-preview.duplicate span{color:#ffc0ca}
+.sp28-preview.invalid{border-color:rgba(255,174,83,.42)}.sp28-preview.invalid strong{color:#ffc16f}
+#sp28SaveButton:disabled{opacity:.45!important;cursor:not-allowed!important;filter:saturate(.45)}
+
+
+/* ============================================================
+   SwimPro V29 — OBJETIVOS
+   ============================================================ */
+.sp29-page,.sp29-page *{box-sizing:border-box}.sp29-page{width:100%;color:#f5fbff}.sp29-page svg{fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.sp29-water-head{position:relative;width:calc(100% + 20px);min-height:175px;margin:-18px -10px 10px;padding:11px 16px 18px;background:linear-gradient(rgba(2,28,48,.10),rgba(2,28,48,.17)),url("/static/swimpro_water_bg_user.png");background-size:cover;background-position:center 47%;border-bottom:1px solid rgba(33,216,243,.11)}
+.sp29-topbar{min-height:40px;display:flex;justify-content:space-between;align-items:center}.sp29-icon-btn{width:38px;height:38px;display:grid;place-items:center;color:#fff}.sp29-icon-btn svg{width:20px;height:20px}.sp29-add-btn{width:40px;height:40px;display:grid;place-items:center;border-radius:10px;background:linear-gradient(145deg,#28d4eb,#3f87f0);color:#fff}.sp29-add-btn svg{width:22px;height:22px}
+.sp29-kicker{display:block;margin-top:10px;color:#27def4;font-size:9px;font-weight:850;letter-spacing:.04em}.sp29-water-head h1{margin:8px 0 0;font-size:28px;line-height:1.05}.sp29-water-head p{margin:7px 0 0;color:#c9d7de;font-size:9px}
+.sp29-summary{display:grid;grid-template-columns:repeat(3,1fr);margin-bottom:9px;overflow:hidden;border:1px solid rgba(33,216,243,.28);border-radius:10px;background:#06334f}.sp29-summary article{min-height:66px;display:grid;place-content:center;text-align:center;border-right:1px solid rgba(78,145,171,.18)}.sp29-summary article:last-child{border-right:0}.sp29-summary strong,.sp29-summary span{display:block}.sp29-summary strong{font-size:20px}.sp29-summary span{margin-top:3px;color:#9fb8c4;font-size:7px}
+.sp29-goals-list{display:grid;gap:8px}.sp29-goal-card{padding:11px;border:1px solid rgba(33,216,243,.24);border-radius:10px;background:linear-gradient(180deg,#073956,#062f49)}.sp29-goal-card.achieved{border-color:rgba(61,226,174,.45);background:linear-gradient(180deg,#074151,#073548)}
+.sp29-goal-head{display:flex;justify-content:space-between;gap:8px;align-items:flex-start}.sp29-goal-head>div{min-width:0}.sp29-goal-head strong,.sp29-goal-head span{display:block}.sp29-goal-head strong{font-size:11px}.sp29-goal-head span{margin-top:3px;color:#9fb8c4;font-size:8px}.sp29-goal-head>a{width:30px;height:30px;display:grid;place-items:center;color:#27def4}.sp29-goal-head>a svg{width:16px;height:16px}
+.sp29-values{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;margin-top:10px}.sp29-values>div{min-width:0;padding:8px;border-radius:8px;background:#082f49;border:1px solid rgba(33,216,243,.11)}.sp29-values span,.sp29-values strong{display:block}.sp29-values span{color:#8faab6;font-size:7px}.sp29-values strong{margin-top:4px;overflow:hidden;font-size:12px;text-overflow:ellipsis;white-space:nowrap}.sp29-values>div:first-child strong{color:#ffd84b}
+.sp29-progress-copy{display:flex;justify-content:space-between;align-items:center;margin-top:10px}.sp29-progress-copy span{color:#9fb8c4;font-size:8px}.sp29-progress-copy strong{font-size:9px;color:#27def4}.sp29-progress-track{height:8px;margin-top:5px;overflow:hidden;border-radius:99px;background:#04283e}.sp29-progress-track>div{height:100%;border-radius:99px;background:linear-gradient(90deg,#28d7ef,#4b70ee)}
+.sp29-achieved,.sp29-gap-note{margin-top:8px;padding:7px 8px;border-radius:7px;font-size:8px}.sp29-achieved{background:rgba(61,226,174,.10);color:#45e8b7}.sp29-gap-note{background:#06283e;color:#b9cbd4}.sp29-define{display:grid;place-items:center;margin-top:10px;min-height:34px;border-radius:7px;border:1px solid #176886;color:#27def4;font-size:8px;font-weight:800}
+.sp29-card-actions{display:grid;grid-template-columns:1fr auto;gap:6px;margin-top:9px}.sp29-card-actions>a,.sp29-card-actions button{min-height:32px;display:grid;place-items:center;padding:0 9px;border-radius:7px;border:1px solid #176886;background:#07334e;color:#dce9ee;font-size:8px;font-weight:750}.sp29-card-actions form{margin:0}.sp29-card-actions button{border-color:#8b3e50;color:#ff8797;background:rgba(90,29,44,.18)}
+.sp29-empty{display:grid;place-items:center;min-height:220px;padding:22px;text-align:center;border:1px solid rgba(33,216,243,.24);border-radius:10px;background:#06334f}.sp29-empty strong{font-size:13px}.sp29-empty span{margin-top:6px;color:#9fb8c4;font-size:9px}.sp29-empty a{margin-top:14px;padding:9px 13px;border-radius:7px;background:linear-gradient(90deg,#27d4eb,#3d91ef);color:#052b3d;font-size:9px;font-weight:850}
+.sp29-form-head{min-height:160px}.sp29-form{display:grid;gap:12px}.sp29-form label>span{display:block;margin-bottom:5px;font-size:10px}.sp29-form select,.sp29-form input{width:100%;height:41px;border:1px solid #176886;border-radius:8px;background:#082f49;color:#f5fbff;padding:0 10px;font-size:11px;outline:none}.sp29-form select:focus,.sp29-form input:focus{border-color:#28def4;box-shadow:0 0 0 2px rgba(40,222,244,.07)}.sp29-time-input{position:relative}.sp29-time-input svg{position:absolute;top:50%;left:10px;width:17px;height:17px;transform:translateY(-50%);color:#27def4;pointer-events:none}.sp29-time-input input{padding-left:37px}.sp29-form button{height:43px;border:0;border-radius:8px;background:linear-gradient(90deg,#27d4eb,#3d91ef);color:#052b3d;font-size:11px;font-weight:850}.sp29-error{margin-bottom:9px;padding:9px;border-radius:7px;background:rgba(88,26,42,.38);color:#ffd7df;font-size:9px}
+.sp29-home-actions,.sp25-home-head-actions{display:flex;align-items:center;gap:7px}.sp29-home-actions a:first-child,.sp25-home-head-actions a:first-child{color:#8fd9e8!important}
+@media(max-width:350px){.sp29-values{grid-template-columns:1fr}.sp29-summary{grid-template-columns:1fr 1fr}.sp29-summary article:nth-child(2){border-right:0}}
+
+
+/* ============================================================
+   SwimPro V30 — TEMPORADAS
+   ============================================================ */
+.sp30-season-row{display:grid;grid-template-columns:minmax(0,1fr) 118px;gap:7px;align-items:stretch;margin-bottom:10px}
+.sp30-season-row .sp22-course-tabs{margin:0}
+.sp30-season-select select,.sp30-history-season select,.sp30-goal-season select{width:100%;height:42px;border:1px solid #185774;border-radius:8px;background:#082f49;color:#f5fbff;padding:0 8px;font-size:9px}
+.sp30-label{display:block;margin-top:5px!important;color:#8faab6!important;font-size:7px!important}.sp30-historical{color:#7fa7b8!important}
+.sp30-history-season,.sp30-goal-season{margin-bottom:9px}
+.sp30-pb-compare{display:grid;grid-template-columns:1fr 1fr;margin-bottom:9px;overflow:hidden;border:1px solid rgba(37,216,241,.30);border-radius:11px;background:#06334f}.sp30-pb-compare article{min-height:92px;padding:12px;display:grid;align-content:center}.sp30-pb-compare article:first-child{border-right:1px solid rgba(80,145,171,.18)}.sp30-pb-compare span,.sp30-pb-compare strong,.sp30-pb-compare small{display:block}.sp30-pb-compare span{font-size:8px;color:#9fb8c4;font-weight:800}.sp30-pb-compare strong{margin-top:6px;font-size:20px}.sp30-pb-compare article:first-child strong{color:#ffd84b}.sp30-pb-compare small{margin-top:4px;color:#8faab6;font-size:7px}
+.sp30-stats-row{min-height:64px;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:center;border-bottom:1px solid rgba(90,151,177,.16)}.sp30-stats-row:last-child{border-bottom:0}.sp30-stats-row>div:first-child strong,.sp30-stats-row>div:first-child span,.sp30-stats-row>div:last-child small,.sp30-stats-row>div:last-child strong,.sp30-stats-row>div:last-child span{display:block}.sp30-stats-row>div:first-child strong{font-size:9px}.sp30-stats-row>div:first-child span{margin-top:3px;color:#9fb8c4;font-size:8px}.sp30-stats-row>div:last-child{text-align:right}.sp30-stats-row>div:last-child small{color:#8faab6;font-size:7px}.sp30-stats-row>div:last-child strong{margin-top:2px;color:#ffd84b;font-size:15px}.sp30-stats-row>div:last-child span{margin-top:2px;color:#9fb8c4;font-size:7px}
+@media(max-width:350px){.sp30-season-row{grid-template-columns:1fr}.sp30-pb-compare{grid-template-columns:1fr}.sp30-pb-compare article:first-child{border-right:0;border-bottom:1px solid rgba(80,145,171,.18)}}
+
+
+/* ============================================================
+   SwimPro V31 — LOGROS PERSONALES
+   ============================================================ */
+
+.sp31-page,
+.sp31-page * {
+  box-sizing: border-box;
+}
+
+.sp31-page {
+  width: 100%;
+  color: #f5fbff;
+}
+
+.sp31-page svg {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.sp31-water-head {
+  width: calc(100% + 20px);
+  min-height: 172px;
+  margin: -18px -10px 10px;
+  padding: 11px 16px 18px;
+  background:
+    linear-gradient(rgba(2,28,48,.10),rgba(2,28,48,.17)),
+    url("/static/swimpro_water_bg_user.png");
+  background-size: cover;
+  background-position: center 47%;
+  border-bottom: 1px solid rgba(33,216,243,.11);
+}
+
+.sp31-topbar {
+  min-height: 40px;
+}
+
+.sp31-back {
+  width: 38px;
+  height: 38px;
+  display: grid;
+  place-items: center;
+  margin-left: -8px;
+  color: #fff;
+}
+
+.sp31-back svg {
+  width: 21px;
+  height: 21px;
+}
+
+.sp31-kicker {
+  display: block;
+  margin-top: 10px;
+  color: #27def4;
+  font-size: 9px;
+  font-weight: 850;
+  letter-spacing: .04em;
+}
+
+.sp31-water-head h1 {
+  margin: 8px 0 0;
+  font-size: 27px;
+  line-height: 1.06;
+}
+
+.sp31-water-head p {
+  margin: 7px 0 0;
+  color: #c8d7de;
+  font-size: 9px;
+}
+
+.sp31-progress-card {
+  display: grid;
+  grid-template-columns: 72px minmax(0,1fr);
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 9px;
+  padding: 12px;
+  border: 1px solid rgba(33,216,243,.28);
+  border-radius: 11px;
+  background: linear-gradient(180deg,#073956,#062f49);
+}
+
+.sp31-progress-circle {
+  width: 68px;
+  height: 68px;
+  display: grid;
+  place-content: center;
+  text-align: center;
+  border: 4px solid #24d7ef;
+  border-radius: 50%;
+  background: #062a42;
+}
+
+.sp31-progress-circle strong,
+.sp31-progress-circle span {
+  display: block;
+}
+
+.sp31-progress-circle strong {
+  font-size: 17px;
+  color: #fff;
+}
+
+.sp31-progress-circle span {
+  margin-top: 2px;
+  color: #91abb7;
+  font-size: 6px;
+}
+
+.sp31-progress-copy strong,
+.sp31-progress-copy span {
+  display: block;
+}
+
+.sp31-progress-copy strong {
+  font-size: 12px;
+}
+
+.sp31-progress-copy span {
+  margin-top: 5px;
+  color: #9fb8c4;
+  font-size: 8px;
+  line-height: 1.4;
+}
+
+.sp31-kpis {
+  display: grid;
+  grid-template-columns: repeat(3,1fr);
+  margin-bottom: 9px;
+  overflow: hidden;
+  border: 1px solid rgba(33,216,243,.26);
+  border-radius: 10px;
+  background: #06334f;
+}
+
+.sp31-kpis article {
+  min-height: 62px;
+  display: grid;
+  place-content: center;
+  text-align: center;
+  border-right: 1px solid rgba(78,145,171,.18);
+}
+
+.sp31-kpis article:last-child {
+  border-right: 0;
+}
+
+.sp31-kpis span,
+.sp31-kpis strong {
+  display: block;
+}
+
+.sp31-kpis span {
+  color: #8faab6;
+  font-size: 7px;
+}
+
+.sp31-kpis strong {
+  margin-top: 4px;
+  font-size: 18px;
+}
+
+.sp31-section {
+  margin-bottom: 10px;
+  overflow: hidden;
+  border: 1px solid rgba(33,216,243,.26);
+  border-radius: 11px;
+  background: linear-gradient(180deg,#073956,#062f49);
+}
+
+.sp31-section-head {
+  min-height: 39px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 11px;
+  border-bottom: 1px solid rgba(33,216,243,.12);
+}
+
+.sp31-section-head h2 {
+  margin: 0;
+  color: #27def4;
+  font-size: 10px;
+}
+
+.sp31-section-head span {
+  color: #8faab6;
+  font-size: 8px;
+}
+
+.sp31-grid {
+  padding: 8px;
+}
+
+.sp31-achievement {
+  min-height: 68px;
+  display: grid;
+  grid-template-columns: 42px minmax(0,1fr) 28px;
+  gap: 9px;
+  align-items: center;
+  margin-bottom: 7px;
+  padding: 9px;
+  border-radius: 9px;
+}
+
+.sp31-achievement:last-child {
+  margin-bottom: 0;
+}
+
+.sp31-achievement.unlocked {
+  border: 1px solid rgba(61,226,174,.30);
+  background:
+    linear-gradient(180deg,rgba(8,67,67,.64),rgba(7,49,60,.80));
+}
+
+.sp31-achievement.locked {
+  border: 1px solid rgba(84,144,170,.18);
+  background: #082f49;
+  opacity: .86;
+}
+
+.sp31-icon {
+  width: 42px;
+  height: 42px;
+  display: grid;
+  place-items: center;
+  border-radius: 10px;
+  background: rgba(39,216,243,.09);
+  font-size: 20px;
+}
+
+.sp31-achievement.unlocked .sp31-icon {
+  background: rgba(61,226,174,.10);
+}
+
+.sp31-copy {
+  min-width: 0;
+}
+
+.sp31-copy strong,
+.sp31-copy span,
+.sp31-copy small {
+  display: block;
+}
+
+.sp31-copy strong {
+  color: #f5fbff;
+  font-size: 10px;
+}
+
+.sp31-copy span {
+  margin-top: 3px;
+  color: #a6bbc5;
+  font-size: 8px;
+  line-height: 1.35;
+}
+
+.sp31-copy small {
+  margin-top: 4px;
+  color: #6fd0e9;
+  font-size: 7px;
+}
+
+.sp31-check {
+  width: 25px;
+  height: 25px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: #3ce1ae;
+  color: #063b3b;
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.sp31-lock {
+  width: 27px;
+  height: 27px;
+  display: grid;
+  place-items: center;
+  color: #7394a2;
+}
+
+.sp31-lock svg {
+  width: 17px;
+  height: 17px;
+}
+
+.sp31-mini-progress {
+  height: 5px;
+  margin-top: 6px;
+  overflow: hidden;
+  border-radius: 99px;
+  background: #05263b;
+}
+
+.sp31-mini-progress > div {
+  height: 100%;
+  border-radius: 99px;
+  background: linear-gradient(90deg,#27d5eb,#4a75ef);
+}
+
+.sp31-empty {
+  padding: 18px;
+  color: #9fb8c4;
+  font-size: 9px;
+  text-align: center;
+}
+
+.sp31-home-quick {
+  display: grid;
+  grid-template-columns: repeat(3,1fr);
+  gap: 6px;
+  margin: -2px 0 8px;
+}
+
+.sp31-home-quick a {
+  min-height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  border: 1px solid rgba(33,216,243,.18);
+  border-radius: 8px;
+  background: #06334f;
+  color: #cfe0e7;
+  font-size: 8px;
+}
+
+.sp31-home-quick span {
+  font-size: 12px;
+}
+
+@media (max-width: 350px) {
+  .sp31-home-quick {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+
+  .sp31-water-head h1 {
+    font-size: 24px;
+  }
+}
+
+
+/* ============================================================
+   SwimPro V33 — iconos de estilo en Inicio / Últimos tiempos
+   Basados en la referencia visual suministrada por el usuario.
+   ============================================================ */
+.sp18-swim-icon{
+  overflow:hidden;
+  flex:0 0 auto;
+}
+.sp18-swim-icon .sp33-style-icon{
+  width:19px!important;
+  height:19px!important;
+  display:block;
+  fill:none;
+  stroke:#063247;
+  stroke-width:2.15;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+}
+.sp18-swim-icon .sp33-style-icon circle{
+  fill:#063247;
+  stroke:none;
+}
+/* Mantener el código cromático de la referencia */
+.sp18-mariposa{background:#ffd84c!important;}
+.sp18-libre{background:#35daca!important;}
+.sp18-pecho{background:#55bff1!important;}
+.sp18-espalda{background:#65acf4!important;}
+.sp18-combinado{background:#61c8eb!important;}
+
+
+/* ============================================================
+   SwimPro V34 — iconos profesionales en Detalle del tiempo
+   ============================================================ */
+.sp34-detail-icon-wrap{
+  width:100%;
+  min-height:92px;
+  display:grid;
+  place-items:center;
+  margin:4px 0 12px;
+  padding:10px;
+  border:1px solid rgba(37,216,244,.18);
+  border-radius:12px;
+  background:linear-gradient(180deg,rgba(8,55,82,.82),rgba(5,43,66,.72));
+}
+.sp34-detail-stroke-icon{
+  width:108px;
+  height:76px;
+  display:block;
+  object-fit:contain;
+  filter:drop-shadow(0 0 9px rgba(37,216,244,.16));
+}
+
+
+/* ============================================================
+   SwimPro V35 — pictograma de estilo dentro del círculo
+   Detalle del tiempo
+   ============================================================ */
+.sp35-detail-stroke-symbol{
+  width:34px!important;
+  height:27px!important;
+  display:block!important;
+  object-fit:contain!important;
+  margin:auto!important;
+}
+
+/* Remove the V34 standalone presentation if stale markup is cached. */
+.sp34-detail-icon-wrap{
+  display:none!important;
+}
+
+/* Ensure common circular icon holders keep the desired badge appearance. */
+.sp29-detail-icon,
+.sp30-detail-icon,
+.sp-detail-icon,
+.detail-stroke-icon,
+.swim-detail-icon{
+  overflow:hidden;
+}
+
+/* SwimPro V36 */
+.sp36-detail-stroke-symbol{
+  width:35px!important;
+  height:28px!important;
+  display:block!important;
+  object-fit:contain!important;
+  margin:auto!important;
+}
+.sp-profile-brand{
+  background:transparent!important;
+  border:none!important;
+  box-shadow:none!important;
+}
+.sp-profile-brand img{
+  width:min(250px,72vw)!important;
+  height:auto!important;
+  max-height:150px!important;
+  object-fit:contain!important;
+  display:block!important;
+  margin:0 auto!important;
+  background:transparent!important;
+  border-radius:0!important;
+  box-shadow:none!important;
+}
+
+/* SwimPro V37 — Home icons matching reference 2 */
+.sp18-swim-icon .sp37-home-style-icon{
+  width:20px!important;
+  height:20px!important;
+  display:block!important;
+  fill:none!important;
+  stroke:#063247!important;
+  stroke-width:2.15!important;
+  stroke-linecap:round!important;
+  stroke-linejoin:round!important;
+}
+.sp18-mariposa{background:#ffd84c!important;}
+.sp18-libre{background:#20d3c0!important;}
+.sp18-pecho{background:#39aef2!important;}
+.sp18-espalda{background:#61b7f5!important;}
+.sp18-combinado{background:#58c7e8!important;}
+
+/* SwimPro V38 PWA */
+html{background:#03263c}body{overscroll-behavior-y:none;-webkit-tap-highlight-color:transparent}
+@media(display-mode:standalone){body{padding-top:env(safe-area-inset-top);padding-left:env(safe-area-inset-left);padding-right:env(safe-area-inset-right)}.bottom-nav,.nav-bottom,.sp-bottom-nav{padding-bottom:max(8px,env(safe-area-inset-bottom))!important}}

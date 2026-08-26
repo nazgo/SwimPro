@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+{% block title %}Nuevo objetivo · SwimPro{% endblock %}
+
+{% block content %}
+<div class="sp29-page">
+
+  <section class="sp29-water-head sp29-form-head">
+    <div class="sp29-topbar">
+      <a href="{{ url_for('goals_dashboard') }}" class="sp29-icon-btn" aria-label="Volver">
+        <svg viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></svg>
+      </a>
+    </div>
+
+    <span class="sp29-kicker">OBJETIVOS</span>
+    <h1>Nuevo objetivo</h1>
+    <p>Define la marca que quieres alcanzar.</p>
+  </section>
+
+  {% if error %}<div class="sp29-error">{{ error }}</div>{% endif %}
+
+  <form method="post" class="sp29-form">
+
+    <label>
+      <span>Piscina</span>
+      <select name="pool_length" id="pool_length">
+        <option value="25">25 m (Corta)</option>
+        <option value="50" selected>50 m (Larga)</option>
+      </select>
+    </label>
+
+    <label>
+      <span>Estilo</span>
+      <select name="stroke" id="stroke">
+        {% for s in styles %}
+          <option value="{{ s }}">{{ s }}</option>
+        {% endfor %}
+      </select>
+    </label>
+
+    <label>
+      <span>Distancia</span>
+      <select name="distance" id="distance"></select>
+    </label>
+
+    <label>
+      <span>Tiempo objetivo</span>
+      <div class="sp29-time-input">
+        <svg viewBox="0 0 24 24">
+          <circle cx="12" cy="13" r="7"/>
+          <path d="M12 13V9M9 3h6M12 6V4"/>
+        </svg>
+        <input name="target_time"
+               placeholder="Ej. 1:13.99"
+               inputmode="decimal"
+               required>
+      </div>
+    </label>
+
+    <button type="submit">Guardar objetivo</button>
+  </form>
+</div>
+
+<script>
+const officialEvents = {{ official_events|tojson }};
+const pool = document.getElementById("pool_length");
+const stroke = document.getElementById("stroke");
+const distance = document.getElementById("distance");
+
+function refreshDistances() {
+  const values = officialEvents[stroke.value][Number(pool.value)] || [];
+  distance.innerHTML = "";
+  values.forEach(value => {
+    const option = document.createElement("option");
+    option.value = value;
+    option.textContent = value + " m";
+    distance.appendChild(option);
+  });
+}
+
+pool.addEventListener("change", refreshDistances);
+stroke.addEventListener("change", refreshDistances);
+refreshDistances();
+</script>
+{% endblock %}

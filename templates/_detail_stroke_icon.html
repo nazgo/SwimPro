@@ -1,0 +1,12 @@
+{% macro detail_stroke_icon(stroke) -%}
+{% set icon_map = {
+  'Libre':'detail_freestyle_solid.svg',
+  'Espalda':'detail_backstroke_solid.svg',
+  'Pecho':'detail_breaststroke_solid.svg',
+  'Mariposa':'detail_butterfly_solid.svg',
+  'Combinado':'detail_im_solid.svg'
+} %}
+<img class="sp36-detail-stroke-symbol"
+     src="{{ url_for('static', filename='icons/' ~ icon_map.get(stroke, 'detail_freestyle_solid.svg')) }}"
+     alt="{{ stroke }}">
+{%- endmacro %}

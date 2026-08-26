@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+{% block title %}{{ comp.name }} · SwimPro{% endblock %}
+{% block content %}
+<div class="sp27-page">
+  <section class="sp27-water-head">
+    <div class="sp27-topbar">
+      <a href="{{ url_for('competitions') }}" class="sp27-icon-btn" aria-label="Volver">
+        <svg viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></svg>
+      </a>
+      <div class="sp27-top-actions">
+        <a href="{{ url_for('edit_competition', competition_id=comp.id) }}" class="sp27-icon-btn" aria-label="Editar competencia">
+          <svg viewBox="0 0 24 24"><path d="m4 16-1 5 5-1L19 9l-4-4L4 16Z"/></svg>
+        </a>
+      </div>
+    </div>
+
+    <h1>{{ comp.name }}</h1>
+    <div class="sp27-meta-line">
+      <svg viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M8 3v4M16 3v4M4 10h16"/></svg>
+      <span>{{ comp.competition_date }}</span>
+    </div>
+    <div class="sp27-meta-line">
+      <svg viewBox="0 0 24 24"><path d="M12 21s6-5 6-11a6 6 0 1 0-12 0c0 6 6 11 6 11Z"/><circle cx="12" cy="10" r="2"/></svg>
+      <span>{{ comp.location or 'Sin ubicación' }}</span>
+    </div>
+    <span class="sp27-course">{{ comp.pool_length }} m ({% if comp.pool_length == 25 %}Corta{% else %}Larga{% endif %})</span>
+  </section>
+
+  <section class="sp27-summary">
+    <article><strong>{{ total_races }}</strong><span>Pruebas</span></article>
+    <article><strong>{{ completed }}</strong><span>Completadas</span></article>
+    <article><strong>{{ new_pbs }}</strong><span>PB</span></article>
+    <article><strong>{{ first_marks }}</strong><span>Primera marca</span></article>
+  </section>
+
+  <section class="sp27-card">
+    <div class="sp27-card-head">
+      <h2>MIS PRUEBAS</h2>
+      <a href="{{ url_for('new_competition_event', competition_id=comp.id) }}">+ Agregar</a>
+    </div>
+
+    <div class="sp27-events">
+      {% for e in events %}
+      <article class="sp27-event-card {% if e.swim_id %}completed{% endif %}">
+        <div class="sp27-event-main">
+          <div>
+            <strong>{{ e.distance }} {{ e.stroke|upper }}</strong>
+            <span>{{ comp.pool_length }} m</span>
+          </div>
+          <div class="sp27-event-status">
+            {% if e.swim_id %}
+              <strong>{{ e.time_cs|swimtime }}</strong>
+              {% if e.is_pb %}<em>PB</em>
+              {% elif e.is_first %}<small class="sp27-good">Primera marca</small>
+              {% else %}<small>Completada</small>{% endif %}
+            {% else %}
+              <strong>Pendiente</strong>
+              <small>{% if e.target_cs %}Objetivo {{ e.target_cs|swimtime }}{% else %}Sin objetivo{% endif %}</small>
+            {% endif %}
+          </div>
+        </div>
+
+        <div class="sp27-event-details">
+          <div><span>Objetivo</span><strong>{% if e.target_cs %}{{ e.target_cs|swimtime }}{% else %}—{% endif %}</strong></div>
+          <div><span>Resultado</span><strong>{% if e.time_cs %}{{ e.time_cs|swimtime }}{% else %}—{% endif %}</strong></div>
+          <div><span>Posición</span><strong>{{ e.position or '—' }}</strong></div>
+          <div><span>PB</span><strong>{% if e.is_pb %}Sí{% elif e.is_first %}Primera{% else %}—{% endif %}</strong></div>
+        </div>
+
+        {% if e.splits %}
+        <div class="sp27-splits">
+          <div class="sp27-subtitle">PARCIALES</div>
+          {% set ns = namespace(prev=0) %}
+          {% for s in e.splits %}
+          <div class="sp27-split-row">
+            <span>{{ s.split_distance }} m</span>
+            <strong>{{ s.split_cs|swimtime }}</strong>
+            <small>Tramo {{ (s.split_cs - ns.prev)|swimtime }}</small>
+          </div>
+          {% set ns.prev = s.split_cs %}
+          {% endfor %}
+        </div>
+        {% endif %}
+
+        {% if e.notes or e.swim_notes %}
+          <div class="sp27-event-notes">{{ e.notes or e.swim_notes }}</div>
+        {% endif %}
+
+        <div class="sp27-event-actions">
+          {% if e.swim_id %}
+            <a class="primary" href="{{ url_for('swim_detail', swim_id=e.swim_id) }}">Ver resultado</a>
+          {% else %}
+            <a class="primary" href="{{ url_for('add_swim', competition_id=comp.id, planned_event_id=e.id) }}">Registrar resultado</a>
+          {% endif %}
+          <a href="{{ url_for('edit_competition_event', event_id=e.id) }}">Editar prueba</a>
+          {% if not e.swim_id %}
+          <form method="post" action="{{ url_for('delete_competition_event', event_id=e.id) }}" onsubmit="return confirm('¿Quitar esta prueba?');">
+            <button type="submit">Eliminar</button>
+          </form>
+          {% endif %}
+        </div>
+      </article>
+      {% else %}
+        <div class="sp27-empty">Aún no has agregado pruebas.</div>
+      {% endfor %}
+    </div>
+  </section>
+</div>
+{% endblock %}

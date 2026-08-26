@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% block title %}Estadísticas · SwimPro{% endblock %}
+{% block content %}
+<div class="sp25-page sp30-stats">
+  <section class="sp25-water-header sp25-stats-header">
+    <a href="{{ url_for('index') }}" class="sp25-back"><svg viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></svg></a>
+    <span class="sp25-kicker">SWIMPRO</span>
+    <h1>Estadísticas</h1>
+    <p>Histórico y temporadas en una sola vista</p>
+  </section>
+
+  <form class="sp25-filters" method="get">
+    <select name="pool" onchange="this.form.submit()">
+      <option value="">Todas las piscinas</option>
+      <option value="25" {% if pool == 25 %}selected{% endif %}>25 m</option>
+      <option value="50" {% if pool == 50 %}selected{% endif %}>50 m</option>
+    </select>
+    <select name="stroke" onchange="this.form.submit()">
+      <option value="">Todos los estilos</option>
+      {% for s in styles %}<option value="{{ s }}" {% if stroke == s %}selected{% endif %}>{{ s }}</option>{% endfor %}
+    </select>
+    <select name="year" onchange="this.form.submit()">
+      <option value="">Histórico</option>
+      {% for y in seasons %}<option value="{{ y }}" {% if year == y %}selected{% endif %}>{{ y }}</option>{% endfor %}
+    </select>
+  </form>
+
+  <section class="sp25-stats-kpis">
+    <article><span>TIEMPOS</span><strong>{{ total_swims }}</strong></article>
+    <article><span>PRUEBAS</span><strong>{{ event_count }}</strong></article>
+    <article><span>COMPETENCIAS</span><strong>{{ total_competitions }}</strong></article>
+  </section>
+
+  <section class="sp25-history-card">
+    <div class="sp25-card-title">
+      <h2>{% if year %}TEMPORADA {{ year }}{% else %}PB HISTÓRICOS{% endif %}</h2>
+      <span>{{ progression|length }} pruebas</span>
+    </div>
+    <div class="sp25-progress-list">
+      {% for r in progression %}
+        <a href="{{ url_for('history', distance=r.distance, stroke=r.stroke, pool_length=r.pool_length, year=year) }}" class="sp30-stats-row">
+          <div>
+            <strong>{{ r.distance }} {{ r.stroke|upper }}</strong>
+            <span>{{ r.pool_length }} m · {{ r.historical_attempts }} históricos</span>
+          </div>
+          <div>
+            {% if year %}
+              <small>PB {{ year }}</small>
+              <strong>{% if r.season_pb %}{{ r.season_pb|swimtime }}{% else %}—{% endif %}</strong>
+              <span>Hist: {{ r.historical_pb|swimtime }}</span>
+            {% else %}
+              <small>PB histórico</small>
+              <strong>{{ r.historical_pb|swimtime }}</strong>
+            {% endif %}
+          </div>
+        </a>
+      {% endfor %}
+    </div>
+  </section>
+</div>
+{% endblock %}

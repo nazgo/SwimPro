@@ -1,0 +1,110 @@
+{% extends "base.html" %}
+{% block title %}Logros · SwimPro{% endblock %}
+
+{% block content %}
+<div class="sp31-page">
+
+  <section class="sp31-water-head">
+    <div class="sp31-topbar">
+      <a href="{{ url_for('index') }}" class="sp31-back" aria-label="Volver">
+        <svg viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></svg>
+      </a>
+    </div>
+
+    <span class="sp31-kicker">SWIMPRO</span>
+    <h1>Logros personales</h1>
+    <p>Cada marca cuenta una parte de tu progreso.</p>
+  </section>
+
+  <section class="sp31-progress-card">
+    <div class="sp31-progress-circle">
+      <strong>{{ completion }}%</strong>
+      <span>completado</span>
+    </div>
+
+    <div class="sp31-progress-copy">
+      <strong>{{ unlocked|length }} de {{ total }} logros</strong>
+      <span>Los logros se desbloquean automáticamente con tus tiempos, competencias y objetivos.</span>
+    </div>
+  </section>
+
+  <section class="sp31-kpis">
+    <article>
+      <span>TIEMPOS</span>
+      <strong>{{ total_swims }}</strong>
+    </article>
+    <article>
+      <span>NUEVOS PB</span>
+      <strong>{{ total_pbs }}</strong>
+    </article>
+    <article>
+      <span>COMPETENCIAS</span>
+      <strong>{{ competitions_count }}</strong>
+    </article>
+  </section>
+
+  <section class="sp31-section">
+    <div class="sp31-section-head">
+      <h2>DESBLOQUEADOS</h2>
+      <span>{{ unlocked|length }}</span>
+    </div>
+
+    <div class="sp31-grid">
+      {% for a in unlocked %}
+      <article class="sp31-achievement unlocked">
+        <div class="sp31-icon">{{ a.icon }}</div>
+
+        <div class="sp31-copy">
+          <strong>{{ a.title }}</strong>
+          <span>{{ a.description }}</span>
+          {% if a.detail %}<small>{{ a.detail }}</small>{% endif %}
+        </div>
+
+        <div class="sp31-check">✓</div>
+      </article>
+      {% else %}
+      <div class="sp31-empty">
+        Registra tu primer tiempo para comenzar a desbloquear logros.
+      </div>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="sp31-section">
+    <div class="sp31-section-head">
+      <h2>PRÓXIMOS LOGROS</h2>
+      <span>{{ locked|length }}</span>
+    </div>
+
+    <div class="sp31-grid">
+      {% for a in locked %}
+      <article class="sp31-achievement locked">
+        <div class="sp31-icon">{{ a.icon }}</div>
+
+        <div class="sp31-copy">
+          <strong>{{ a.title }}</strong>
+          <span>{{ a.description }}</span>
+
+          {% if a.progress is not none and a.progress_max %}
+            <div class="sp31-mini-progress">
+              <div style="width: {{ ((a.progress / a.progress_max) * 100)|round|int }}%"></div>
+            </div>
+            <small>{{ a.detail }}</small>
+          {% elif a.detail %}
+            <small>{{ a.detail }}</small>
+          {% endif %}
+        </div>
+
+        <div class="sp31-lock">
+          <svg viewBox="0 0 24 24">
+            <rect x="5" y="10" width="14" height="10" rx="2"/>
+            <path d="M8 10V7a4 4 0 0 1 8 0v3"/>
+          </svg>
+        </div>
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+
+</div>
+{% endblock %}

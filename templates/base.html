@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#031b2d">
+  <title>{% block title %}SwimPro{% endblock %}</title>
+  <link rel="manifest" href="{{ url_for('static', filename='manifest.json') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <!-- SwimPro PWA -->
+  <link rel="manifest" href="{{ url_for('static', filename='manifest.webmanifest') }}">
+  <meta name="theme-color" content="#03263C">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="SwimPro">
+  <meta name="application-name" content="SwimPro">
+  <link rel="apple-touch-icon" sizes="180x180" href="{{ url_for('static', filename='pwa/apple-touch-icon.png') }}">
+  <link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', filename='pwa/favicon-32.png') }}">
+  <link rel="apple-touch-startup-image" href="{{ url_for('static', filename='pwa/splash-1170x2532.png') }}" media="(device-width:390px) and (device-height:844px) and (-webkit-device-pixel-ratio:3)">
+  <link rel="apple-touch-startup-image" href="{{ url_for('static', filename='pwa/splash-1179x2556.png') }}" media="(device-width:393px) and (device-height:852px) and (-webkit-device-pixel-ratio:3)">
+  <link rel="apple-touch-startup-image" href="{{ url_for('static', filename='pwa/splash-1290x2796.png') }}" media="(device-width:430px) and (device-height:932px) and (-webkit-device-pixel-ratio:3)">
+  <link rel="apple-touch-startup-image" href="{{ url_for('static', filename='pwa/splash-1125x2436.png') }}" media="(device-width:375px) and (device-height:812px) and (-webkit-device-pixel-ratio:3)">
+
+</head>
+<body>
+  <main class="app-shell">
+    {% block content %}{% endblock %}
+  </main>
+
+  <nav class="sp24-nav">
+    <a href="{{ url_for('index') }}" class="{% if request.endpoint == 'index' %}active{% endif %}">
+      <svg viewBox="0 0 24 24"><path d="M4 11.5 12 5l8 6.5"/><path d="M6 10.5V20h12v-9.5"/></svg>
+      <span>Inicio</span>
+    </a>
+
+    <a href="{{ url_for('marks') }}" class="{% if request.endpoint in ['marks','history'] %}active{% endif %}">
+      <svg viewBox="0 0 24 24"><path d="M8 4h8v4a4 4 0 0 1-8 0V4Z"/><path d="M8 6H4v2a4 4 0 0 0 4 4M16 6h4v2a4 4 0 0 1-4 4M12 12v5M9 20h6"/></svg>
+      <span>Marcas</span>
+    </a>
+
+    <a href="{{ url_for('add_swim') }}" class="sp24-time {% if request.endpoint in ['add_swim','edit_swim','swim_detail'] %}active{% endif %}">
+      <div><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></div>
+      <span>Tiempo</span>
+    </a>
+
+    <a href="{{ url_for('competitions') }}" class="{% if request.endpoint in ['competitions','competition_detail','new_competition','edit_competition','new_competition_event'] %}active{% endif %}">
+      <svg viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M8 3v4M16 3v4M4 10h16"/></svg>
+      <span>Competencias</span>
+    </a>
+
+    <a href="{{ url_for('profile') }}" class="{% if request.endpoint == 'profile' %}active{% endif %}">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.5"/><path d="M5 20c.8-4 3-6 7-6s6.2 2 7 6"/></svg>
+      <span>Perfil</span>
+    </a>
+  </nav>
+
+  <script>
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.register("{{ url_for('static', filename='sw.js') }}");
+    }
+  </script>
+
+<script>
+(() => {
+  if ("serviceWorker" in navigator) {
+    window.addEventListener("load",()=>navigator.serviceWorker.register("/static/sw.js").catch(()=>{}));
+  }
+  let deferred=null;
+  window.addEventListener("beforeinstallprompt",e=>{e.preventDefault();deferred=e;});
+  window.SwimProPWA={
+    canInstall:()=>!!deferred,
+    install:async()=>{if(!deferred)return false;deferred.prompt();const c=await deferred.userChoice;deferred=null;return c.outcome==="accepted";},
+    isStandalone:()=>window.matchMedia("(display-mode: standalone)").matches||navigator.standalone===true,
+    isIOS:()=>/iphone|ipad|ipod/i.test(navigator.userAgent)
+  };
+})();
+</script>
+</body>
+</html>

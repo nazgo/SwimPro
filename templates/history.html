@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+{% block title %}Evolución · {{ distance }} m {{ stroke }}{% endblock %}
+{% block content %}
+<div class="sp25-page sp30-history">
+
+  <section class="sp25-water-header">
+    <a href="{{ url_for('marks', pool=pool_length, year=selected_year) }}" class="sp25-back" aria-label="Volver">
+      <svg viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></svg>
+    </a>
+    <span class="sp25-kicker">EVOLUCIÓN</span>
+    <h1>{{ distance }} m {{ stroke }}</h1>
+    <p>Piscina {{ pool_length }} m</p>
+  </section>
+
+  <form method="get" class="sp30-history-season">
+    <select name="year" onchange="this.form.submit()">
+      <option value="">Histórico completo</option>
+      {% for y in seasons %}
+        <option value="{{ y }}" {% if selected_year == y %}selected{% endif %}>Temporada {{ y }}</option>
+      {% endfor %}
+    </select>
+  </form>
+
+  <section class="sp30-pb-compare">
+    <article>
+      <span>PB HISTÓRICO</span>
+      <strong>{% if historical_pb %}{{ historical_pb|swimtime }}{% else %}—{% endif %}</strong>
+      <small>mejor marca de todos los tiempos</small>
+    </article>
+    <article>
+      <span>{% if selected_year %}PB {{ selected_year }}{% else %}PB ACTUAL{% endif %}</span>
+      <strong>{% if pb %}{{ pb|swimtime }}{% else %}—{% endif %}</strong>
+      <small>{% if selected_year %}mejor de la temporada{% else %}vista histórica{% endif %}</small>
+    </article>
+  </section>
+
+  <section class="sp25-metrics-grid">
+    <article><span>MEJORA DEL PERÍODO</span><strong>{% if total_improvement is not none %}−{{ total_improvement|swimtime }}{% else %}—{% endif %}</strong><small>desde primera marca visible</small></article>
+    <article><span>PROMEDIO ÚLT. 3</span><strong>{% if avg3 %}{{ avg3|swimtime }}{% else %}—{% endif %}</strong><small>consistencia reciente</small></article>
+    <article><span>REGISTROS</span><strong>{{ rows|length }}</strong><small>{% if selected_year %}en {{ selected_year }}{% else %}históricos{% endif %}</small></article>
+    <article><span>ÚLTIMO TIEMPO</span><strong>{% if latest %}{{ latest|swimtime }}{% else %}—{% endif %}</strong><small>registro más reciente</small></article>
+  </section>
+
+  <section class="sp25-chart-card">
+    <div class="sp25-card-title">
+      <h2>PROGRESIÓN</h2>
+      <span>{% if selected_year %}{{ selected_year }}{% else %}Histórico{% endif %}</span>
+    </div>
+    <div class="sp25-chart-wrap"><canvas id="historyChart"></canvas></div>
+  </section>
+
+  <section class="sp25-goal-card">
+    <div class="sp25-card-title"><h2>OBJETIVO</h2>{% if goal_progress is not none %}<span>{{ goal_progress }}%</span>{% endif %}</div>
+    <div class="sp25-goal-info">
+      <div><span>Meta</span><strong>{% if goal %}{{ goal.target_cs|swimtime }}{% else %}Sin definir{% endif %}</strong></div>
+      <div><span>Faltan (vs histórico)</span><strong>{% if goal and goal_gap is not none %}{% if goal_gap > 0 %}{{ goal_gap|swimtime }}{% else %}Objetivo logrado{% endif %}{% else %}—{% endif %}</strong></div>
+    </div>
+    {% if goal_progress is not none %}<div class="sp25-progress-track"><div style="width:{{ goal_progress }}%"></div></div>{% endif %}
+    <form method="post" action="{{ url_for('set_goal') }}" class="sp25-goal-form">
+      <input type="hidden" name="distance" value="{{ distance }}">
+      <input type="hidden" name="stroke" value="{{ stroke }}">
+      <input type="hidden" name="pool_length" value="{{ pool_length }}">
+      <input type="text" name="target_time" value="{% if goal %}{{ goal.target_cs|swimtime }}{% endif %}" placeholder="1:14.99" required>
+      <button type="submit">Guardar</button>
+    </form>
+  </section>
+
+  <section class="sp25-history-card">
+    <div class="sp25-card-title"><h2>HISTORIAL</h2><span>{% if selected_year %}{{ selected_year }}{% else %}Todo{% endif %}</span></div>
+    <div class="sp25-history-list">
+      {% for r in rows|reverse %}
+        <a href="{{ url_for('swim_detail', swim_id=r.id) }}" class="sp25-history-row">
+          <div class="sp25-history-copy">
+            <strong>{{ r.swim_date }}</strong>
+            <span>{{ r.kind }}{% if r.competition_name %} · {{ r.competition_name }}{% endif %}</span>
+          </div>
+          <div class="sp25-history-result">
+            <strong>{{ r.time_cs|swimtime }}</strong>
+            {% if historical_pb and r.time_cs == historical_pb %}<em>PB HIST.</em>
+            {% elif selected_year and season_pb and r.time_cs == season_pb %}<em>PB {{ selected_year }}</em>
+            {% endif %}
+          </div>
+        </a>
+      {% else %}
+        <div class="sp25-empty">No hay registros para esta temporada.</div>
+      {% endfor %}
+    </div>
+  </section>
+</div>
+
+<script>
+const historyRows = [
+  {% for r in rows %}
+    {date:"{{ r.swim_date }}",seconds:{{ r.time_cs / 100 }}}{% if not loop.last %},{% endif %}
+  {% endfor %}
+];
+const ctx=document.getElementById("historyChart");
+if(ctx&&historyRows.length){
+  new Chart(ctx,{
+    type:"line",
+    data:{labels:historyRows.map(x=>x.date),datasets:[{data:historyRows.map(x=>x.seconds),borderColor:"#2db8ff",backgroundColor:"rgba(45,184,255,.08)",borderWidth:2.4,pointRadius:4,pointBackgroundColor:"#2dd8f5",pointBorderColor:"#0877ad",pointBorderWidth:2,tension:.22,fill:true}]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{color:"#98b6c3",maxRotation:0},grid:{color:"rgba(91,151,178,.08)"}},y:{reverse:true,ticks:{color:"#98b6c3",callback:v=>Number(v).toFixed(2)},grid:{color:"rgba(91,151,178,.08)"}}}}
+  });
+}
+</script>
+{% endblock %}

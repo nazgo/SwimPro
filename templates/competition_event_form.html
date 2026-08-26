@@ -1,0 +1,121 @@
+{% extends "base.html" %}
+{% block title %}Agregar prueba · SwimPro{% endblock %}
+
+{% block content %}
+<div class="sp272-page">
+
+  <section class="sp272-water-header">
+    <a href="{{ url_for('competition_detail', competition_id=comp.id) }}"
+       class="sp272-back"
+       aria-label="Volver">
+      <svg viewBox="0 0 24 24">
+        <path d="m15 18-6-6 6-6"/>
+      </svg>
+    </a>
+
+    <span class="sp272-kicker">COMPETENCIA</span>
+    <h1>Agregar prueba</h1>
+
+    <div class="sp272-comp-name">
+      {{ comp.name }}
+    </div>
+
+    <div class="sp272-meta">
+      <span>
+        <svg viewBox="0 0 24 24">
+          <rect x="4" y="5" width="16" height="15" rx="2"/>
+          <path d="M8 3v4M16 3v4M4 10h16"/>
+        </svg>
+        {{ comp.competition_date }}
+      </span>
+
+      <span>
+        <svg viewBox="0 0 24 24">
+          <path d="M3 17c2-2 4-2 6 0s4 2 6 0 4-2 6 0"/>
+          <path d="M4 11h16"/>
+        </svg>
+        {{ comp.pool_length }} m
+        ({% if comp.pool_length == 25 %}Corta{% else %}Larga{% endif %})
+      </span>
+    </div>
+  </section>
+
+  {% if error %}
+    <div class="sp272-error">{{ error }}</div>
+  {% endif %}
+
+  <section class="sp272-card">
+    <div class="sp272-card-head">
+      <h2>DATOS DE LA PRUEBA</h2>
+    </div>
+
+    <form method="post" class="sp272-form">
+
+      <label>
+        <span>Estilo</span>
+        <select name="stroke" id="stroke" required>
+          {% for s in styles %}
+            <option value="{{ s }}">{{ s }}</option>
+          {% endfor %}
+        </select>
+      </label>
+
+      <label>
+        <span>Distancia</span>
+        <select name="distance" id="distance" required></select>
+      </label>
+
+      <label>
+        <span>Tiempo objetivo <small>(opcional)</small></span>
+
+        <div class="sp272-time-field">
+          <svg viewBox="0 0 24 24">
+            <circle cx="12" cy="13" r="7"/>
+            <path d="M12 13V9M9 3h6M12 6V4"/>
+          </svg>
+
+          <input type="text"
+                 name="target_time"
+                 placeholder="Ej. 1:14.50"
+                 inputmode="decimal">
+        </div>
+
+        <small class="sp272-help">
+          Puedes definir una meta para comparar automáticamente el resultado de la prueba.
+        </small>
+      </label>
+
+      <button type="submit" class="sp272-submit">
+        <svg viewBox="0 0 24 24">
+          <path d="M12 5v14M5 12h14"/>
+        </svg>
+        Agregar prueba
+      </button>
+
+    </form>
+  </section>
+
+</div>
+
+<script>
+const officialEvents = {{ official_events|tojson }};
+const poolLength = {{ comp.pool_length }};
+const stroke = document.getElementById("stroke");
+const distance = document.getElementById("distance");
+
+function refreshDistances() {
+  const values = officialEvents[stroke.value][poolLength] || [];
+  distance.innerHTML = "";
+
+  values.forEach(value => {
+    const option = document.createElement("option");
+    option.value = value;
+    option.textContent = value + " m";
+    distance.appendChild(option);
+  });
+}
+
+stroke.addEventListener("change", refreshDistances);
+refreshDistances();
+</script>
+{% endblock %}

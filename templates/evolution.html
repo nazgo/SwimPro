@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block title %}Evolución{% endblock %}
+{% block content %}
+<div class="topbar">
+  <div>
+    <p class="eyebrow">PROGRESO</p>
+    <h1>Evolución</h1>
+    <p class="muted">Compara tu último tiempo con el registro anterior y con tu PB.</p>
+  </div>
+</div>
+
+<div class="list">
+{% for r in rows %}
+  <a class="progress-card" href="{{ url_for('history', distance=r.distance, stroke=r.stroke, pool_length=r.pool_length) }}">
+    <div class="progress-main">
+      <div>
+        <strong>{{ r.distance }} m {{ r.stroke }}</strong>
+        <span>Piscina {{ r.pool_length }} m · último {{ r.swim_date }}</span>
+      </div>
+      <b>{{ r.time_cs|swimtime }}</b>
+    </div>
+
+    <div class="progress-metrics">
+      <div>
+        <span>vs anterior</span>
+        {% if r.delta_previous is not none %}
+          <strong class="{% if r.delta_previous < 0 %}delta-good{% elif r.delta_previous > 0 %}delta-bad{% endif %}">
+            {{ r.delta_previous|signed_seconds }}
+          </strong>
+        {% else %}
+          <strong>—</strong>
+        {% endif %}
+      </div>
+      <div>
+        <span>vs PB</span>
+        <strong class="{% if r.delta_pb == 0 %}delta-good{% elif r.delta_pb > 0 %}delta-bad{% endif %}">
+          {% if r.delta_pb == 0 %}PB{% else %}{{ r.delta_pb|signed_seconds }}{% endif %}
+        </strong>
+      </div>
+    </div>
+  </a>
+{% else %}
+  <div class="empty-card">Registra algunos tiempos para comenzar a ver tu evolución.</div>
+{% endfor %}
+</div>
+{% endblock %}

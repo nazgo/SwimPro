@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% block title %}Objetivos · SwimPro{% endblock %}
+{% block content %}
+<div class="sp29-page sp30-goals">
+  <section class="sp29-water-head">
+    <div class="sp29-topbar">
+      <a href="{{ url_for('index') }}" class="sp29-icon-btn"><svg viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></svg></a>
+      <a href="{{ url_for('new_goal') }}" class="sp29-add-btn"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></a>
+    </div>
+    <span class="sp29-kicker">SWIMPRO</span>
+    <h1>Objetivos</h1>
+    <p>Metas históricas con contexto de temporada.</p>
+  </section>
+
+  <form method="get" class="sp30-goal-season">
+    <select name="year" onchange="this.form.submit()">
+      <option value="">PB histórico</option>
+      {% for y in seasons %}<option value="{{ y }}" {% if selected_year == y %}selected{% endif %}>Temporada {{ y }}</option>{% endfor %}
+    </select>
+  </form>
+
+  <section class="sp29-summary">
+    <article><strong>{{ items|selectattr('target_cs')|list|length }}</strong><span>Objetivos</span></article>
+    <article><strong>{{ items|selectattr('achieved')|list|length }}</strong><span>Logrados</span></article>
+    <article><strong>{{ items|rejectattr('achieved')|selectattr('target_cs')|list|length }}</strong><span>En progreso</span></article>
+  </section>
+
+  <section class="sp29-goals-list">
+    {% for g in items %}
+      <article class="sp29-goal-card {% if g.achieved %}achieved{% endif %}">
+        <div class="sp29-goal-head">
+          <div><strong>{{ g.distance }} {{ g.stroke|upper }}</strong><span>{{ g.pool_length }} m</span></div>
+          {% if g.target_cs %}<a href="{{ url_for('edit_goal', distance=g.distance, stroke=g.stroke, pool_length=g.pool_length) }}"><svg viewBox="0 0 24 24"><path d="m4 16-1 5 5-1L19 9l-4-4L4 16Z"/></svg></a>{% endif %}
+        </div>
+
+        <div class="sp29-values">
+          <div><span>PB HISTÓRICO</span><strong>{% if g.historical_pb %}{{ g.historical_pb|swimtime }}{% else %}—{% endif %}</strong></div>
+          <div><span>{% if selected_year %}PB {{ selected_year }}{% else %}OBJETIVO{% endif %}</span><strong>{% if selected_year %}{% if g.season_pb %}{{ g.season_pb|swimtime }}{% else %}—{% endif %}{% else %}{% if g.target_cs %}{{ g.target_cs|swimtime }}{% else %}Sin definir{% endif %}{% endif %}</strong></div>
+          <div><span>OBJETIVO</span><strong>{% if g.target_cs %}{{ g.target_cs|swimtime }}{% else %}—{% endif %}</strong></div>
+        </div>
+
+        {% if g.target_cs %}
+          <div class="sp29-progress-copy"><span>Progreso histórico</span><strong>{{ g.progress or 0 }}%</strong></div>
+          <div class="sp29-progress-track"><div style="width:{{ g.progress or 0 }}%"></div></div>
+          {% if g.achieved %}<div class="sp29-achieved">🏆 Objetivo conseguido</div>
+          {% elif g.historical_pb %}<div class="sp29-gap-note">Faltan {{ g.gap_cs|swimtime }} frente a tu PB histórico.</div>{% endif %}
+        {% else %}
+          <a class="sp29-define" href="{{ url_for('new_goal') }}">+ Definir objetivo</a>
+        {% endif %}
+
+        <div class="sp29-card-actions">
+          <a href="{{ url_for('history', distance=g.distance, stroke=g.stroke, pool_length=g.pool_length, year=selected_year) }}">Ver evolución</a>
+          {% if g.target_cs %}
+          <form method="post" action="{{ url_for('delete_goal', distance=g.distance, stroke=g.stroke, pool_length=g.pool_length) }}" onsubmit="return confirm('¿Eliminar este objetivo?');">
+            <button type="submit">Eliminar</button>
+          </form>
+          {% endif %}
+        </div>
+      </article>
+    {% endfor %}
+  </section>
+</div>
+{% endblock %}

@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}Sin conexión · SwimPro{% endblock %}
+{% block content %}
+<div class="pwa-offline">
+  <img src="{{ url_for('static', filename='swimpro_logo_user.png') }}" alt="SwimPro">
+  <h1>Estás sin conexión</h1>
+  <p>SwimPro no puede cargar esta pantalla ahora. Cuando recuperes conexión, vuelve a intentarlo.</p>
+  <button type="button" onclick="location.reload()">Reintentar</button>
+</div>
+<style>
+.pwa-offline{min-height:420px;display:grid;place-items:center;align-content:center;gap:12px;text-align:center;padding:28px}
+.pwa-offline img{width:150px;max-width:55vw;height:auto}.pwa-offline h1{margin:5px 0 0;font-size:24px}
+.pwa-offline p{max-width:310px;margin:0;color:#9fb8c4;font-size:12px;line-height:1.45}
+.pwa-offline button{min-width:150px;height:42px;border:0;border-radius:9px;background:linear-gradient(90deg,#27d4eb,#3c91ef);color:#052b3d;font-weight:800}
+</style>
+{% endblock %}

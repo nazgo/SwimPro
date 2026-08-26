@@ -1,0 +1,60 @@
+{
+  "id": "/",
+  "name": "SwimPro - Professional Swimming App",
+  "short_name": "SwimPro",
+  "description": "Registro personal de tiempos, competencias, objetivos, temporadas y progreso de natación.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "display_override": [
+    "standalone",
+    "minimal-ui"
+  ],
+  "background_color": "#03263C",
+  "theme_color": "#03263C",
+  "orientation": "portrait",
+  "categories": [
+    "sports",
+    "fitness"
+  ],
+  "icons": [
+    {
+      "src": "/static/pwa/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/static/pwa/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/static/pwa/icon-maskable-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/static/pwa/icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Registrar tiempo",
+      "url": "/add"
+    },
+    {
+      "name": "Mis marcas",
+      "url": "/marks"
+    },
+    {
+      "name": "Competencias",
+      "url": "/competitions"
+    }
+  ]
+}

@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}Editar prueba · SwimPro{% endblock %}
+{% block content %}
+<div class="sp27-page">
+  <section class="sp27-water-head sp27-edit-head">
+    <div class="sp27-topbar">
+      <a href="{{ url_for('competition_detail', competition_id=event.competition_id) }}" class="sp27-icon-btn" aria-label="Volver">
+        <svg viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></svg>
+      </a>
+    </div>
+    <span class="sp27-kicker">PRUEBA</span>
+    <h1>{{ event.distance }} m {{ event.stroke }}</h1>
+    <p>{{ event.competition_name }}</p>
+  </section>
+
+  {% if error %}<div class="sp27-error">{{ error }}</div>{% endif %}
+
+  <form class="sp27-edit-form" method="post">
+    <label><span>Tiempo objetivo</span>
+      <input type="text" name="target_time" value="{% if event.target_cs %}{{ event.target_cs|swimtime }}{% endif %}" placeholder="1:15.00">
+    </label>
+    <label><span>Posición</span>
+      <input type="text" name="position" value="{{ event.position or '' }}" placeholder="Ej. 3er Lugar">
+    </label>
+    <label><span>Notas</span>
+      <textarea name="notes" rows="5" placeholder="Observaciones de esta prueba">{{ event.notes or '' }}</textarea>
+    </label>
+    <button type="submit">Guardar prueba</button>
+  </form>
+</div>
+{% endblock %}

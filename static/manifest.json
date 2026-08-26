@@ -1,0 +1,9 @@
+{
+  "name": "SwimPro",
+  "short_name": "SwimPro",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#031b2d",
+  "theme_color": "#031b2d",
+  "description": "Professional Swimming App"
+}

@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block title %}Nueva competencia · SwimPro{% endblock %}
+
+{% block content %}
+<div class="sp24-page sp24-form-page">
+
+  <section class="sp24-water-header sp24-form-header">
+    <a href="{{ url_for('competitions') }}" class="sp24-back" aria-label="Volver">
+      <svg viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></svg>
+    </a>
+    <h1>Nueva competencia</h1>
+  </section>
+
+  {% if error %}<div class="sp24-error">{{ error }}</div>{% endif %}
+
+  <form class="sp24-competition-form" method="post">
+    <div class="sp24-form-two">
+      <label>
+        <span>Nombre</span>
+        <input name="name" required placeholder="Nombre de la competencia">
+      </label>
+
+      <label>
+        <span>Fecha</span>
+        <div class="sp24-date-field">
+          <input type="date" name="competition_date" value="{{ today }}" required>
+          <svg viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M8 3v4M16 3v4M4 10h16"/></svg>
+        </div>
+      </label>
+    </div>
+
+    <label>
+      <span>Ubicación</span>
+      <input name="location" placeholder="Santiago, Chile">
+    </label>
+
+    <label>
+      <span>Piscina</span>
+      <select name="pool_length">
+        <option value="25">25 m (Corta)</option>
+        <option value="50">50 m (Larga)</option>
+      </select>
+    </label>
+
+    <label>
+      <span>Notas</span>
+      <textarea name="notes" rows="5" placeholder="Notas adicionales (opcional)"></textarea>
+    </label>
+
+    <button class="sp24-create-button" type="submit">Crear competencia</button>
+  </form>
+
+</div>
+{% endblock %}
