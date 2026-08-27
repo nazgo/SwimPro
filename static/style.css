@@ -4710,3 +4710,100 @@ html{background:#03263c}body{overscroll-behavior-y:none;-webkit-tap-highlight-co
   display:inline !important;
   font-size:inherit !important;
 }
+
+
+/* ============================================================
+   SwimPro V45 — Competencias agrupadas por año
+   ============================================================ */
+.sp45-competitions,.sp45-competitions *{box-sizing:border-box}
+.sp45-competitions{color:#f7fbff;padding-bottom:8px}
+.sp45-competitions svg{fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+
+.sp45-comp-head{
+  display:flex;align-items:flex-start;justify-content:space-between;gap:12px;
+  padding:14px 10px 10px
+}
+.sp45-comp-head>div>span{
+  display:block;color:#2ee0f5;font-size:7px;font-weight:900;letter-spacing:.05em
+}
+.sp45-comp-head h1{margin:3px 0 0;font-size:27px}
+.sp45-comp-head p{margin:4px 0 0;max-width:280px;color:#91abb8;font-size:8px;line-height:1.4}
+.sp45-add{
+  width:39px;height:39px;display:grid;place-items:center;flex:0 0 39px;
+  border:1px solid rgba(46,224,245,.35);border-radius:50%;
+  background:linear-gradient(145deg,#18badc,#387ced);color:#fff;
+  box-shadow:0 5px 16px rgba(0,145,211,.18)
+}
+.sp45-add svg{width:19px;height:19px}
+
+.sp45-year-list{padding:0 8px}
+.sp45-year-section{
+  margin-bottom:8px;border:1px solid rgba(46,224,245,.22);
+  border-radius:11px;background:#052f49;overflow:hidden
+}
+.sp45-year-header{
+  width:100%;display:flex;align-items:center;justify-content:space-between;
+  padding:10px 11px;border:0;background:linear-gradient(180deg,#073b58,#06334f);
+  color:#fff;text-align:left
+}
+.sp45-year-header div{display:grid;grid-template-columns:auto auto 1fr;column-gap:8px;align-items:baseline}
+.sp45-year-header small{
+  grid-column:1/-1;color:#2ee0f5;font-size:6px;font-weight:900;letter-spacing:.05em
+}
+.sp45-year-header strong{font-size:20px;line-height:1}
+.sp45-year-header span{color:#91abb8;font-size:7px}
+.sp45-year-header>svg{
+  width:18px;height:18px;color:#88b8c9;transition:transform .2s ease
+}
+.sp45-year-header.open>svg{transform:rotate(180deg)}
+.sp45-year-body{display:none;padding:0 8px 8px}
+.sp45-year-body.open{display:block}
+
+.sp45-comp-card{
+  display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;
+  padding:10px 2px;border-top:1px solid rgba(130,194,215,.12);
+  color:#fff;text-decoration:none
+}
+.sp45-comp-main{display:grid;grid-template-columns:42px minmax(0,1fr);gap:9px;align-items:center}
+.sp45-date{
+  width:42px;height:45px;display:grid;place-items:center;align-content:center;
+  border:1px solid rgba(46,224,245,.20);border-radius:9px;background:#073751
+}
+.sp45-date strong{font-size:15px;line-height:1}
+.sp45-date span{margin-top:2px;color:#2ee0f5;font-size:6px;font-weight:900}
+.sp45-comp-copy{min-width:0}
+.sp45-comp-copy>strong{
+  display:block;overflow:hidden;text-overflow:ellipsis;color:#fff;
+  font-size:10px;white-space:nowrap
+}
+.sp45-comp-copy>span{
+  display:flex;align-items:center;gap:3px;margin-top:4px;
+  color:#aac0ca;font-size:7px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis
+}
+.sp45-comp-copy>span svg{width:9px;height:9px;flex:0 0 9px;color:#6cb8d7}
+.sp45-comp-copy>small{display:block;margin-top:3px;color:#63d8ec;font-size:6px}
+
+.sp45-comp-meta{
+  display:flex;align-items:center;gap:10px;padding-left:5px
+}
+.sp45-comp-meta>div{text-align:center;min-width:35px}
+.sp45-comp-meta>div strong{display:block;font-size:12px}
+.sp45-comp-meta>div span{display:block;margin-top:1px;color:#7f9eab;font-size:5.5px}
+.sp45-chevron{width:14px;height:14px;color:#51d8ec}
+
+.sp45-empty{
+  margin:22px 10px;padding:22px 16px;text-align:center;
+  border:1px solid rgba(46,224,245,.22);border-radius:12px;background:#06334f
+}
+.sp45-empty-icon{
+  width:50px;height:50px;display:grid;place-items:center;margin:0 auto 9px;
+  border-radius:50%;background:#073c58;color:#2ee0f5
+}
+.sp45-empty-icon svg{width:25px;height:25px}
+.sp45-empty h2{margin:0;font-size:16px}
+.sp45-empty p{margin:7px auto 12px;max-width:280px;color:#91abb8;font-size:8px;line-height:1.45}
+.sp45-empty a{
+  display:inline-grid;place-items:center;min-width:150px;height:39px;
+  border-radius:8px;background:linear-gradient(90deg,#27d4eb,#3b8df0);
+  color:#052b3d;font-size:8px;font-weight:900;text-decoration:none
+}
