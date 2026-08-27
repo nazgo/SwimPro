@@ -1,207 +1,22 @@
 {% extends "base.html" %}
-{% block title %}SwimPro
-<!-- V44.4 · Menú lateral funcional -->
-<div class="sp44-overlay" id="spHeaderOverlay" hidden></div>
-
-<aside class="sp44-side-menu" id="spSideMenu" aria-hidden="true">
-  <div class="sp44-panel-head">
-    <div>
-      <small>SWIMPRO</small>
-      <strong>{{ session.get('username', 'Nadador') }}</strong>
-    </div>
-    <button type="button" class="sp44-panel-close" data-close-header-panel aria-label="Cerrar">×</button>
-  </div>
-
-  <nav class="sp44-menu-list">
-    <a href="{{ url_for('profile') }}">
-      <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M5 21a7 7 0 0 1 14 0"/></svg>
-      <span>Perfil</span>
-    </a>
-    <a href="{{ url_for('goals_dashboard') }}">
-      <svg viewBox="0 0 24 24"><circle cx="11" cy="12" r="7"/><circle cx="11" cy="12" r="3"/><path d="m14 9 6-6"/></svg>
-      <span>Objetivos</span>
-    </a>
-    <a href="{{ url_for('achievements') }}">
-      <svg viewBox="0 0 24 24"><path d="M8 4h8v5a4 4 0 0 1-8 0V4Z"/><path d="M12 13v4m-4 3h8"/></svg>
-      <span>Logros</span>
-    </a>
-    <a href="{{ url_for('stats') }}">
-      <svg viewBox="0 0 24 24"><path d="M4 19V10m6 9V5m6 14v-7m4 7H2"/></svg>
-      <span>Estadísticas</span>
-    </a>
-    <a href="{{ url_for('competitions') }}">
-      <svg viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M8 3v4m8-4v4M4 10h16"/></svg>
-      <span>Competencias</span>
-    </a>
-    <a href="{{ url_for('account_settings') }}">
-      <svg viewBox="0 0 24 24"><path d="M12 15a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>
-      <span>Cuenta y seguridad</span>
-    </a>
-  </nav>
-
-  <form method="post" action="{{ url_for('logout') }}" class="sp44-menu-logout">
-    <button type="submit">
-      <svg viewBox="0 0 24 24"><path d="M10 17l5-5-5-5m5 5H3m11-8h5a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-5"/></svg>
-      <span>Cerrar sesión</span>
-    </button>
-  </form>
-</aside>
-
-<!-- V44.4 · Panel de notificaciones -->
-<aside class="sp44-notif-panel" id="spNotifPanel" aria-hidden="true">
-  <div class="sp44-panel-head">
-    <div>
-      <small>ACTIVIDAD</small>
-      <strong>Notificaciones</strong>
-    </div>
-    <button type="button" class="sp44-panel-close" data-close-header-panel aria-label="Cerrar">×</button>
-  </div>
-
-  <div class="sp44-notif-list">
-    {% if next_competition %}
-    <a href="{{ url_for('competition_detail', competition_id=next_competition.id) }}" class="sp44-notif-item">
-      <span class="sp44-notif-icon">
-        <svg viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M8 3v4m8-4v4M4 10h16"/></svg>
-      </span>
-      <div>
-        <strong>Próxima competencia</strong>
-        <small>{{ next_competition.name }}</small>
-      </div>
-    </a>
-    {% endif %}
-
-    {% if recent %}
-    <a href="{{ url_for('swim_detail', swim_id=recent[0].id) }}" class="sp44-notif-item">
-      <span class="sp44-notif-icon">
-        <svg viewBox="0 0 24 24"><path d="M12 20V4m0 0-5 5m5-5 5 5"/></svg>
-      </span>
-      <div>
-        <strong>Último registro</strong>
-        <small>{{ recent[0].distance }} m {{ recent[0].stroke }}</small>
-      </div>
-    </a>
-    {% endif %}
-
-    <a href="{{ url_for('goals_dashboard') }}" class="sp44-notif-item">
-      <span class="sp44-notif-icon">
-        <svg viewBox="0 0 24 24"><circle cx="11" cy="12" r="7"/><circle cx="11" cy="12" r="3"/><path d="m14 9 6-6"/></svg>
-      </span>
-      <div>
-        <strong>Revisa tus objetivos</strong>
-        <small>Mantén tus metas actualizadas.</small>
-      </div>
-    </a>
-
-    <a href="{{ url_for('account_settings') }}" class="sp44-notif-item">
-      <span class="sp44-notif-icon">
-        <svg viewBox="0 0 24 24"><path d="M12 15a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>
-      </span>
-      <div>
-        <strong>Cuenta protegida</strong>
-        <small>Gestiona contraseña y sesiones.</small>
-      </div>
-    </a>
-  </div>
-</aside>
-
-
-
-
-<script>
-document.addEventListener("DOMContentLoaded", function () {
-  const menuBtn = document.getElementById("spHeaderMenuBtn");
-  const notifBtn = document.getElementById("spHeaderNotifBtn");
-  const menu = document.getElementById("spSideMenu");
-  const notif = document.getElementById("spNotifPanel");
-  const overlay = document.getElementById("spHeaderOverlay");
-
-  if (!menuBtn || !notifBtn || !menu || !notif || !overlay) {
-    console.warn("SwimPro header panels: elementos no encontrados");
-    return;
-  }
-
-  function closeAllPanels() {
-    menu.classList.remove("open");
-    notif.classList.remove("open");
-    menu.setAttribute("aria-hidden", "true");
-    notif.setAttribute("aria-hidden", "true");
-    menuBtn.setAttribute("aria-expanded", "false");
-    notifBtn.setAttribute("aria-expanded", "false");
-    overlay.hidden = true;
-    document.body.classList.remove("sp45-panel-open");
-  }
-
-  function openPanel(panel, button) {
-    closeAllPanels();
-    panel.classList.add("open");
-    panel.setAttribute("aria-hidden", "false");
-    button.setAttribute("aria-expanded", "true");
-    overlay.hidden = false;
-    document.body.classList.add("sp45-panel-open");
-  }
-
-  menuBtn.addEventListener("click", function (event) {
-    event.preventDefault();
-    event.stopPropagation();
-    if (menu.classList.contains("open")) {
-      closeAllPanels();
-    } else {
-      openPanel(menu, menuBtn);
-    }
-  });
-
-  notifBtn.addEventListener("click", function (event) {
-    event.preventDefault();
-    event.stopPropagation();
-    if (notif.classList.contains("open")) {
-      closeAllPanels();
-    } else {
-      openPanel(notif, notifBtn);
-    }
-  });
-
-  overlay.addEventListener("click", closeAllPanels);
-
-  document.querySelectorAll("[data-close-header-panel]").forEach(function (btn) {
-    btn.addEventListener("click", closeAllPanels);
-  });
-
-  document.addEventListener("keydown", function (event) {
-    if (event.key === "Escape") closeAllPanels();
-  });
-});
-</script>
-
-{% endblock %}
+{% block title %}SwimPro{% endblock %}
 
 {% block content %}
-
-<div class="sp45-header-controls">
-  <button type="button" id="spHeaderMenuBtn" class="sp45-header-control sp45-menu-control"
-          aria-label="Abrir menú" aria-controls="spSideMenu" aria-expanded="false">
-    <svg viewBox="0 0 24 24" aria-hidden="true">
-      <path d="M4 7h16M4 12h16M4 17h16"/>
-    </svg>
-  </button>
-
-  <button type="button" id="spHeaderNotifBtn" class="sp45-header-control sp45-notif-control"
-          aria-label="Abrir notificaciones" aria-controls="spNotifPanel" aria-expanded="false">
-    <svg viewBox="0 0 24 24" aria-hidden="true">
-      <path d="M6 9a6 6 0 0 1 12 0c0 6.5 2.8 7 2.8 7H3.2S6 15.5 6 9"/>
-      <path d="M10 20h4"/>
-    </svg>
-    <span class="sp45-notif-dot" aria-hidden="true"></span>
-  </button>
-</div>
-
 <div class="sp18-home">
 
   <section class="sp18-hero">
     <div class="sp18-water" aria-hidden="true"></div>
 
-    
+    <button class="sp18-top-btn sp18-menu" aria-label="Menú" type="button">
+      <svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+    </button>
 
-    
+    <button class="sp18-top-btn sp18-bell" aria-label="Notificaciones" type="button">
+      <svg viewBox="0 0 24 24">
+        <path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 7h18s-3 0-3-7"/>
+        <path d="M10 19h4"/>
+      </svg>
+    </button>
 
     <div class="sp18-logo-wrap">
       <img src="{{ url_for('static', filename='swimpro_logo_user.png') }}"
@@ -209,7 +24,7 @@ document.addEventListener("DOMContentLoaded", function () {
     </div>
 
     <div class="sp18-greeting">
-      <h1>{{ profile.name }}</h1>
+      <h1>Hola, {{ profile.name }} 👋</h1>
       <p>Categoría: {{ category or '—' }}{% if age is not none %} años{% endif %}</p>
     </div>
   </section>
