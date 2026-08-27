@@ -209,7 +209,7 @@ document.addEventListener("DOMContentLoaded", function () {
     </div>
 
     <div class="sp18-greeting">
-      <h1>Hola, {{ profile.name }} 👋</h1>
+      <h1>{{ profile.name }}</h1>
       <p>Categoría: {{ category or '—' }}{% if age is not none %} años{% endif %}</p>
     </div>
   </section>
