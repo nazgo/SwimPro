@@ -440,12 +440,54 @@ def age_on_date(birth_date_str, on_date=None):
     on_date = on_date or date.today()
     return on_date.year - born.year - ((on_date.month, on_date.day) < (born.month, born.day))
 
+# Categorías formativas usadas por Natación Ñuñoa/FECHIDA.
+# Para Infantil/Juvenil se usa edad deportiva por año calendario:
+# temporada - año de nacimiento.
+YOUTH_CATEGORIES = {
+    8: "Infantil E",
+    9: "Infantil D",
+    10: "Infantil C",
+    11: "Infantil A",
+    12: "Infantil B1",
+    13: "Infantil B2",
+    14: "Juvenil A1",
+    15: "Juvenil A2",
+    16: "Juvenil B",
+    17: "Juvenil B",
+    18: "Juvenil B",
+}
+
+def sports_age(birth_date_str, season=None):
+    if not birth_date_str:
+        return None
+    try:
+        born = datetime.strptime(birth_date_str, "%Y-%m-%d").date()
+    except ValueError:
+        return None
+    season = int(season or date.today().year)
+    return season - born.year
+
 def masters_category(age):
+    """Compatibilidad con llamadas antiguas: devuelve grupo Máster desde 25 años."""
     if age is None:
         return None
     if age < 25:
-        return "Open"
+        return "Mayores"
     start = 25 + ((age - 25) // 5) * 5
+    return f"{start}-{start + 4}"
+
+def swimming_category(birth_date_str, season=None):
+    """Categoría deportiva de SwimPro para la temporada indicada."""
+    sport_age = sports_age(birth_date_str, season)
+    if sport_age is None:
+        return None
+    if sport_age <= 8:
+        return "Infantil E"
+    if sport_age <= 18:
+        return YOUTH_CATEGORIES.get(sport_age, "Sin categoría")
+    if sport_age < 25:
+        return "Mayores"
+    start = 25 + ((sport_age - 25) // 5) * 5
     return f"{start}-{start + 4}"
 
 def pb_for(conn, distance, stroke, pool_length):
@@ -960,7 +1002,7 @@ def index():
     conn = get_db()
     profile = conn.execute("SELECT * FROM profile WHERE id=1").fetchone()
     age = age_on_date(profile["birth_date"]) if profile else None
-    category = masters_category(age)
+    category = swimming_category(profile["birth_date"])
 
     pbs = conn.execute("""
         SELECT distance, stroke, pool_length, MIN(time_cs) AS best_cs, MAX(swim_date) AS last_date
@@ -2386,7 +2428,7 @@ def profile():
 
     data = conn.execute("SELECT * FROM profile WHERE id=1").fetchone()
     age = age_on_date(data["birth_date"]) if data else None
-    category = masters_category(age)
+    category = swimming_category(data["birth_date"])
     conn.close()
     return render_template("profile.html", profile=data, age=age, category=category)
 
