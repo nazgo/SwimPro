@@ -1909,31 +1909,108 @@ def delete_goal(distance, stroke, pool_length):
 def stats():
     conn = get_db()
     try:
-        season=request.args.get("season","").strip()
-        stroke=request.args.get("stroke","").strip()
-        pool=request.args.get("pool","").strip()
-        seasons=[r["season"] for r in conn.execute("SELECT DISTINCT EXTRACT(YEAR FROM date)::INT season FROM swims WHERE date IS NOT NULL ORDER BY season DESC").fetchall() if r["season"]]
-        where=[]; params=[]
-        if season: where.append("EXTRACT(YEAR FROM date)::INT=?"); params.append(int(season))
-        if stroke: where.append("stroke=?"); params.append(stroke)
-        if pool: where.append("pool_length=?"); params.append(int(pool))
-        clause=(" WHERE "+" AND ".join(where)) if where else ""
-        rows=[dict(r) for r in conn.execute(f"SELECT id,date,stroke,distance,pool_length,time_seconds,type,competition_id FROM swims{clause} ORDER BY date,id",tuple(params)).fetchall()]
-        groups={}
-        for r in rows: groups.setdefault((r["stroke"],r["distance"],r["pool_length"]),[]).append(r)
-        summary=[]
-        for k,v in groups.items():
-            first=float(v[0]["time_seconds"]); best=min(float(x["time_seconds"]) for x in v)
-            summary.append(dict(stroke=k[0],distance=k[1],pool_length=k[2],records=len(v),gain=max(0,first-best),best=best))
-        biggest=max(summary,key=lambda x:x["gain"],default=None)
-        active=max(summary,key=lambda x:x["records"],default=None)
-        event=(active["stroke"],active["distance"],active["pool_length"]) if active else None
-        chart=groups.get(event,[]) if event else []
-        style_summary=[]
-        for s in STYLES:
-            vals=[r for r in rows if r["stroke"]==s]
-            if vals: style_summary.append(dict(stroke=s,records=len(vals),events=len({(r["distance"],r["pool_length"]) for r in vals})))
-        return render_template("statistics.html",seasons=seasons,selected_season=season,selected_stroke=stroke,selected_pool=pool,styles=STYLES,total_records=len(rows),competitions=len({r["competition_id"] for r in rows if r["competition_id"]}),pb_count=len(groups),styles_count=len({r["stroke"] for r in rows}),biggest=biggest,active=active,chart=chart,event=event,style_summary=style_summary)
+        season = request.args.get("season", "").strip()
+        stroke = request.args.get("stroke", "").strip()
+        pool = request.args.get("pool", "").strip()
+
+        # El esquema real de SwimPro usa swim_date, time_cs y kind.
+        seasons = available_seasons(conn)
+
+        where = []
+        params = []
+
+        if season:
+            where.append("substr(swim_date,1,4)=?")
+            params.append(str(season))
+        if stroke:
+            where.append("stroke=?")
+            params.append(stroke)
+        if pool:
+            where.append("pool_length=?")
+            params.append(int(pool))
+
+        clause = (" WHERE " + " AND ".join(where)) if where else ""
+
+        rows = [dict(r) for r in conn.execute(f"""
+            SELECT
+                id,
+                swim_date AS date,
+                stroke,
+                distance,
+                pool_length,
+                time_cs,
+                (time_cs / 100.0) AS time_seconds,
+                kind AS type,
+                competition_id
+            FROM swims
+            {clause}
+            ORDER BY swim_date, id
+        """, tuple(params)).fetchall()]
+
+        groups = {}
+        for r in rows:
+            groups.setdefault(
+                (r["stroke"], r["distance"], r["pool_length"]),
+                []
+            ).append(r)
+
+        summary = []
+        for key, values in groups.items():
+            first = float(values[0]["time_seconds"])
+            best = min(float(x["time_seconds"]) for x in values)
+
+            summary.append({
+                "stroke": key[0],
+                "distance": key[1],
+                "pool_length": key[2],
+                "records": len(values),
+                "gain": max(0.0, first - best),
+                "best": best,
+            })
+
+        biggest = max(summary, key=lambda x: x["gain"], default=None)
+        active = max(summary, key=lambda x: x["records"], default=None)
+
+        event = (
+            (active["stroke"], active["distance"], active["pool_length"])
+            if active else None
+        )
+        chart = groups.get(event, []) if event else []
+
+        style_summary = []
+        for style_name in STYLES:
+            values = [r for r in rows if r["stroke"] == style_name]
+            if values:
+                style_summary.append({
+                    "stroke": style_name,
+                    "records": len(values),
+                    "events": len({
+                        (r["distance"], r["pool_length"])
+                        for r in values
+                    }),
+                })
+
+        return render_template(
+            "statistics.html",
+            seasons=seasons,
+            selected_season=season,
+            selected_stroke=stroke,
+            selected_pool=pool,
+            styles=STYLES,
+            total_records=len(rows),
+            competitions=len({
+                r["competition_id"]
+                for r in rows
+                if r["competition_id"]
+            }),
+            pb_count=len(groups),
+            styles_count=len({r["stroke"] for r in rows}),
+            biggest=biggest,
+            active=active,
+            chart=chart,
+            event=event,
+            style_summary=style_summary,
+        )
     finally:
         conn.close()
 
