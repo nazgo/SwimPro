@@ -4807,3 +4807,108 @@ html{background:#03263c}body{overscroll-behavior-y:none;-webkit-tap-highlight-co
   border-radius:8px;background:linear-gradient(90deg,#27d4eb,#3b8df0);
   color:#052b3d;font-size:8px;font-weight:900;text-decoration:none
 }
+
+
+/* ============================================================
+   SwimPro V46 — Foto de perfil
+   ============================================================ */
+.sp46-avatar-wrap{
+  position:relative;
+  width:56px;
+  height:56px;
+  flex:0 0 56px;
+}
+.sp46-avatar-button{
+  position:relative;
+  width:56px;
+  height:56px;
+  display:grid;
+  place-items:center;
+  padding:0;
+  overflow:visible;
+  border:0;
+  border-radius:50%;
+  background:linear-gradient(145deg,#43c9ef,#4778ef);
+  color:#fff;
+  font:inherit;
+  cursor:pointer;
+  box-shadow:0 0 0 2px rgba(39,222,244,.15);
+}
+.sp46-avatar-button>img{
+  width:56px;
+  height:56px;
+  display:block;
+  border-radius:50%;
+  object-fit:cover;
+  object-position:center;
+}
+.sp46-avatar-button>span:not(.sp46-avatar-edit){
+  font-size:20px;
+  font-weight:900;
+}
+.sp46-avatar-edit{
+  position:absolute;
+  right:-2px;
+  bottom:-2px;
+  width:21px;
+  height:21px;
+  display:grid;
+  place-items:center;
+  border:2px solid #07344e;
+  border-radius:50%;
+  background:#26d7ee;
+  color:#06334c;
+  box-shadow:0 2px 7px rgba(0,0,0,.24);
+}
+.sp46-avatar-edit svg{
+  width:11px;
+  height:11px;
+  fill:none;
+  stroke:currentColor;
+  stroke-width:2;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+}
+.sp46-avatar-button.uploading{
+  opacity:.62;
+  pointer-events:none;
+}
+.sp46-avatar-button.uploading::after{
+  content:"";
+  position:absolute;
+  inset:15px;
+  border:2px solid rgba(255,255,255,.35);
+  border-top-color:#fff;
+  border-radius:50%;
+  animation:sp46spin .75s linear infinite;
+}
+@keyframes sp46spin{to{transform:rotate(360deg)}}
+
+.sp46-avatar-alert{
+  margin:0 10px 8px;
+  padding:8px 10px;
+  border-radius:8px;
+  font-size:8px;
+  line-height:1.35;
+}
+.sp46-avatar-alert.success{
+  border:1px solid rgba(63,226,176,.28);
+  background:rgba(19,83,69,.36);
+  color:#79e8c4;
+}
+.sp46-avatar-alert.error{
+  border:1px solid rgba(255,103,128,.35);
+  background:rgba(91,26,43,.40);
+  color:#ffd6df;
+}
+.sp46-delete-avatar{
+  width:100%;
+  min-height:36px;
+  margin-bottom:7px;
+  border:1px solid rgba(255,103,128,.26);
+  border-radius:8px;
+  background:rgba(86,28,44,.20);
+  color:#ff9caf;
+  font-size:8px;
+  font-weight:850;
+}
