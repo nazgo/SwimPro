@@ -4710,3 +4710,126 @@ html{background:#03263c}body{overscroll-behavior-y:none;-webkit-tap-highlight-co
   display:inline !important;
   font-size:inherit !important;
 }
+
+
+/* ============================================================
+   SwimPro V44.4 — Header icons funcionales
+   ============================================================ */
+.sp44-header-icon-btn,
+#spHeaderMenuBtn,
+#spHeaderNotifBtn{
+  position:relative;
+  width:34px;
+  height:34px;
+  display:grid;
+  place-items:center;
+  border:0;
+  padding:0;
+  background:transparent;
+  color:#e9fbff;
+}
+.sp44-header-icon-btn svg,
+#spHeaderMenuBtn svg,
+#spHeaderNotifBtn svg{
+  width:20px;
+  height:20px;
+  fill:none;
+  stroke:currentColor;
+  stroke-width:1.8;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+}
+.sp44-notif-dot{
+  position:absolute;
+  right:4px;
+  top:4px;
+  width:6px;
+  height:6px;
+  border-radius:50%;
+  background:#29e0f4;
+  box-shadow:0 0 6px rgba(41,224,244,.65);
+}
+.sp44-overlay{
+  position:fixed;
+  inset:0;
+  z-index:1200;
+  background:rgba(0,15,27,.62);
+  backdrop-filter:blur(2px);
+}
+.sp44-side-menu,
+.sp44-notif-panel{
+  position:fixed;
+  top:0;
+  bottom:0;
+  z-index:1210;
+  width:min(310px,84vw);
+  background:linear-gradient(180deg,#052c46,#03263c);
+  border-color:rgba(39,216,244,.22);
+  box-shadow:0 0 28px rgba(0,0,0,.35);
+  transition:transform .22s ease;
+  color:#f4fbff;
+  padding-top:max(10px,env(safe-area-inset-top));
+}
+.sp44-side-menu{
+  left:0;
+  transform:translateX(-102%);
+  border-right:1px solid rgba(39,216,244,.22);
+}
+.sp44-notif-panel{
+  right:0;
+  transform:translateX(102%);
+  border-left:1px solid rgba(39,216,244,.22);
+}
+.sp44-side-menu.open,
+.sp44-notif-panel.open{transform:translateX(0)}
+.sp44-panel-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  min-height:62px;
+  padding:12px 14px;
+  border-bottom:1px solid rgba(120,192,214,.13);
+}
+.sp44-panel-head small{display:block;color:#2adef2;font-size:7px;font-weight:900;letter-spacing:.08em}
+.sp44-panel-head strong{display:block;margin-top:2px;font-size:15px}
+.sp44-panel-close{width:34px;height:34px;border:0;background:transparent;color:#d8f6ff;font-size:25px}
+.sp44-menu-list{display:grid;padding:9px}
+.sp44-menu-list a,.sp44-menu-logout button{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  min-height:45px;
+  border:0;
+  border-radius:9px;
+  padding:0 10px;
+  background:transparent;
+  color:#eefaff;
+  font-size:9px;
+  font-weight:750;
+  text-decoration:none;
+}
+.sp44-menu-list a:active{background:#073954}
+.sp44-menu-list svg,.sp44-menu-logout svg,.sp44-notif-item svg{
+  width:18px;height:18px;fill:none;stroke:#2dddf2;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round
+}
+.sp44-menu-logout{position:absolute;left:9px;right:9px;bottom:max(10px,env(safe-area-inset-bottom))}
+.sp44-menu-logout button{width:100%;border:1px solid rgba(255,99,125,.25);background:rgba(89,28,45,.24);color:#ffabb9}
+.sp44-menu-logout svg{stroke:#ff8fa3}
+.sp44-notif-list{padding:9px}
+.sp44-notif-item{
+  display:grid;
+  grid-template-columns:36px minmax(0,1fr);
+  gap:9px;
+  align-items:center;
+  min-height:59px;
+  padding:8px;
+  border-bottom:1px solid rgba(120,192,214,.11);
+  color:#f4fbff;
+  text-decoration:none;
+}
+.sp44-notif-icon{
+  width:36px;height:36px;display:grid;place-items:center;border-radius:10px;background:#073c59;border:1px solid rgba(39,216,244,.19)
+}
+.sp44-notif-item strong{display:block;font-size:9px}
+.sp44-notif-item small{display:block;margin-top:3px;color:#94afbc;font-size:7px;line-height:1.35}
+body.sp44-panel-open{overflow:hidden}
