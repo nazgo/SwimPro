@@ -1,5 +1,7 @@
 import os
 from urllib.parse import urljoin
+import cloudinary.uploader
+import cloudinary
 from email.message import EmailMessage
 import smtplib
 import hashlib
@@ -29,6 +31,8 @@ app.config.update(
     SESSION_COOKIE_SECURE=bool(os.environ.get("DATABASE_URL")),
     PERMANENT_SESSION_LIFETIME=60 * 60 * 24 * 30,
 )
+
+app.config["MAX_CONTENT_LENGTH"] = 5 * 1024 * 1024  # 5 MB avatar limit
 DB = Path(__file__).with_name("swimtracker.db")
 DATABASE_URL = os.getenv("DATABASE_URL", "").strip()
 
@@ -282,6 +286,9 @@ def init_auth_db():
             "CREATE INDEX IF NOT EXISTS ix_password_reset_tokens_user "
             "ON password_reset_tokens(user_id, expires_at)"
         )
+
+        conn.execute("ALTER TABLE profile ADD COLUMN IF NOT EXISTS avatar_url TEXT")
+        conn.execute("ALTER TABLE profile ADD COLUMN IF NOT EXISTS avatar_public_id TEXT")
 
         owned_tables = ("profile", "competitions", "swims", "competition_events", "goals", "splits")
 
@@ -2246,6 +2253,122 @@ def set_goal():
         stroke=stroke,
         pool_length=pool_length
     ))
+
+
+
+ALLOWED_AVATAR_MIMES = {"image/jpeg", "image/png", "image/webp"}
+
+
+def _cloudinary_configured():
+    return bool(os.environ.get("CLOUDINARY_URL"))
+
+
+def _upload_profile_avatar(file_storage, user_id):
+    if not _cloudinary_configured():
+        raise RuntimeError("Cloudinary no está configurado.")
+
+    if not file_storage or not file_storage.filename:
+        raise ValueError("Selecciona una imagen.")
+
+    mime = (file_storage.mimetype or "").lower()
+    if mime not in ALLOWED_AVATAR_MIMES:
+        raise ValueError("Formato no permitido. Usa JPG, PNG o WEBP.")
+
+    # Cloudinary performs the final image processing. The original is not
+    # stored on Render's ephemeral disk.
+    result = cloudinary.uploader.upload(
+        file_storage,
+        folder="swimpro/profile",
+        public_id=f"user_{user_id}",
+        overwrite=True,
+        invalidate=True,
+        resource_type="image",
+        transformation=[
+            {
+                "width": 600,
+                "height": 600,
+                "crop": "fill",
+                "gravity": "auto",
+                "quality": "auto:good",
+                "fetch_format": "auto",
+            }
+        ],
+    )
+
+    return result["secure_url"], result["public_id"]
+
+
+@app.route("/profile/avatar", methods=["POST"])
+def upload_profile_avatar():
+    avatar = request.files.get("avatar")
+    error = None
+
+    try:
+        avatar_url, public_id = _upload_profile_avatar(
+            avatar,
+            session["user_id"]
+        )
+    except (ValueError, RuntimeError) as exc:
+        error = str(exc)
+    except Exception:
+        app.logger.exception("Error subiendo foto de perfil a Cloudinary")
+        error = "No fue posible subir la foto. Inténtalo nuevamente."
+
+    if error:
+        return redirect(url_for("profile", avatar_error=error))
+
+    conn = get_db()
+    try:
+        row = conn.execute(
+            "SELECT id FROM profile WHERE id=1"
+        ).fetchone()
+
+        if row:
+            conn.execute(
+                "UPDATE profile SET avatar_url=?, avatar_public_id=? WHERE id=1",
+                (avatar_url, public_id)
+            )
+        else:
+            conn.execute(
+                "INSERT INTO profile (id, name, avatar_url, avatar_public_id) VALUES (1, ?, ?, ?)",
+                (session.get("username", "Mi perfil"), avatar_url, public_id)
+            )
+        conn.commit()
+    finally:
+        conn.close()
+
+    return redirect(url_for("profile", avatar_saved="1"))
+
+
+@app.route("/profile/avatar/delete", methods=["POST"])
+def delete_profile_avatar():
+    conn = get_db()
+    try:
+        profile_row = conn.execute(
+            "SELECT avatar_public_id FROM profile WHERE id=1"
+        ).fetchone()
+
+        public_id = profile_row["avatar_public_id"] if profile_row else None
+
+        if public_id and _cloudinary_configured():
+            try:
+                cloudinary.uploader.destroy(
+                    public_id,
+                    invalidate=True,
+                    resource_type="image"
+                )
+            except Exception:
+                app.logger.exception("No se pudo eliminar la foto de Cloudinary")
+
+        conn.execute(
+            "UPDATE profile SET avatar_url=NULL, avatar_public_id=NULL WHERE id=1"
+        )
+        conn.commit()
+    finally:
+        conn.close()
+
+    return redirect(url_for("profile", avatar_deleted="1"))
+
 
 
 @app.route("/profile", methods=["GET", "POST"])
