@@ -4658,3 +4658,18 @@ html{background:#03263c}body{overscroll-behavior-y:none;-webkit-tap-highlight-co
 .sp42-alert.success{border:1px solid rgba(61,226,174,.32);background:rgba(16,77,67,.34);color:#6ce8bf}
 .sp42-account-link{display:grid;place-items:center;min-height:38px;margin-bottom:7px;border:1px solid #176886;border-radius:8px;background:#082f49;color:#27def4;font-size:9px;font-weight:850}
 .v44,.v44 *{box-sizing:border-box}.v44{color:#f6fbff}.v44 svg,.v44-action-icon{fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}.v44-action-icon{width:15px;height:15px;margin-right:5px;color:#27def4;vertical-align:-4px}.v44-head{display:flex;gap:9px;padding:13px 10px}.v44-head>a{color:#fff;font-size:29px}.v44-head small,.v44-title small,.v44-card.mini small{display:block;color:#27def4;font-size:7px;font-weight:900}.v44-head h1{margin:2px 0;font-size:27px}.v44-head p{margin:0;color:#91adba;font-size:8px}.v44-filter{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;margin:0 8px 8px}.v44-filter select{min-width:0;height:35px;border:1px solid #176886;border-radius:8px;background:#07334e;color:#fff;font-size:8px}.v44-kpi{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;margin:0 8px 8px}.v44-kpi article{padding:8px 3px;text-align:center;border:1px solid #12617c;border-radius:9px;background:#06334f}.v44-kpi span{display:block;color:#88a9b7;font-size:5.5px}.v44-kpi b{font-size:18px}.v44-card{margin:0 8px 8px;padding:11px;border:1px solid #12617c;border-radius:10px;background:#06334f}.v44-title{display:flex;gap:8px;align-items:center}.v44-title>svg,.v44-card.mini>svg{width:30px;height:30px;padding:6px;border:1px solid #176886;border-radius:9px;color:#27def4}.v44-title b{display:block;font-size:10px}.v44-chart>svg{width:100%;height:145px}.v44-chart .grid{stroke:#17465b;stroke-width:1}.v44-chart .plot{fill:none;stroke:#2ebef4;stroke-width:2.3}.v44-chart .dot{fill:#27def4}.v44-chart>div{display:flex;justify-content:space-between;color:#7895a2;font-size:6px}.v44-pair{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin:0 8px}.v44-pair .v44-card{margin:0 0 8px}.v44-card.mini>svg{border-radius:50%}.v44-card.mini b{display:block;margin-top:4px;font-size:13px}.v44-card.mini span{font-size:7px;color:#9bb5c0}.v44-list>div{display:grid;grid-template-columns:1fr auto auto;gap:7px;padding:8px 1px;border-top:1px solid #17465b}.v44-list b{font-size:8px}.v44-list span{font-size:7px}.v44-list em{font-size:6px;color:#27def4;font-style:normal}.v44-empty{color:#91adba;font-size:8px}
+
+/* SwimPro V44.2 — professional profile navigation icons */
+.sp-pro-action-icon{
+  width:17px;
+  height:17px;
+  flex:0 0 17px;
+  margin-right:6px;
+  vertical-align:-4px;
+  fill:none;
+  stroke:#35dff4;
+  stroke-width:1.65;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+  filter:drop-shadow(0 0 3px rgba(53,223,244,.16));
+}
