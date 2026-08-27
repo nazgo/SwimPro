@@ -4673,3 +4673,40 @@ html{background:#03263c}body{overscroll-behavior-y:none;-webkit-tap-highlight-co
   stroke-linejoin:round;
   filter:drop-shadow(0 0 3px rgba(53,223,244,.16));
 }
+
+
+/* ============================================================
+   SwimPro V44.3 — Home quick actions: SVG profesionales
+   ============================================================ */
+.sp44-home-actions a{
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  gap:6px !important;
+}
+
+.sp44-home-action-icon{
+  width:20px !important;
+  height:20px !important;
+  display:grid !important;
+  place-items:center !important;
+  flex:0 0 20px !important;
+  border-radius:6px !important;
+  background:rgba(39,222,244,.08) !important;
+}
+
+.sp44-home-action-icon svg{
+  width:16px !important;
+  height:16px !important;
+  fill:none !important;
+  stroke:#32ddf3 !important;
+  stroke-width:1.7 !important;
+  stroke-linecap:round !important;
+  stroke-linejoin:round !important;
+  filter:drop-shadow(0 0 3px rgba(50,221,243,.16));
+}
+
+.sp44-home-action-label{
+  display:inline !important;
+  font-size:inherit !important;
+}
