@@ -1240,17 +1240,46 @@ def add_swim():
 @app.route("/competitions")
 def competitions():
     conn = get_db()
-    rows = conn.execute("""
-        SELECT c.*,
-               COUNT(DISTINCT ce.id) AS planned_count,
-               SUM(CASE WHEN ce.status='Completada' THEN 1 ELSE 0 END) AS completed_count
-        FROM competitions c
-        LEFT JOIN competition_events ce ON ce.competition_id=c.id
-        GROUP BY c.id
-        ORDER BY c.competition_date DESC, c.id DESC
-    """).fetchall()
-    conn.close()
-    return render_template("competitions.html", rows=rows)
+    try:
+        rows = conn.execute("""
+            SELECT
+                c.*,
+                COUNT(ce.id) AS total_events,
+                SUM(CASE WHEN ce.result_cs IS NOT NULL THEN 1 ELSE 0 END) AS completed_events
+            FROM competitions c
+            LEFT JOIN competition_events ce ON ce.competition_id = c.id
+            GROUP BY c.id
+            ORDER BY c.comp_date DESC, c.id DESC
+        """).fetchall()
+
+        competitions = [dict(r) for r in rows]
+
+        grouped = {}
+        for comp in competitions:
+            year = None
+            if comp.get("comp_date"):
+                try:
+                    year = str(comp["comp_date"])[:4]
+                except Exception:
+                    year = None
+            year = year or "Sin fecha"
+            grouped.setdefault(year, []).append(comp)
+
+        # Years descending, with undated competitions at the end.
+        years = [y for y in grouped.keys() if y != "Sin fecha"]
+        years = sorted(years, reverse=True)
+        if "Sin fecha" in grouped:
+            years.append("Sin fecha")
+
+        return render_template(
+            "competitions.html",
+            competition_groups=grouped,
+            competition_years=years,
+            competitions=competitions,
+        )
+    finally:
+        conn.close()
+
 
 @app.route("/competitions/new", methods=["GET", "POST"])
 def new_competition():
