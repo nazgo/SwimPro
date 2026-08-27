@@ -4912,3 +4912,469 @@ html{background:#03263c}body{overscroll-behavior-y:none;-webkit-tap-highlight-co
   font-size:8px;
   font-weight:850;
 }
+
+
+/* ============================================================
+   SwimPro V47 — Responsive / Tablet / Desktop
+   Mobile (<600px) intentionally keeps the approved phone UI.
+   ============================================================ */
+
+/* Tablet: iPad mini / iPad / Android tablets */
+@media (min-width: 600px) {
+
+  html,
+  body{
+    min-width:100%;
+  }
+
+  body{
+    background:#031f31;
+  }
+
+  .app-shell{
+    width:calc(100% - 48px) !important;
+    max-width:860px !important;
+    min-height:100vh;
+    padding:24px 18px 112px !important;
+  }
+
+  .sp24-nav{
+    width:calc(100% - 48px) !important;
+    max-width:860px !important;
+    height:78px !important;
+    padding:7px 20px calc(7px + env(safe-area-inset-bottom)) !important;
+  }
+
+  .sp24-nav a{
+    font-size:9px !important;
+  }
+
+  .sp24-nav svg{
+    width:22px !important;
+    height:22px !important;
+  }
+
+  .sp24-nav .sp24-plus{
+    width:54px !important;
+    height:54px !important;
+    margin-top:-16px !important;
+  }
+
+  /* ---------- HOME ---------- */
+  .sp18-home{
+    display:grid !important;
+    grid-template-columns:repeat(2,minmax(0,1fr)) !important;
+    gap:14px !important;
+  }
+
+  .sp18-home > .sp18-hero,
+  .sp18-home > .sp31-home-quick{
+    grid-column:1 / -1 !important;
+  }
+
+  .sp18-home > .sp18-panel{
+    margin:0 !important;
+  }
+
+  /* If there are three panels, the last (upcoming competition) spans full width. */
+  .sp18-home > .sp18-panel:last-child:nth-child(5){
+    grid-column:1 / -1 !important;
+  }
+
+  .sp18-hero{
+    height:245px !important;
+    border-radius:0 0 14px 14px;
+    overflow:hidden;
+  }
+
+  .sp18-logo-wrap{
+    width:250px !important;
+  }
+
+  .sp18-greeting h1{
+    font-size:20px !important;
+  }
+
+  .sp18-greeting p{
+    font-size:10px !important;
+  }
+
+  .sp31-home-quick{
+    gap:10px !important;
+  }
+
+  .sp31-home-quick a{
+    min-height:48px !important;
+    font-size:10px !important;
+  }
+
+  .sp44-home-action-icon{
+    width:23px !important;
+    height:23px !important;
+    flex-basis:23px !important;
+  }
+
+  .sp44-home-action-icon svg{
+    width:18px !important;
+    height:18px !important;
+  }
+
+  .sp18-panel{
+    padding:14px !important;
+    border-radius:12px !important;
+  }
+
+  .sp18-panel-head h2{
+    font-size:10px !important;
+  }
+
+  .sp18-panel-head a,
+  .sp25-home-head-actions a{
+    font-size:8px !important;
+  }
+
+  .sp18-pb-grid{
+    gap:8px !important;
+  }
+
+  .sp18-pb{
+    min-height:112px !important;
+    padding:10px !important;
+  }
+
+  .sp18-pb > span{
+    font-size:10px !important;
+  }
+
+  .sp18-pb-value strong{
+    font-size:22px !important;
+  }
+
+  .sp18-recent-row{
+    min-height:62px !important;
+    padding-block:8px !important;
+  }
+
+  .sp18-recent-main strong,
+  .sp18-recent-result strong{
+    font-size:11px !important;
+  }
+
+  .sp18-recent-main span,
+  .sp18-recent-result small{
+    font-size:8px !important;
+  }
+
+  /* ---------- MARKS ---------- */
+  .sp22-marks{
+    display:grid !important;
+    grid-template-columns:repeat(2,minmax(0,1fr)) !important;
+    gap:14px !important;
+  }
+
+  .sp22-marks > .sp22-header,
+  .sp22-marks > .sp30-season-row{
+    grid-column:1 / -1 !important;
+  }
+
+  .sp22-stroke-card{
+    margin:0 !important;
+    align-self:start;
+  }
+
+  .sp22-stroke-head{
+    min-height:62px !important;
+    padding:12px 14px !important;
+  }
+
+  .sp22-stroke-title strong{
+    font-size:13px !important;
+  }
+
+  .sp22-times{
+    grid-template-columns:repeat(2,minmax(0,1fr)) !important;
+  }
+
+  .sp22-time-cell{
+    min-height:108px !important;
+    padding:12px !important;
+  }
+
+  .sp22-time-cell > span{
+    font-size:11px !important;
+  }
+
+  .sp22-time-cell strong{
+    font-size:18px !important;
+  }
+
+  .sp30-season-row select,
+  .sp22-course-tabs{
+    min-height:48px !important;
+  }
+
+  /* ---------- COMPETITIONS ---------- */
+  .sp45-comp-head{
+    padding:18px 14px 14px !important;
+  }
+
+  .sp45-comp-head h1{
+    font-size:31px !important;
+  }
+
+  .sp45-comp-head p{
+    max-width:none !important;
+    font-size:10px !important;
+  }
+
+  .sp45-year-list{
+    padding:0 12px !important;
+  }
+
+  .sp45-year-header{
+    padding:14px 16px !important;
+  }
+
+  .sp45-year-header strong{
+    font-size:25px !important;
+  }
+
+  .sp45-year-header span{
+    font-size:9px !important;
+  }
+
+  .sp45-year-body{
+    padding:0 12px 12px !important;
+  }
+
+  .sp45-comp-card{
+    padding:13px 4px !important;
+  }
+
+  .sp45-comp-main{
+    grid-template-columns:54px minmax(0,1fr) !important;
+    gap:12px !important;
+  }
+
+  .sp45-date{
+    width:54px !important;
+    height:57px !important;
+  }
+
+  .sp45-date strong{
+    font-size:19px !important;
+  }
+
+  .sp45-comp-copy > strong{
+    font-size:12px !important;
+  }
+
+  .sp45-comp-copy > span{
+    font-size:9px !important;
+  }
+
+  .sp45-comp-copy > small{
+    font-size:8px !important;
+  }
+
+  .sp45-comp-meta > div{
+    min-width:54px !important;
+  }
+
+  .sp45-comp-meta > div strong{
+    font-size:15px !important;
+  }
+
+  .sp45-comp-meta > div span{
+    font-size:7px !important;
+  }
+
+  /* ---------- PROFILE ---------- */
+  .sp-profile-v13{
+    display:grid !important;
+    grid-template-columns:repeat(2,minmax(0,1fr)) !important;
+    gap:14px !important;
+  }
+
+  .sp-profile-v13 > .sp-profile-header,
+  .sp-profile-v13 > .sp-profile-brand,
+  .sp-profile-v13 > .sp-profile-person,
+  .sp-profile-v13 > .sp-profile-stats{
+    grid-column:1 / -1 !important;
+  }
+
+  .sp-profile-v13 > .sp-profile-card,
+  .sp-profile-v13 > .sp-profile-info{
+    margin:0 !important;
+    align-self:start;
+  }
+
+  .sp-profile-header{
+    min-height:58px !important;
+  }
+
+  .sp-profile-header h1{
+    font-size:22px !important;
+  }
+
+  .sp-profile-brand img{
+    width:240px !important;
+    max-height:none !important;
+  }
+
+  .sp-profile-person{
+    min-height:100px !important;
+    padding:16px !important;
+  }
+
+  .sp46-avatar-wrap,
+  .sp46-avatar-button,
+  .sp46-avatar-button > img{
+    width:72px !important;
+    height:72px !important;
+  }
+
+  .sp-profile-person-copy strong{
+    font-size:17px !important;
+  }
+
+  .sp-profile-person-copy small{
+    font-size:9px !important;
+  }
+
+  .sp-profile-kicker{
+    font-size:8px !important;
+  }
+
+  .sp-profile-stats article{
+    min-height:100px !important;
+    padding:15px !important;
+  }
+
+  .sp-profile-stats article strong{
+    font-size:27px !important;
+  }
+
+  .sp-profile-card{
+    padding-bottom:14px !important;
+    border-radius:12px !important;
+  }
+
+  .sp-profile-card-title{
+    min-height:44px !important;
+    padding:13px 14px !important;
+    font-size:9px !important;
+  }
+
+  .sp-profile-form{
+    padding:14px !important;
+    gap:13px !important;
+  }
+
+  .sp-profile-form label > span{
+    font-size:10px !important;
+  }
+
+  .sp-profile-form input,
+  .sp-profile-form select{
+    min-height:48px !important;
+    font-size:16px !important;
+  }
+
+  .sp-profile-save{
+    min-height:48px !important;
+    font-size:10px !important;
+  }
+
+  .sp-profile-downloads{
+    padding:12px !important;
+  }
+
+  .sp-profile-downloads a{
+    min-height:66px !important;
+  }
+
+  .sp-profile-downloads strong,
+  .sp41-account-copy strong{
+    font-size:10px !important;
+  }
+
+  .sp-profile-downloads span,
+  .sp41-account-copy span{
+    font-size:8px !important;
+  }
+
+  /* ---------- GENERAL FORMS / DETAILS ---------- */
+  .sp24-page,
+  .sp26-page,
+  .sp27-page,
+  .sp271-page,
+  .sp272-page,
+  .sp29-page,
+  .sp42-page,
+  .v44{
+    width:100% !important;
+    max-width:none !important;
+  }
+}
+
+
+/* Larger tablets / iPad landscape / desktop */
+@media (min-width: 1000px) {
+
+  .app-shell{
+    width:calc(100% - 80px) !important;
+    max-width:1160px !important;
+    padding:28px 28px 118px !important;
+  }
+
+  .sp24-nav{
+    width:calc(100% - 80px) !important;
+    max-width:1160px !important;
+  }
+
+  .sp18-home{
+    grid-template-columns:repeat(12,minmax(0,1fr)) !important;
+    gap:18px !important;
+  }
+
+  .sp18-home > .sp18-hero,
+  .sp18-home > .sp31-home-quick{
+    grid-column:1 / -1 !important;
+  }
+
+  .sp18-home > .sp18-panel{
+    grid-column:span 6 !important;
+  }
+
+  .sp18-home > .sp18-panel:last-child:nth-child(5){
+    grid-column:1 / -1 !important;
+  }
+
+  .sp18-pb-grid{
+    grid-template-columns:repeat(2,minmax(0,1fr)) !important;
+  }
+
+  .sp22-marks{
+    grid-template-columns:repeat(2,minmax(0,1fr)) !important;
+    gap:18px !important;
+  }
+
+  .sp45-year-list{
+    padding-inline:16px !important;
+  }
+
+  .sp-profile-v13{
+    grid-template-columns:repeat(2,minmax(0,1fr)) !important;
+    gap:18px !important;
+  }
+}
+
+
+/* Very wide desktop: avoid stretched lines and giant cards */
+@media (min-width: 1400px) {
+  .app-shell,
+  .sp24-nav{
+    max-width:1240px !important;
+  }
+}
