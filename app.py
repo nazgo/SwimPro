@@ -1908,109 +1908,34 @@ def delete_goal(distance, stroke, pool_length):
 @app.route("/stats")
 def stats():
     conn = get_db()
-
-    pool = request.args.get("pool", type=int)
-    stroke = request.args.get("stroke", type=str)
-    year = request.args.get("year", type=int)
-    seasons = available_seasons(conn)
-
-    if year and year not in seasons:
-        year = None
-
-    base_filters = []
-    base_params = []
-
-    if pool in (25, 50):
-        base_filters.append("pool_length=?")
-        base_params.append(pool)
-
-    if stroke in STYLES:
-        base_filters.append("stroke=?")
-        base_params.append(stroke)
-
-    historical_where = (" WHERE " + " AND ".join(base_filters)) if base_filters else ""
-
-    season_filters = list(base_filters)
-    season_params = list(base_params)
-
-    if year:
-        season_filters.append("substr(swim_date,1,4)=?")
-        season_params.append(str(year))
-
-    season_where = (" WHERE " + " AND ".join(season_filters)) if season_filters else ""
-
-    total_swims = conn.execute(
-        f"SELECT COUNT(*) AS c FROM swims{season_where}",
-        season_params
-    ).fetchone()["c"]
-
-    total_competitions = conn.execute(
-        "SELECT COUNT(*) AS c FROM competitions"
-    ).fetchone()["c"]
-
-    historical_rows = conn.execute(f"""
-        SELECT distance, stroke, pool_length,
-               MIN(time_cs) AS historical_pb,
-               COUNT(*) AS historical_attempts
-        FROM swims
-        {historical_where}
-        GROUP BY distance, stroke, pool_length
-        ORDER BY stroke, distance, pool_length
-    """, base_params).fetchall()
-
-    progression = []
-    for r in historical_rows:
-        season_pb = None
-        season_attempts = 0
-
-        if year:
-            sr = conn.execute("""
-                SELECT MIN(time_cs) AS season_pb,
-                       COUNT(*) AS season_attempts
-                FROM swims
-                WHERE distance=? AND stroke=? AND pool_length=?
-                  AND substr(swim_date,1,4)=?
-            """, (
-                r["distance"], r["stroke"], r["pool_length"],
-                str(year)
-            )).fetchone()
-            if sr:
-                season_pb = sr["season_pb"]
-                season_attempts = sr["season_attempts"]
-
-        first = conn.execute("""
-            SELECT time_cs
-            FROM swims
-            WHERE distance=? AND stroke=? AND pool_length=?
-            ORDER BY swim_date ASC, id ASC
-            LIMIT 1
-        """, (r["distance"], r["stroke"], r["pool_length"])).fetchone()
-
-        progression.append({
-            "distance": r["distance"],
-            "stroke": r["stroke"],
-            "pool_length": r["pool_length"],
-            "historical_pb": r["historical_pb"],
-            "historical_attempts": r["historical_attempts"],
-            "season_pb": season_pb,
-            "season_attempts": season_attempts,
-            "improvement": (first["time_cs"] - r["historical_pb"]) if first else 0
-        })
-
-    conn.close()
-
-    return render_template(
-        "stats.html",
-        total_swims=total_swims,
-        total_competitions=total_competitions,
-        event_count=len(historical_rows),
-        progression=progression,
-        pool=pool,
-        stroke=stroke,
-        year=year,
-        seasons=seasons,
-        styles=STYLES
-    )
+    try:
+        season=request.args.get("season","").strip()
+        stroke=request.args.get("stroke","").strip()
+        pool=request.args.get("pool","").strip()
+        seasons=[r["season"] for r in conn.execute("SELECT DISTINCT EXTRACT(YEAR FROM date)::INT season FROM swims WHERE date IS NOT NULL ORDER BY season DESC").fetchall() if r["season"]]
+        where=[]; params=[]
+        if season: where.append("EXTRACT(YEAR FROM date)::INT=?"); params.append(int(season))
+        if stroke: where.append("stroke=?"); params.append(stroke)
+        if pool: where.append("pool_length=?"); params.append(int(pool))
+        clause=(" WHERE "+" AND ".join(where)) if where else ""
+        rows=[dict(r) for r in conn.execute(f"SELECT id,date,stroke,distance,pool_length,time_seconds,type,competition_id FROM swims{clause} ORDER BY date,id",tuple(params)).fetchall()]
+        groups={}
+        for r in rows: groups.setdefault((r["stroke"],r["distance"],r["pool_length"]),[]).append(r)
+        summary=[]
+        for k,v in groups.items():
+            first=float(v[0]["time_seconds"]); best=min(float(x["time_seconds"]) for x in v)
+            summary.append(dict(stroke=k[0],distance=k[1],pool_length=k[2],records=len(v),gain=max(0,first-best),best=best))
+        biggest=max(summary,key=lambda x:x["gain"],default=None)
+        active=max(summary,key=lambda x:x["records"],default=None)
+        event=(active["stroke"],active["distance"],active["pool_length"]) if active else None
+        chart=groups.get(event,[]) if event else []
+        style_summary=[]
+        for s in STYLES:
+            vals=[r for r in rows if r["stroke"]==s]
+            if vals: style_summary.append(dict(stroke=s,records=len(vals),events=len({(r["distance"],r["pool_length"]) for r in vals})))
+        return render_template("statistics.html",seasons=seasons,selected_season=season,selected_stroke=stroke,selected_pool=pool,styles=STYLES,total_records=len(rows),competitions=len({r["competition_id"] for r in rows if r["competition_id"]}),pb_count=len(groups),styles_count=len({r["stroke"] for r in rows}),biggest=biggest,active=active,chart=chart,event=event,style_summary=style_summary)
+    finally:
+        conn.close()
 
 
 @app.route("/swim/<int:swim_id>/edit", methods=["GET", "POST"])
