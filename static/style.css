@@ -4833,3 +4833,103 @@ html{background:#03263c}body{overscroll-behavior-y:none;-webkit-tap-highlight-co
 .sp44-notif-item strong{display:block;font-size:9px}
 .sp44-notif-item small{display:block;margin-top:3px;color:#94afbc;font-size:7px;line-height:1.35}
 body.sp44-panel-open{overflow:hidden}
+
+
+/* ============================================================
+   SwimPro V44.5 — Header controls fixed
+   ============================================================ */
+
+/* Hero/header must be positioning context */
+.sp31-home-hero,
+.home-hero,
+.hero,
+.sp-home-hero{
+  position:relative !important;
+}
+
+.sp45-header-controls{
+  position:absolute !important;
+  top:8px !important;
+  left:0 !important;
+  right:0 !important;
+  z-index:80 !important;
+  pointer-events:none !important;
+}
+
+.sp45-header-control{
+  position:absolute !important;
+  top:0 !important;
+  width:34px !important;
+  height:34px !important;
+  display:grid !important;
+  place-items:center !important;
+  border:0 !important;
+  padding:0 !important;
+  margin:0 !important;
+  background:transparent !important;
+  color:#eafaff !important;
+  cursor:pointer !important;
+  pointer-events:auto !important;
+  border-radius:50% !important;
+  -webkit-tap-highlight-color:transparent !important;
+}
+
+.sp45-menu-control{
+  left:8px !important;
+}
+
+.sp45-notif-control{
+  right:8px !important;
+}
+
+.sp45-header-control:active{
+  background:rgba(39,222,244,.10) !important;
+}
+
+.sp45-header-control svg{
+  width:20px !important;
+  height:20px !important;
+  display:block !important;
+  fill:none !important;
+  stroke:currentColor !important;
+  stroke-width:1.8 !important;
+  stroke-linecap:round !important;
+  stroke-linejoin:round !important;
+}
+
+.sp45-notif-dot{
+  position:absolute !important;
+  top:3px !important;
+  right:3px !important;
+  width:6px !important;
+  height:6px !important;
+  border-radius:50% !important;
+  background:#2ce0f4 !important;
+  box-shadow:0 0 6px rgba(44,224,244,.65) !important;
+}
+
+/* Make overlay clickable above page but below panels */
+#spHeaderOverlay{
+  position:fixed !important;
+  inset:0 !important;
+  z-index:1190 !important;
+  background:rgba(0,14,25,.60) !important;
+  backdrop-filter:blur(2px) !important;
+}
+
+#spSideMenu,
+#spNotifPanel{
+  z-index:1200 !important;
+}
+
+#spSideMenu.open{
+  transform:translateX(0) !important;
+}
+
+#spNotifPanel.open{
+  transform:translateX(0) !important;
+}
+
+body.sp45-panel-open{
+  overflow:hidden !important;
+}
