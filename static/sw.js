@@ -1,5 +1,5 @@
-const STATIC_CACHE="swimpro-v48-static";
-const PAGE_CACHE="swimpro-v48-pages";
+const STATIC_CACHE="swimpro-v49-static";
+const PAGE_CACHE="swimpro-v49-pages";
 const OFFLINE_URL="/offline";
 const SHELL=["/login","/offline","/static/style.css","/static/manifest.webmanifest","/static/pwa/icon-192.png","/static/pwa/icon-512.png","/static/pwa/apple-touch-icon.png"];
 self.addEventListener("install",e=>{e.waitUntil(caches.open(STATIC_CACHE).then(c=>c.addAll(SHELL)).then(()=>self.skipWaiting()));});

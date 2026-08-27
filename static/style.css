@@ -5378,3 +5378,66 @@ html{background:#03263c}body{overscroll-behavior-y:none;-webkit-tap-highlight-co
     max-width:1240px !important;
   }
 }
+
+
+/* ============================================================
+   SwimPro V49 — Club en encabezado
+   ============================================================ */
+.sp18-hero{
+  position:relative;
+}
+.sp49-home-club{
+  position:absolute;
+  right:14px;
+  bottom:14px;
+  max-width:48%;
+  display:flex;
+  align-items:center;
+  justify-content:flex-end;
+  gap:5px;
+  color:#c9e9f4;
+  font-size:8px;
+  font-weight:700;
+  text-align:right;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  text-shadow:0 1px 3px rgba(0,0,0,.4);
+}
+.sp49-home-club svg{
+  width:13px;
+  height:13px;
+  flex:0 0 13px;
+  fill:none;
+  stroke:#35dff4;
+  stroke-width:1.7;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+}
+.sp49-home-club span{
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+@media (max-width:599px){
+  .sp49-home-club{
+    right:9px;
+    bottom:10px;
+    max-width:46%;
+    font-size:7px;
+  }
+}
+
+@media (min-width:600px){
+  .sp49-home-club{
+    right:20px;
+    bottom:18px;
+    font-size:10px;
+    max-width:50%;
+  }
+  .sp49-home-club svg{
+    width:15px;
+    height:15px;
+    flex-basis:15px;
+  }
+}
