@@ -35,10 +35,10 @@
              class="sp45-comp-card">
             <div class="sp45-comp-main">
               <div class="sp45-date">
-                {% if c.comp_date %}
-                  <strong>{{ c.comp_date[8:10] if c.comp_date|length >= 10 else '' }}</strong>
+                {% if c.competition_date %}
+                  <strong>{{ c.competition_date[8:10] if c.competition_date|length >= 10 else '' }}</strong>
                   <span>
-                    {% set mm = c.comp_date[5:7] if c.comp_date|length >= 7 else '' %}
+                    {% set mm = c.competition_date[5:7] if c.competition_date|length >= 7 else '' %}
                     {% set month_names = {
                       '01':'ENE','02':'FEB','03':'MAR','04':'ABR','05':'MAY','06':'JUN',
                       '07':'JUL','08':'AGO','09':'SEP','10':'OCT','11':'NOV','12':'DIC'
