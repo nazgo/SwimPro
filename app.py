@@ -1245,29 +1245,42 @@ def competitions():
             SELECT
                 c.*,
                 COUNT(ce.id) AS total_events,
-                SUM(CASE WHEN ce.result_cs IS NOT NULL THEN 1 ELSE 0 END) AS completed_events
+                COUNT(
+                    DISTINCT CASE
+                        WHEN s.id IS NOT NULL THEN ce.id
+                        ELSE NULL
+                    END
+                ) AS completed_events
             FROM competitions c
-            LEFT JOIN competition_events ce ON ce.competition_id = c.id
+            LEFT JOIN competition_events ce
+                ON ce.competition_id = c.id
+            LEFT JOIN swims s
+                ON s.planned_event_id = ce.id
+               AND s.competition_id = c.id
             GROUP BY c.id
-            ORDER BY c.comp_date DESC, c.id DESC
+            ORDER BY c.competition_date DESC, c.id DESC
         """).fetchall()
 
         competitions = [dict(r) for r in rows]
 
         grouped = {}
         for comp in competitions:
-            year = None
-            if comp.get("comp_date"):
+            year = "Sin fecha"
+            comp_date = comp.get("competition_date")
+
+            if comp_date:
                 try:
-                    year = str(comp["comp_date"])[:4]
+                    year = str(comp_date)[:4]
                 except Exception:
-                    year = None
-            year = year or "Sin fecha"
+                    year = "Sin fecha"
+
             grouped.setdefault(year, []).append(comp)
 
-        # Years descending, with undated competitions at the end.
-        years = [y for y in grouped.keys() if y != "Sin fecha"]
-        years = sorted(years, reverse=True)
+        years = sorted(
+            [y for y in grouped.keys() if y != "Sin fecha"],
+            reverse=True
+        )
+
         if "Sin fecha" in grouped:
             years.append("Sin fecha")
 
