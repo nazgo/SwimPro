@@ -24,8 +24,8 @@
     </div>
 
     <div class="sp18-greeting">
-      <h1> {{ profile.name }} </h1>
-      <p>Categoría: {{ category or '—' }}{% if age is not none %} años{% endif %}</p>
+      <h1>Hola, {{ profile.name }} 👋</h1>
+      <p>Categoría: {{ category or '—' }}{% if age is not none %} · {{ age }} años{% endif %}</p>
     </div>
   </section>
 
