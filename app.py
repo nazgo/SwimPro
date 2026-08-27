@@ -39,10 +39,10 @@ DATABASE_URL = os.getenv("DATABASE_URL", "").strip()
 STYLES = ["Libre", "Espalda", "Pecho", "Mariposa", "Combinado"]
 
 OFFICIAL_EVENTS = {
-    "Libre": {25: [50, 100, 200, 400, 800, 1500], 50: [50, 100, 200, 400, 800, 1500]},
-    "Espalda": {25: [50, 100, 200], 50: [50, 100, 200]},
-    "Pecho": {25: [50, 100, 200], 50: [50, 100, 200]},
-    "Mariposa": {25: [50, 100, 200], 50: [50, 100, 200]},
+    "Libre": {25: [25, 50, 100, 200, 400, 800, 1500], 50: [50, 100, 200, 400, 800, 1500]},
+    "Espalda": {25: [25, 50, 100, 200], 50: [50, 100, 200]},
+    "Pecho": {25: [25, 50, 100, 200], 50: [50, 100, 200]},
+    "Mariposa": {25: [25, 50, 100, 200], 50: [50, 100, 200]},
     "Combinado": {25: [100, 200, 400], 50: [200, 400]},
 }
 
@@ -178,7 +178,7 @@ def init_db():
     conn = get_db()
     if DATABASE_URL:
         statements = [
-            """CREATE TABLE IF NOT EXISTS profile (id INTEGER PRIMARY KEY CHECK (id = 1), name TEXT NOT NULL DEFAULT 'Mi perfil', birth_date TEXT, sex TEXT)""",
+            """CREATE TABLE IF NOT EXISTS profile (id INTEGER PRIMARY KEY CHECK (id = 1), name TEXT NOT NULL DEFAULT 'Mi perfil', birth_date TEXT, sex TEXT, club TEXT)""",
             """CREATE TABLE IF NOT EXISTS competitions (id BIGSERIAL PRIMARY KEY, name TEXT NOT NULL, competition_date TEXT NOT NULL, location TEXT, pool_length INTEGER NOT NULL, notes TEXT, created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP)""",
             """CREATE TABLE IF NOT EXISTS swims (id BIGSERIAL PRIMARY KEY, distance INTEGER NOT NULL, stroke TEXT NOT NULL, pool_length INTEGER NOT NULL, time_cs INTEGER NOT NULL, swim_date TEXT NOT NULL, kind TEXT NOT NULL DEFAULT 'Competencia', event_name TEXT, notes TEXT, competition_id BIGINT REFERENCES competitions(id) ON DELETE SET NULL, planned_event_id BIGINT, created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP)""",
             """CREATE TABLE IF NOT EXISTS competition_events (id BIGSERIAL PRIMARY KEY, competition_id BIGINT NOT NULL REFERENCES competitions(id) ON DELETE CASCADE, distance INTEGER NOT NULL, stroke TEXT NOT NULL, target_cs INTEGER, status TEXT NOT NULL DEFAULT 'Pendiente', position TEXT, notes TEXT, created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP)""",
@@ -191,7 +191,7 @@ def init_db():
         conn._conn if False else None
         # Keep the original SQLite schema for local/offline development.
         script = """
-        CREATE TABLE IF NOT EXISTS profile (id INTEGER PRIMARY KEY CHECK (id = 1), name TEXT NOT NULL DEFAULT 'Mi perfil', birth_date TEXT, sex TEXT);
+        CREATE TABLE IF NOT EXISTS profile (id INTEGER PRIMARY KEY CHECK (id = 1), name TEXT NOT NULL DEFAULT 'Mi perfil', birth_date TEXT, sex TEXT, club TEXT);
         CREATE TABLE IF NOT EXISTS competitions (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL, competition_date TEXT NOT NULL, location TEXT, pool_length INTEGER NOT NULL, notes TEXT, created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP);
         CREATE TABLE IF NOT EXISTS swims (id INTEGER PRIMARY KEY AUTOINCREMENT, distance INTEGER NOT NULL, stroke TEXT NOT NULL, pool_length INTEGER NOT NULL, time_cs INTEGER NOT NULL, swim_date TEXT NOT NULL, kind TEXT NOT NULL DEFAULT 'Competencia', event_name TEXT, notes TEXT, competition_id INTEGER, planned_event_id INTEGER, created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP, FOREIGN KEY(competition_id) REFERENCES competitions(id) ON DELETE SET NULL);
         CREATE TABLE IF NOT EXISTS competition_events (id INTEGER PRIMARY KEY AUTOINCREMENT, competition_id INTEGER NOT NULL, distance INTEGER NOT NULL, stroke TEXT NOT NULL, target_cs INTEGER, status TEXT NOT NULL DEFAULT 'Pendiente', created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP, FOREIGN KEY(competition_id) REFERENCES competitions(id) ON DELETE CASCADE);
@@ -289,6 +289,7 @@ def init_auth_db():
 
         conn.execute("ALTER TABLE profile ADD COLUMN IF NOT EXISTS avatar_url TEXT")
         conn.execute("ALTER TABLE profile ADD COLUMN IF NOT EXISTS avatar_public_id TEXT")
+        conn.execute("ALTER TABLE profile ADD COLUMN IF NOT EXISTS club TEXT")
 
         owned_tables = ("profile", "competitions", "swims", "competition_events", "goals", "splits")
 
@@ -2417,10 +2418,11 @@ def delete_profile_avatar():
 def profile():
     conn = get_db()
     if request.method == "POST":
-        conn.execute("UPDATE profile SET name=?, birth_date=?, sex=? WHERE id=1", (
+        conn.execute("UPDATE profile SET name=?, birth_date=?, sex=?, club=? WHERE id=1", (
             request.form.get("name", "").strip() or "Mi perfil",
             request.form.get("birth_date", ""),
-            request.form.get("sex", "")
+            request.form.get("sex", ""),
+            request.form.get("club", "").strip()
         ))
         conn.commit()
         conn.close()
